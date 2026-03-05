@@ -17,6 +17,8 @@ interface CourseRepository {
 
 
     suspend fun updateCourse(item: Course)
+
+    suspend fun deleteAll()
 }
 
 class OfflineCourseRepository(private val courseDao: CourseDao) : CourseRepository {
@@ -30,4 +32,6 @@ class OfflineCourseRepository(private val courseDao: CourseDao) : CourseReposito
     override suspend fun deleteCourse(item: Course) = courseDao.delete(item)
 
     override suspend fun updateCourse(item: Course) = courseDao.update(item)
+
+    override suspend fun deleteAll() = courseDao.deleteAll()
 }

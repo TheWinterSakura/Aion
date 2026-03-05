@@ -7,13 +7,17 @@ import com.example.classschedule.screen.AddCourseViewModel
 import com.example.classschedule.screen.CourseDetailViewModel
 import com.example.classschedule.screen.EditCourseViewModel
 import com.example.classschedule.screen.HomeViewModel
+import com.example.classschedule.screen.SettingViewModel
 import com.example.classschedule.screen.SpiderViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
-            HomeViewModel(repository = application.container.courseRepository)
+            HomeViewModel(
+                repository = application.container.courseRepository,
+                repositoryPreferences = application.userPreferencesRepository
+            )
         }
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
@@ -30,6 +34,13 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             SpiderViewModel(repository = application.container.courseRepository)
+        }
+        initializer {
+            val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
+            SettingViewModel(
+                repository = application.userPreferencesRepository,
+                repositoryCourse = application.container.courseRepository
+            )
         }
     }
 }

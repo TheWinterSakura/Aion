@@ -21,3 +21,6 @@ data class EditCourseScreen(
 @Serializable
 object WebScreen
 
+@Serializable
+object SettingScreen
+

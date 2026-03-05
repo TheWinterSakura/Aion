@@ -66,15 +66,22 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToAddCourse: () -> Unit,
     navigateToCourseDetails: (Int) -> Unit,
-    navigateToWeb:()-> Unit,
+    navigateToSetting: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
     val courseList by viewModel.courseList.collectAsState()
 
-    val allWeeks by remember { mutableIntStateOf(20) }
+    val allWeeks by viewModel.allWeek.collectAsState()
     var expanded by remember { mutableStateOf(false) }
+    val startDate by viewModel.startDate.collectAsState()
 
-    var currentWeek by remember { mutableIntStateOf(viewModel.calculateCurrentWeek(startDateStr = "2026-03-01")) }
+    var currentWeek by remember { mutableIntStateOf(1) }
+
+    LaunchedEffect(startDate) {
+        if (startDate != ""){
+            currentWeek = viewModel.calculateCurrentWeek(startDateStr = startDate)
+        }
+    }
 
     val initialDayIndex = remember { LocalDate.now().dayOfWeek.value - 1 }
 
@@ -109,7 +116,7 @@ fun HomeScreen(
                                 onDismissRequest = { expanded = false },
                                 modifier = Modifier.heightIn(max = 400.dp)
                             ) {
-                                repeat(allWeeks) { i ->
+                                repeat(allWeeks.toInt()) { i ->
                                     DropdownMenuItem(
                                         text = { Text("第 ${i + 1} 周") },
                                         onClick = {
@@ -124,7 +131,7 @@ fun HomeScreen(
                     actions = {
                         IconButton(
                             onClick = {
-                                navigateToWeb()
+                                navigateToSetting()
                             }
                         ) {
                             Icon(

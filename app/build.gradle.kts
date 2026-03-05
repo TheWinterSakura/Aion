@@ -73,4 +73,5 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("org.jsoup:jsoup:1.17.2")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 }

@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.CourseRepository
+import com.example.classschedule.data.UserPreferencesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,10 +21,23 @@ data class CourseSimpleInput(
 )
 
 class HomeViewModel(
-    private val repository: CourseRepository
+    private val repository: CourseRepository,
+    private val repositoryPreferences: UserPreferencesRepository
 ) : ViewModel() {
 
     private val _week = MutableStateFlow<CourseSimpleInput?>(null)
+
+    val startDate = repositoryPreferences.commencementDate.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = ""
+    )
+
+    val allWeek = repositoryPreferences.allWeek.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = ""
+    )
 
     val week = listOf(
         "Monday",

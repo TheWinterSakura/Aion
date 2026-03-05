@@ -17,6 +17,7 @@ import com.example.classschedule.screen.CourseDetail
 import com.example.classschedule.screen.EditCourse
 import com.example.classschedule.screen.HomeScreen
 import com.example.classschedule.screen.ImportScheduleScreen
+import com.example.classschedule.screen.SetScreen
 import com.example.classschedule.ui.theme.ClassScheduleTheme
 
 class MainActivity : ComponentActivity() {
@@ -51,8 +52,8 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                 navigateToCourseDetails = { id ->
                     navController.navigate(CourseDetailScreen(id = id))
                 },
-                navigateToWeb = {
-                    navController.navigate(WebScreen)
+                navigateToSetting ={
+                    navController.navigate(SettingScreen)
                 }
             )
         }
@@ -91,6 +92,14 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
             ImportScheduleScreen(
                 navigateUp = {
                     navController.navigateUp()
+                }
+            )
+        }
+
+        composable<SettingScreen> {
+            SetScreen(
+                onNavigateToWeb = {
+                    navController.navigate(WebScreen)
                 }
             )
         }

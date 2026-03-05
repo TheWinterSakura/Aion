@@ -26,4 +26,7 @@ interface CourseDao {
 
     @Query("SELECT * FROM course WHERE id = :id")
     fun getCourseById(id: Int): Flow<Course?>
+
+    @Query("DELETE FROM course")
+    suspend fun deleteAll()
 }
