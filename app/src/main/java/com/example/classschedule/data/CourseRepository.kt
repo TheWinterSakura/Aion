@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CourseRepository {
 
-    fun getAllICourseSimple(weekData: String, weekDay: String): Flow<List<CourseSimple>>
+    fun getAllICourseSimple(currentWeekDate: Int, weekDay: String): Flow<List<CourseSimple>>
 
 
     fun getCourseStream(id: Int): Flow<Course?>
@@ -19,9 +19,9 @@ interface CourseRepository {
     suspend fun updateCourse(item: Course)
 }
 
-class OfflineItemsRepository(private val courseDao: CourseDao) : CourseRepository {
-    override fun getAllICourseSimple(weekData: String, weekDay: String): Flow<List<CourseSimple>> =
-        courseDao.getAllCourseSimple(weekData = weekData, weekDay = weekDay)
+class OfflineCourseRepository(private val courseDao: CourseDao) : CourseRepository {
+    override fun getAllICourseSimple(currentWeekDate:Int, weekDay: String): Flow<List<CourseSimple>> =
+        courseDao.getAllCourseSimple(currentWeekDate = currentWeekDate, weekDay = weekDay)
 
     override fun getCourseStream(id: Int): Flow<Course?> = courseDao.getCourseById(id)
 

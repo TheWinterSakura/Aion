@@ -9,4 +9,15 @@ object HomeScreen
 object AddCourseScreen
 
 @Serializable
-object CourseDetailScreen
+data class CourseDetailScreen(
+    val id: Int
+)
+
+@Serializable
+data class EditCourseScreen(
+    val id: Int
+)
+
+@Serializable
+object WebScreen
+

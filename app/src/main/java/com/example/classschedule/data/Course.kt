@@ -8,9 +8,9 @@ data class Course(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val weekDay: String,
-    val weekData: String,
+    val startWeekDate:Int,
+    val endWeekDate: Int,
     var courseName: String,
-    var courseWeek: String,
     var courseTime: String,
     var courseCampus: String,
     var courseLocation: String,

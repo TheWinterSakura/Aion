@@ -21,9 +21,9 @@ interface CourseDao {
     @Delete
     suspend fun delete(course: Course)
 
-    @Query("SELECT courseName, courseTime, courseLocation, id FROM course WHERE weekData = :weekData AND weekDay = :weekDay")
-    fun getAllCourseSimple(weekData: String, weekDay: String): Flow<List<CourseSimple>>
+    @Query("SELECT courseName, courseTime, courseLocation, id FROM course WHERE weekDay = :weekDay AND startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate")
+    fun getAllCourseSimple(weekDay: String, currentWeekDate: Int): Flow<List<CourseSimple>>
 
     @Query("SELECT * FROM course WHERE id = :id")
-    fun getCourseById(id: Int): Flow<Course>
+    fun getCourseById(id: Int): Flow<Course?>
 }
