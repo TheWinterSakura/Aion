@@ -10,22 +10,18 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-
-data class CourseSimpleInput(
-    val weekDay: String,
-    val currentWeekDate: Int,
-)
 
 class HomeViewModel(
     private val repository: CourseRepository,
     private val repositoryPreferences: UserPreferencesRepository
 ) : ViewModel() {
 
-    private val _week = MutableStateFlow<CourseSimpleInput?>(null)
+    private val _week = MutableStateFlow<Int>(1)
 
     val startDate = repositoryPreferences.commencementDate.stateIn(
         scope = viewModelScope,
@@ -51,10 +47,10 @@ class HomeViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val courseList = _week.flatMapLatest { input ->
-        if (input != null) {
-            repository.getAllICourseSimple(currentWeekDate = input.currentWeekDate, weekDay = input.weekDay)
+        if (input != 0) {
+            repository.getAllICourseSimple(currentWeekDate = input)
         } else {
-            MutableStateFlow(emptyList())
+            flowOf(emptyList())
         }
     }.stateIn(
         scope = viewModelScope,
@@ -64,9 +60,8 @@ class HomeViewModel(
 
     fun loadSimpleCourse(
         currentWeekDate: Int,
-        weekDay: String
     ) {
-        _week.value = CourseSimpleInput(currentWeekDate = currentWeekDate , weekDay = weekDay)
+        _week.value = currentWeekDate
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -29,5 +29,6 @@ data class CourseSimple(
     val courseName: String,
     val courseTime: String,
     val courseLocation: String,
+    val weekDay: String,
     val id: Int,
 )
