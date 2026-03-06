@@ -88,18 +88,20 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                 })
         }
 
-        composable<WebScreen> {
+        composable<WebScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<WebScreen>()
             ImportScheduleScreen(
                 navigateUp = {
                     navController.navigateUp()
-                }
+                },
+                universityUrl = args.universityUrl
             )
         }
 
         composable<SettingScreen> {
             SetScreen(
-                onNavigateToWeb = {
-                    navController.navigate(WebScreen)
+                onNavigateToWeb = { universityUrl ->
+                    navController.navigate(WebScreen(universityUrl = universityUrl))
                 }
             )
         }

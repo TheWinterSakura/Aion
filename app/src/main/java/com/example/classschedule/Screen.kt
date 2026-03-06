@@ -19,7 +19,7 @@ data class EditCourseScreen(
 )
 
 @Serializable
-object WebScreen
+data class WebScreen(val universityUrl: String)
 
 @Serializable
 object SettingScreen

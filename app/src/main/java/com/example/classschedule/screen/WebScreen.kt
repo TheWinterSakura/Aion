@@ -23,6 +23,7 @@ import com.example.classschedule.AppViewModelProvider
 @Composable
 fun ImportScheduleScreen(
     navigateUp: () -> Unit,
+    universityUrl: String,
     viewModel: SpiderViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val statusText by viewModel.spiderStatus.collectAsState()
@@ -71,10 +72,8 @@ fun ImportScheduleScreen(
                         settings.javaScriptEnabled = true
                         settings.domStorageEnabled = true
                         webViewClient = WebViewClient()
-
                         webViewInstance = this
-
-                        loadUrl("http://jwgl.hebtu.edu.cn/")
+                        loadUrl(universityUrl)
                     }
                 }
             )

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.Course
 import com.example.classschedule.data.CourseRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -13,7 +12,7 @@ import org.jsoup.Jsoup
 import java.util.regex.Pattern
 
 class SpiderViewModel(
-    private val repository: CourseRepository
+    private val repository: CourseRepository,
 ) : ViewModel() {
 
     private val _spiderStatus = MutableStateFlow("请登录，看到课表后点击右下角导入")
@@ -60,7 +59,6 @@ class SpiderViewModel(
                         val courseWeekStudyHours = div.selectFirst("p:has([title*=周学时])")?.text()?.trim() ?: ""
                         val credit = div.selectFirst("p:has([title*=学分])")?.text()?.trim() ?: ""
                         val totalHours = div.selectFirst("p:has([title*=总学时])")?.text()?.trim() ?: ""
-
                         var startWeek = 0
                         var endWeek = 0
 

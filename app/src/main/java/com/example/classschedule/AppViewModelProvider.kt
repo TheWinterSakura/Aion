@@ -33,7 +33,9 @@ object AppViewModelProvider {
         }
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
-            SpiderViewModel(repository = application.container.courseRepository)
+            SpiderViewModel(
+                repository = application.container.courseRepository,
+            )
         }
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)

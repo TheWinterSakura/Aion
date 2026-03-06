@@ -27,9 +27,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -142,7 +142,7 @@ fun HomeScreen(
                     },
                     actions = {
                         IconButton(onClick = navigateToSetting) {
-                            Icon(imageVector = Icons.Default.Build, contentDescription = "设置")
+                            Icon(imageVector = Icons.Rounded.Settings, contentDescription = "设置")
                         }
                     }
                 )
