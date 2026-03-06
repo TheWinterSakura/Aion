@@ -47,9 +47,13 @@ fun ImportScheduleScreen(
                     val jsCode = "(function() { return document.documentElement.outerHTML; })();"
                     webViewInstance?.evaluateJavascript(jsCode) { htmlStr ->
                         if (htmlStr != null && htmlStr != "null") {
-                            viewModel.parseHtmlAndSave(htmlStr) {
-                                navigateUp()
-                            }
+                            viewModel.analytical(
+                                schoolName = "河北师范大学",
+                                rawHtml = htmlStr,
+                                onParseSuccess = {
+                                    navigateUp()
+                                }
+                            )
                         }
                     }
                 },
