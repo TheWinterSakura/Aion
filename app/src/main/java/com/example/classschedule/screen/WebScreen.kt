@@ -75,6 +75,13 @@ fun ImportScheduleScreen(
                     WebView(context).apply {
                         settings.javaScriptEnabled = true
                         settings.domStorageEnabled = true
+                        isHorizontalScrollBarEnabled = true
+                        isVerticalScrollBarEnabled = true
+                        settings.useWideViewPort = true
+                        settings.loadWithOverviewMode = false
+                        settings.setSupportZoom(true)
+                        settings.builtInZoomControls = true
+                        settings.displayZoomControls = false
                         webViewClient = WebViewClient()
                         webViewInstance = this
                         loadUrl(universityUrl)
