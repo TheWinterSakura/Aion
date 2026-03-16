@@ -49,10 +49,17 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                 navigateToAddCourse = {
                     navController.navigate(AddCourseScreen)
                 },
-                navigateToCourseDetails = { id ->
-                    navController.navigate(CourseDetailScreen(id = id))
+                navigateToCourseDetails = { id, weekDate, dayDate, startDate ->
+                    navController.navigate(
+                        CourseDetailScreen(
+                            id = id,
+                            weekDate = weekDate,
+                            dayDate = dayDate,
+                            startDate = startDate
+                        )
+                    )
                 },
-                navigateToSetting ={
+                navigateToSetting = {
                     navController.navigate(SettingScreen)
                 }
             )
@@ -70,6 +77,9 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
             val args = backStackEntry.toRoute<CourseDetailScreen>()
             CourseDetail(
                 courseId = args.id,
+                weekDate = args.weekDate,
+                dayDate = args.dayDate,
+                startDate = args.startDate,
                 navigationUp = {
                     navController.navigateUp()
                 },

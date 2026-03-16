@@ -10,7 +10,10 @@ object AddCourseScreen
 
 @Serializable
 data class CourseDetailScreen(
-    val id: Int
+    val id: Int,
+    val weekDate: String,
+    val dayDate: String,
+    val startDate: String,
 )
 
 @Serializable

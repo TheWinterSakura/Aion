@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -74,4 +75,5 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("org.jsoup:jsoup:1.17.2")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.work:work-runtime-ktx:2.8.1")
 }

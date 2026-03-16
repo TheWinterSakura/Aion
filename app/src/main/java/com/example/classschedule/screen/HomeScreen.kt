@@ -64,6 +64,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.CourseSimple
+import com.example.classschedule.tools.getClassTime
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -73,7 +74,7 @@ import java.time.LocalDate
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToAddCourse: () -> Unit,
-    navigateToCourseDetails: (Int) -> Unit,
+    navigateToCourseDetails: (Int, String, String, String) -> Unit,
     navigateToSetting: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
@@ -197,7 +198,9 @@ fun HomeScreen(
             }
             DailyCourseList(
                 courseList = dailyCourses,
-                navigateToCourseDetails = navigateToCourseDetails
+                navigateToCourseDetails = { id ->
+                    navigateToCourseDetails(id, currentWeek.toString(), currentDayString, startDate)
+                }
             )
         }
     }
@@ -229,7 +232,7 @@ fun DailyCourseList(
             items(items = courseList, key = { item -> item.id }) { item ->
                 ScheduleCard(
                     courseName = item.courseName,
-                    courseTime = item.courseTime,
+                    courseTime = getClassTime(item.courseTime),
                     courseLocation = item.courseLocation,
                     onClick = { navigateToCourseDetails(item.id) }
                 )

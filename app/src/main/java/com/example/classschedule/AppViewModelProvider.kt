@@ -25,7 +25,10 @@ object AppViewModelProvider {
         }
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
-            CourseDetailViewModel(repository = application.container.courseRepository)
+            CourseDetailViewModel(
+                repository = application.container.courseRepository,
+                alertManager = application.workManagerClassScheduleRepository,
+            )
         }
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)

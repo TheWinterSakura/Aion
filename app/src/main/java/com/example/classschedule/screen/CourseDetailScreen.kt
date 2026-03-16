@@ -1,5 +1,16 @@
 package com.example.classschedule.screen
 
+import android.Manifest
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,10 +24,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Done
@@ -36,6 +49,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,14 +73,20 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
+import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.showToast
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CourseDetail(
     courseId: Int,
+    weekDate: String,
+    dayDate: String,
+    startDate: String,
     navigationUp: () -> Unit,
     navigateToEdit: (Int) -> Unit,
     viewModel: CourseDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -77,7 +97,75 @@ fun CourseDetail(
 
     val course by viewModel._course.collectAsState()
     val context = LocalContext.current
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
+
+    fun executeAddAlert() {
+        if (course != null) {
+            viewModel.addAlert(
+                course = course!!,
+                weekDate = weekDate,
+                dayDate = dayDate,
+                startDate = startDate,
+                context = context
+            )
+        }
+    }
+
+    val notificationLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            executeAddAlert()
+        } else {
+            "需要通知权限才行".showToast()
+        }
+    }
+
+    val exactAlarmLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { _ ->
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (alarmManager.canScheduleExactAlarms()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    val notifGranted = ContextCompat.checkSelfPermission(
+                        context, Manifest.permission.POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED
+
+                    if (notifGranted) {
+                        executeAddAlert()
+                    } else {
+                        notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                } else {
+                    executeAddAlert()
+                }
+            } else {
+                "需开启精确闹钟权限才能设置提醒".showToast()
+            }
+        }
+    }
+
+    fun checkPermissionsAndAddAlert() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                data = Uri.parse("package:${context.packageName}")
+            }
+            exactAlarmLauncher.launch(intent)
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val notifGranted = ContextCompat.checkSelfPermission(
+                context, Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+            if (!notifGranted) {
+                notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                return
+            }
+        }
+        executeAddAlert()
+    }
 
     Scaffold(
         topBar = {
@@ -96,6 +184,26 @@ fun CourseDetail(
                     titleContentColor = MaterialTheme.colorScheme.onBackground
                 )
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    checkPermissionsAndAddAlert()
+                    viewModel.addSchedule(
+                        context = context,
+                        title = course?.courseName ?: "未查询到课程名称",
+                        location = course?.courseLocation?.split(' ')[1] ?: "未查询到课程地点",
+                        weekDate = weekDate,
+                        dayDate = dayDate,
+                        startDate = startDate,
+                        courseTime = course?.courseTime?:"课程时间获取失败"
+                    )
+                },
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                shape = CircleShape
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "添加提醒")
+            }
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
@@ -117,7 +225,6 @@ fun CourseDetail(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 顶部：课程名称
                 Text(
                     text = course?.courseName ?: "Unknown Course",
                     style = MaterialTheme.typography.headlineMedium,
@@ -126,30 +233,76 @@ fun CourseDetail(
                     modifier = Modifier.padding(bottom = 8.dp, top = 8.dp)
                 )
 
-                // 卡片1：时间和地点
                 CourseInfoCard(title = "Time & Location") {
-                    DetailItem(icon = Icons.Default.DateRange, label = "Week", value = "${course?.startWeekDate} - ${course?.endWeekDate}")
-                    DetailItem(icon = Icons.Default.DateRange, label = "Time", value = course?.courseTime)
-                    DetailItem(icon = Icons.Default.Place, label = "Campus", value = course?.courseCampus)
-                    DetailItem(icon = Icons.Default.LocationOn, label = "Location", value = course?.courseLocation)
+                    DetailItem(
+                        icon = Icons.Default.DateRange,
+                        label = "Week",
+                        value = "${course?.startWeekDate} - ${course?.endWeekDate}"
+                    )
+                    DetailItem(
+                        icon = Icons.Default.DateRange,
+                        label = "Time",
+                        value = "${
+                            course?.courseTime?.substringAfter('(')?.substringBefore(')') ?: ""
+                        } ( ${
+                            getClassTime(
+                                course?.courseTime ?: ""
+                            )
+                        } )"
+                    )
+                    DetailItem(
+                        icon = Icons.Default.Place,
+                        label = "Campus",
+                        value = course?.courseCampus
+                    )
+                    DetailItem(
+                        icon = Icons.Default.LocationOn,
+                        label = "Location",
+                        value = course?.courseLocation?.split(" ")[1] ?: "无"
+                    )
                 }
 
-                // 卡片2：教师和班级信息
                 CourseInfoCard(title = "Class Information") {
-                    DetailItem(icon = Icons.Default.Person, label = "Teacher", value = course?.courseTeacher)
-                    DetailItem(icon = Icons.Default.Menu, label = "Teaching Class", value = course?.courseTeachingClass)
-                    DetailItem(icon = Icons.Default.AccountBox, label = "Class Composition", value = course?.courseTeachingClassComposition)
+                    DetailItem(
+                        icon = Icons.Default.Person,
+                        label = "Teacher",
+                        value = course?.courseTeacher
+                    )
+                    DetailItem(
+                        icon = Icons.Default.Menu,
+                        label = "Teaching Class",
+                        value = course?.courseTeachingClass
+                    )
+                    DetailItem(
+                        icon = Icons.Default.AccountBox,
+                        label = "Class Composition",
+                        value = course?.courseTeachingClassComposition
+                    )
                 }
 
-                // 卡片3：学时与学分
                 CourseInfoCard(title = "Hours & Credits") {
-                    DetailItem(icon = Icons.Default.Star, label = "Credits", value = course?.courseCredit)
-                    DetailItem(icon = Icons.Default.Info, label = "Hour Composition", value = course?.courseHourComposition)
-                    DetailItem(icon = Icons.Default.Refresh, label = "Weekly Study Hours", value = course?.courseWeekStudyHours)
-                    DetailItem(icon = Icons.Default.Done, label = "Total Study Hours", value = course?.courseTotalStudyHours)
+                    DetailItem(
+                        icon = Icons.Default.Star,
+                        label = "Credits",
+                        value = course?.courseCredit
+                    )
+                    DetailItem(
+                        icon = Icons.Default.Info,
+                        label = "Hour Composition",
+                        value = course?.courseHourComposition
+                    )
+                    DetailItem(
+                        icon = Icons.Default.Refresh,
+                        label = "Weekly Study Hours",
+                        value = course?.courseWeekStudyHours
+                    )
+                    DetailItem(
+                        icon = Icons.Default.Done,
+                        label = "Total Study Hours",
+                        value = course?.courseTotalStudyHours
+                    )
                 }
 
-                // 卡片4：选课备注 (如果有)
                 if (!course?.courseSelectionNotes.isNullOrEmpty()) {
                     CourseInfoCard(title = "Notes") {
                         Text(
@@ -163,36 +316,44 @@ fun CourseDetail(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // 【新增】底部操作按钮区域
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // 1. 删除按钮 (红色线框)
                     OutlinedButton(
-                        onClick = { showDeleteConfirmDialog = true }, // 点击显示弹窗
+                        onClick = { showDeleteConfirmDialog = true },
                         modifier = Modifier
                             .weight(1f)
-                            .height(50.dp), // 稍微加高一点，更有质感
+                            .height(50.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.error // 红色文字和图标
+                            contentColor = MaterialTheme.colorScheme.error
                         ),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.error.copy(alpha = 0.5f)) // 红色边框
+                        border = BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.error.copy(alpha = 0.5f)
+                        )
                     ) {
-                        Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete", modifier = Modifier.size(20.dp))
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
+                            modifier = Modifier.size(20.dp)
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Delete", fontWeight = FontWeight.Bold)
                     }
 
-                    // 2. 修改按钮 (主题色填充)
                     Button(
                         onClick = { navigateToEdit(courseId) },
                         modifier = Modifier
                             .weight(1f)
                             .height(50.dp),
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp) // 保持扁平化去阴影
+                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
                     ) {
-                        Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit", modifier = Modifier.size(20.dp))
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Edit",
+                            modifier = Modifier.size(20.dp)
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Edit", fontWeight = FontWeight.Bold)
                     }
@@ -208,7 +369,13 @@ fun CourseDetail(
             onDismissRequest = { showDeleteConfirmDialog = false },
             title = { Text("Delete Course") },
             text = { Text("Are you sure you want to delete '${course?.courseName}'? This action cannot be undone.") },
-            icon = { Icon(Icons.Default.Warning, contentDescription = "Warning", tint = MaterialTheme.colorScheme.error) },
+            icon = {
+                Icon(
+                    Icons.Default.Warning,
+                    contentDescription = "Warning",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            },
             confirmButton = {
                 Button(
                     onClick = {
