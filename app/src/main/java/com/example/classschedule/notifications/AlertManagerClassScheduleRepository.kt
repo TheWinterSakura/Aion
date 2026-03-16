@@ -62,7 +62,7 @@ class AlertManagerClassScheduleRepository(context: Context) {
             } catch (e: SecurityException) {
                 e.printStackTrace()
             }
-            "成功设置闹钟，将于：$dateTimeStr 提醒您".showToast()
+//            "成功设置闹钟，将于：$dateTimeStr 提醒您".showToast()
         }else{
             "数据获取失败，请重启应用后再试".showToast()
         }

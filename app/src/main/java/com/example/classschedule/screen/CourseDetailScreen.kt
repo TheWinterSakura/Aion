@@ -49,7 +49,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -99,6 +99,8 @@ fun CourseDetail(
     val context = LocalContext.current
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
+    val isExpanded = !scrollState.isScrollInProgress
 
     fun executeAddAlert() {
         if (course != null) {
@@ -186,7 +188,7 @@ fun CourseDetail(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
+            ExtendedFloatingActionButton(
                 onClick = {
                     checkPermissionsAndAddAlert()
                     viewModel.addSchedule(
@@ -196,14 +198,15 @@ fun CourseDetail(
                         weekDate = weekDate,
                         dayDate = dayDate,
                         startDate = startDate,
-                        courseTime = course?.courseTime?:"课程时间获取失败"
+                        courseTime = course?.courseTime ?: "课程时间获取失败"
                     )
                 },
+                expanded = isExpanded,
+                icon = { Icon(Icons.Filled.Add, contentDescription = "添加") },
+                text = { Text(text = "添加提醒") },
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 shape = CircleShape
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "添加提醒")
-            }
+            )
         },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
@@ -221,9 +224,9 @@ fun CourseDetail(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .verticalScroll(rememberScrollState())
+                    .verticalScroll(state = scrollState)
                     .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Text(
                     text = course?.courseName ?: "Unknown Course",
