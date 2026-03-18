@@ -9,6 +9,7 @@ import com.example.classschedule.data.UserPreferencesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
@@ -22,6 +23,14 @@ class HomeViewModel(
 ) : ViewModel() {
 
     private val _week = MutableStateFlow<Int>(1)
+    private val _hasLoad = MutableStateFlow<Boolean>(false)
+    val hasLoad = _hasLoad.asStateFlow()
+
+    val isGridLayout = repositoryPreferences.isGridLayout.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false
+    )
 
     val startDate = repositoryPreferences.commencementDate.stateIn(
         scope = viewModelScope,
@@ -71,5 +80,9 @@ class HomeViewModel(
         val daysBetween = ChronoUnit.DAYS.between(startDate, currentDate)
         val currentWeek = (daysBetween / 7) + 1
         return currentWeek.toInt()
+    }
+
+    fun changeLoad(){
+        _hasLoad.value = !_hasLoad.value
     }
 }

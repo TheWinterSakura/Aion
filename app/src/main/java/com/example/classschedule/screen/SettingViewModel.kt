@@ -38,6 +38,12 @@ class SettingViewModel(
         initialValue = ""
     )
 
+    val isGridLayout = repository.isGridLayout.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false
+    )
+
     fun deleteAll() {
         viewModelScope.launch(Dispatchers.IO) {
             repositoryCourse.deleteAll()
@@ -67,9 +73,17 @@ class SettingViewModel(
 
     fun saveUniversity(
         universityUrl: String
-    ){
+    ) {
         viewModelScope.launch {
             repository.saveUniversityUrl(universityUrl = universityUrl)
+        }
+    }
+
+    fun saveIsGridLayout(
+        isGridLayout: Boolean
+    ) {
+        viewModelScope.launch {
+            repository.saveGridLayout(isGridLayout = isGridLayout)
         }
     }
 }
