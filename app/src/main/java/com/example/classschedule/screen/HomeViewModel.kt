@@ -25,6 +25,9 @@ class HomeViewModel(
     private val _week = MutableStateFlow<Int>(1)
     private val _hasLoad = MutableStateFlow<Boolean>(false)
     val hasLoad = _hasLoad.asStateFlow()
+    private val _isTimerFinished = MutableStateFlow<Boolean>(false)
+    val isTimerFinished = _isTimerFinished.asStateFlow()
+
 
     val isGridLayout = repositoryPreferences.isGridLayout.stateIn(
         scope = viewModelScope,
@@ -84,5 +87,9 @@ class HomeViewModel(
 
     fun changeLoad(){
         _hasLoad.value = !_hasLoad.value
+    }
+
+    fun changeIsFinished(){
+        _isTimerFinished.value = true
     }
 }

@@ -64,7 +64,7 @@ fun HomeScreen(
     var currentWeek by rememberSaveable { mutableIntStateOf(1) }
     val hasLoad by viewModel.hasLoad.collectAsState()
     val isGridLayout by viewModel.isGridLayout.collectAsState()
-    var isTimerFinished by remember { mutableStateOf(false) }
+    val isTimerFinished by viewModel.isTimerFinished.collectAsState()
 
     if (startDate.isNotBlank() && !hasLoad) {
         LaunchedEffect(Unit) {
@@ -86,7 +86,7 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         delay(500)
-        isTimerFinished = true
+        viewModel.changeIsFinished()
     }
 
     if (isTimerFinished) {
