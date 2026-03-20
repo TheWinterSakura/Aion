@@ -33,8 +33,9 @@ class DefaultSchoolParser : CourseParser {
             val courseDivs = td.select("div.timetable_con")
 
             for (div in courseDivs) {
-                val rawTitle = div.selectFirst("span.title")?.text() ?: "未知课程"
-                val courseName = rawTitle.replace("[★■☆]".toRegex(), "").trim()
+                val rawTitle = div.selectFirst("span.title")?.text() ?: div.selectFirst("u.title")?.text()?.trim()?:"未知课程"
+                val proCourseName = regex.replace(rawTitle,"($1)")
+                val courseName = proCourseName.replace("[★■☆]".toRegex(), "").trim()
 
                 val timeInfo = div.selectFirst("p:has([title*=节/周])")?.text()?.trim() ?: ""
                 val location = div.selectFirst("p:has([title*=上课地点])")?.text()?.trim() ?: ""
@@ -87,5 +88,7 @@ class DefaultSchoolParser : CourseParser {
 
         return courseList
     }
+
+    val regex = Regex("【(.*?)】")
 
 }

@@ -84,9 +84,11 @@ fun HomeScreen(
         viewModel.loadSimpleCourse(currentWeekDate = currentWeek)
     }
 
-    LaunchedEffect(Unit) {
-        delay(500)
-        viewModel.changeIsFinished()
+    if (!isTimerFinished){
+        LaunchedEffect(Unit) {
+            delay(500)
+            viewModel.changeIsFinished()
+        }
     }
 
     if (isTimerFinished) {

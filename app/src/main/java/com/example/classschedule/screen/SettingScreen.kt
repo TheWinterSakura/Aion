@@ -63,6 +63,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
@@ -173,14 +174,14 @@ private fun TermSettingsSection(
     SettingsCard(title = "学期设置") {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically, // 改为居中对齐更好看
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             OutlinedTextField(
                 value = newStartDate,
                 onValueChange = {},
                 readOnly = true,
-                interactionSource = dateInteractionSource, // 替换了 Box 的 Hack 写法
+                interactionSource = dateInteractionSource,
                 label = { Text("修改开学日期") },
                 placeholder = { Text("当前：${startDate.ifEmpty { "未设置" }}") },
                 trailingIcon = { Icon(Icons.Default.DateRange, "选择日期") },
@@ -194,6 +195,7 @@ private fun TermSettingsSection(
                 Icon(Icons.Default.Check, "保存开学日期", tint = MaterialTheme.colorScheme.onPrimaryContainer)
             }
         }
+        Text("当前开学日期：${startDate.ifEmpty { "未设置" }}", fontSize = 12.sp)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -219,6 +221,7 @@ private fun TermSettingsSection(
                 Icon(Icons.Default.Check, "保存总周数", tint = MaterialTheme.colorScheme.onPrimaryContainer)
             }
         }
+        Text("当前学期总周数：${allWeek.ifEmpty { "未设置" }}", fontSize = 12.sp)
     }
 }
 
