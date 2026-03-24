@@ -28,7 +28,8 @@ fun AppDetail(
     navigateUp: () -> Unit
 ) {
     val context = LocalContext.current
-    val appVersion = "1.0.0"
+    val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+    val versionName = packageInfo.versionName
 
     Scaffold(
         topBar = {
@@ -104,7 +105,7 @@ fun AppDetail(
 
                     ListItem(
                         headlineContent = { Text("当前版本") },
-                        supportingContent = { Text("v$appVersion") },
+                        supportingContent = { Text("v$versionName") },
                         leadingContent = {
                             Icon(Icons.Outlined.Info, contentDescription = null)
                         }

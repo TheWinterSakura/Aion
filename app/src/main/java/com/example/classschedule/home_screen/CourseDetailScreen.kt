@@ -261,7 +261,8 @@ fun CourseDetail(
                     DetailItem(
                         icon = Icons.Default.LocationOn,
                         label = "Location",
-                        value = course?.courseLocation?.split(" ")[1] ?: "无"
+                        value = course?.courseLocation?.split(" ")?.getOrNull(1)
+                            ?: course?.courseLocation ?: "未查询到课程名称"
                     )
                 }
 

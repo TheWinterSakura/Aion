@@ -1,6 +1,7 @@
 package com.example.classschedule.setting_screen
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -24,12 +25,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.classschedule.AppViewModelProvider
@@ -199,7 +202,7 @@ fun ScheduleImportScreen(
                             OutlinedTextField(
                                 value = inputApiKey,
                                 onValueChange = { inputApiKey = it },
-                                label = { Text("请输入 API Key (DeepSeek/GPT等)") },
+                                label = { Text("请输入 API Key ") },
                                 singleLine = true,
                                 shape = RoundedCornerShape(12.dp),
                                 modifier = Modifier.fillMaxWidth()
@@ -236,6 +239,22 @@ fun ScheduleImportScreen(
                                     Text("保存设置")
                                 }
                             }
+                            Text(
+                                text = "点击查看如何获取apiKey",
+                                modifier = Modifier
+                                    .padding(top = 8.dp)
+                                    .clickable(
+                                        onClick = {
+                                            val intent = Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse("https://www.bilibili.com/video/BV14UYZzrECF/?spm_id_from=333.337.search-card.all.click&vd_source=116fc34825ad5a397bcefcbc9c07b265")
+                                            )
+                                            context.startActivity(intent)
+                                        }
+                                    ),
+                                fontSize = 12.sp,
+                                color = Color.Blue
+                            )
                         }
                     }
                 }

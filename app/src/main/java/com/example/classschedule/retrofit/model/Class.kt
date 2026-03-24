@@ -26,7 +26,7 @@ data class TextMessage(
 )
 
 data class TextChatRequest(
-    val model: String = "MiniMax-M2.5",
+    val model: String = "qwen3.5-35b-a3b",
     val messages: List<TextMessage>,
     val temperature: Double = 0.01,
 )

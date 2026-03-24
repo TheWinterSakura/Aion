@@ -17,11 +17,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
+import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.CloudDownload
-import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -36,9 +36,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,31 +52,30 @@ fun SettingHome(
     navigateToClassImportByPDF: () -> Unit,
     navigateToLayoutManager: () -> Unit,
     navigateToAppDetail: () -> Unit,
-    navigateUp:()-> Unit
+    navigateUp: () -> Unit
 ) {
+    val context = LocalContext.current
+    val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("设置", fontWeight = FontWeight.Bold) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
-                ),
+                title = {
+                    Text(
+                        "设置",
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
                 navigationIcon = {
-                    IconButton(
-                        onClick = navigateUp
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
-                            contentDescription = "back"
-                        )
+                    IconButton(onClick = navigateUp) {
+                        Icon(Icons.AutoMirrored.Outlined.KeyboardArrowLeft, "back")
                     }
                 }
             )
         },
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
+        containerColor = Color.White
     ) { paddingValues ->
-
         val scrollState = rememberScrollState()
 
         Column(
@@ -82,62 +84,58 @@ fun SettingHome(
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-            SettingGroup(title = "常规") {
+            SettingGroup(title = "基础设置") {
                 SettingItem(
                     icon = Icons.Outlined.DateRange,
-                    title = "学期设置",
-                    isUnderline = false,
+                    title = "学期时间设置",
                     onClick = navigateToSchoolDate
                 )
             }
 
-            SettingGroup(title = "数据获取") {
+            SettingGroup(title = "导入方式") {
                 SettingItem(
                     icon = Icons.Outlined.CloudDownload,
-                    title = "教务系统课程导入",
+                    title = "教务系统导入",
                     onClick = navigateToClassImportByLoad
                 )
                 SettingItem(
-                    icon = Icons.Outlined.Image,
-                    title = "图片课程导入",
-                    isUnderline = false,
+                    icon = Icons.Outlined.AutoAwesome,
+                    title = "智能图片/PDF 导入",
                     onClick = navigateToClassImportByPDF
                 )
             }
 
-            SettingGroup(title = "高级与个性化") {
+            SettingGroup(title = "数据与外观") {
                 SettingItem(
                     icon = Icons.Outlined.Storage,
-                    title = "数据管理",
+                    title = "数据备份与管理",
                     onClick = navigateToDataManager
                 )
                 SettingItem(
-                    icon = Icons.Outlined.Dashboard,
-                    title = "布局管理",
-                    isUnderline = false,
+                    icon = Icons.Outlined.Palette,
+                    title = "界面布局管理",
                     onClick = navigateToLayoutManager
                 )
             }
 
-            SettingGroup(title = "其他") {
+            SettingGroup(title = "关于") {
                 SettingItem(
                     icon = Icons.Outlined.Info,
-                    title = "关于",
-                    endText = "v1.0.0",
+                    title = "软件信息",
+                    endText = "v$versionName",
                     isUnderline = false,
                     onClick = navigateToAppDetail
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
-
 
 @Composable
 fun SettingGroup(
@@ -149,13 +147,13 @@ fun SettingGroup(
             text = title,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(start = 16.dp, bottom = 8.dp)
+            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
+            letterSpacing = 0.5.sp
         )
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 1.dp
+            color = Color(0xFFF8F8F8)
         ) {
             Column {
                 content()
@@ -163,7 +161,6 @@ fun SettingGroup(
         }
     }
 }
-
 
 @Composable
 fun SettingItem(
@@ -173,58 +170,51 @@ fun SettingItem(
     endText: String = "",
     onClick: () -> Unit,
 ) {
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(22.dp)
+        )
+
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge,
+            color = Color(0xFF222222),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(24.dp)
-            )
+                .weight(1f)
+                .padding(start = 14.dp)
+        )
 
+        if (endText.isNotEmpty()) {
             Text(
-                text = title,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp)
-            )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                if (endText.isNotEmpty()) {
-                    Text(
-                        text = endText,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "前往详细设置",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-
-        if (isUnderline) {
-            HorizontalDivider(
-                modifier = Modifier.padding(start = 56.dp, end = 16.dp),
-                thickness = 0.5.dp,
-                color = MaterialTheme.colorScheme.surfaceVariant
+                text = endText,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Gray,
+                modifier = Modifier.padding(end = 4.dp)
             )
         }
+
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+            contentDescription = null,
+            tint = Color(0xFFCCCCCC),
+            modifier = Modifier.size(20.dp)
+        )
+    }
+
+    if (isUnderline) {
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            thickness = 0.5.dp,
+            color = Color(0xFFEEEEEE)
+        )
     }
 }
