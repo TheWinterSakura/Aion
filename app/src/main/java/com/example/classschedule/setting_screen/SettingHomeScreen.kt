@@ -126,7 +126,7 @@ fun SettingHome(
             SettingGroup(title = "其他") {
                 SettingItem(
                     icon = Icons.Outlined.Info,
-                    title = "关于 App",
+                    title = "关于",
                     endText = "v1.0.0",
                     isUnderline = false,
                     onClick = navigateToAppDetail

@@ -9,58 +9,26 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.animation.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.Image
-import androidx.compose.material.icons.rounded.Key
-import androidx.compose.material.icons.rounded.PictureAsPdf
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -79,25 +47,25 @@ fun ScheduleImportScreen(
     val apiKey by viewModel.apiKey.collectAsState()
 
     var inputApiKey by remember(apiKey) { mutableStateOf(apiKey.removePrefix("Bearer ")) }
+    var isApiCardExpanded by remember { mutableStateOf(apiKey.isBlank()) }
+    var showFabMenu by remember { mutableStateOf(false) }
 
     val pickMedia =
         rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            if (uri != null) {
-                selectedUri = uri
-                val bitmap = uriToBitmap(context, uri)
-                if (bitmap != null && apiKey.isNotBlank()) {
-                    viewModel.parseScheduleImage(bitmap, apiKey = apiKey)
+            uri?.let {
+                selectedUri = it
+                uriToBitmap(context, it)?.let { bitmap ->
+                    viewModel.parseScheduleImage(
+                        bitmap,
+                        apiKey
+                    )
                 }
             }
         }
-
-    val pdfPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument()
-    ) { uri ->
-        if (uri != null && apiKey.isNotBlank()) {
-            viewModel.parseScheduleFromPdf(context, uri, apiKey = apiKey)
+    val pdfPickerLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            uri?.let { viewModel.parseScheduleFromPdf(context, it, apiKey) }
         }
-    }
 
     Scaffold(
         topBar = {
@@ -111,144 +79,167 @@ fun ScheduleImportScreen(
             )
         },
         floatingActionButton = {
-            AnimatedVisibility(
-                visible = viewModel.courseList.isNotEmpty() && !uiState.isLoading,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
+            Column(horizontalAlignment = Alignment.End) {
+                AnimatedVisibility(
+                    visible = showFabMenu,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
+                ) {
+                    SmallFloatingActionButton(
+                        onClick = {
+                            showFabMenu = false
+                            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        },
+                        modifier = Modifier.padding(bottom = 12.dp),
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(Icons.Rounded.Image, contentDescription = null)
+                            Text("图片导入", modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+                }
+                AnimatedVisibility(
+                    visible = showFabMenu,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
+                ) {
+                    SmallFloatingActionButton(
+                        onClick = {
+                            showFabMenu = false
+                            pdfPickerLauncher.launch(arrayOf("application/pdf"))
+                        },
+                        modifier = Modifier.padding(bottom = 12.dp),
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(Icons.Rounded.PictureAsPdf, contentDescription = null)
+                            Text("PDF 导入", modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
+                }
+
                 ExtendedFloatingActionButton(
-                    onClick = { viewModel.addCourse() },
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    icon = { Icon(Icons.Default.Check, contentDescription = "导入课程") },
-                    text = { Text("确认导入", fontWeight = FontWeight.Bold) }
+                    onClick = {
+                        if (viewModel.courseList.isNotEmpty()) {
+                            viewModel.addCourse()
+                        } else {
+                            showFabMenu = !showFabMenu
+                        }
+                    },
+                    containerColor = if (viewModel.courseList.isNotEmpty()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = if (viewModel.courseList.isNotEmpty()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
+                    icon = {
+                        Icon(
+                            if (viewModel.courseList.isNotEmpty()) Icons.Default.Check else if (showFabMenu) Icons.Default.Close else Icons.Default.Add,
+                            contentDescription = null
+                        )
+                    },
+                    text = {
+                        Text(
+                            if (viewModel.courseList.isNotEmpty()) "确认导入" else "选择导入源",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 )
             }
         }
     ) { paddingValues ->
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
-
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                colors = CardDefaults.cardColors(
+                    containerColor = if (isApiCardExpanded) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surfaceContainerLow
+                )
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            Icons.Rounded.Key,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "配置大模型 API Key",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = inputApiKey,
-                        onValueChange = { inputApiKey = it },
-                        label = { Text("请输入 API Key") },
-                        singleLine = true,
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    val isSaved =
-                        apiKey.isNotBlank() && apiKey.removePrefix("Bearer ") == inputApiKey.trim()
-
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { isApiCardExpanded = !isApiCardExpanded },
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        if (isSaved) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = Icons.Rounded.CheckCircle,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text(
-                                    "已配置且生效",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        } else if (inputApiKey.isNotBlank()) {
-                            Text(
-                                "未保存的更改",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.error
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Rounded.Key,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary
                             )
-                        } else {
-                            Spacer(modifier = Modifier.width(1.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                "大模型 API 配置",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
+                        Icon(
+                            if (isApiCardExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                            contentDescription = null
+                        )
+                    }
 
-                        Button(
-                            onClick = { viewModel.changeApiKey("Bearer ${inputApiKey.trim()}") },
-                            enabled = inputApiKey.isNotBlank() && !isSaved,
-                            contentPadding = PaddingValues(horizontal = 24.dp)
-                        ) {
-                            Text("保存设置")
+                    AnimatedVisibility(visible = isApiCardExpanded) {
+                        Column {
+                            Spacer(modifier = Modifier.height(12.dp))
+                            OutlinedTextField(
+                                value = inputApiKey,
+                                onValueChange = { inputApiKey = it },
+                                label = { Text("请输入 API Key (DeepSeek/GPT等)") },
+                                singleLine = true,
+                                shape = RoundedCornerShape(12.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            val isSaved =
+                                apiKey.isNotBlank() && apiKey.removePrefix("Bearer ") == inputApiKey.trim()
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                if (isSaved) {
+                                    Icon(
+                                        Icons.Rounded.CheckCircle,
+                                        "已生效",
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Text(
+                                        " 已保存生效",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Button(
+                                    onClick = {
+                                        viewModel.changeApiKey("Bearer ${inputApiKey.trim()}")
+                                        isApiCardExpanded = false
+                                    },
+                                    enabled = inputApiKey.isNotBlank() && !isSaved
+                                ) {
+                                    Text("保存设置")
+                                }
+                            }
                         }
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(12.dp),
-                enabled = !uiState.isLoading && apiKey.isNotBlank()
-            ) {
-                Icon(Icons.Rounded.Image, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    if (uiState.isLoading) "正在拼命识别中..." else "从相册选择课表图片",
-                    fontSize = MaterialTheme.typography.titleMedium.fontSize
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = { pdfPickerLauncher.launch(arrayOf("application/pdf")) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(12.dp),
-                enabled = !uiState.isLoading && apiKey.isNotBlank()
-            ) {
-                Icon(Icons.Rounded.PictureAsPdf, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    if (uiState.isLoading) "正在拼命识别中..." else "选择 PDF 导入",
-                    fontSize = MaterialTheme.typography.titleMedium.fontSize
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             AnimatedVisibility(visible = uiState.errorMessage != null) {
                 Surface(
@@ -256,12 +247,12 @@ fun ScheduleImportScreen(
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp)
+                        .padding(vertical = 8.dp)
                 ) {
                     Text(
-                        text = uiState.errorMessage ?: "",
+                        uiState.errorMessage ?: "",
                         color = MaterialTheme.colorScheme.onErrorContainer,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(12.dp)
                     )
                 }
             }
@@ -270,31 +261,67 @@ fun ScheduleImportScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f), contentAlignment = Alignment.Center
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(24.dp)
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(48.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            "正在智能识别课表内容...",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            "文件越大识别时间越长，请耐心等待。识别结果可能存在细微偏差，导入后可手动微调。",
+                            style = MaterialTheme.typography.bodySmall,
+                            textAlign = TextAlign.Center,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
-            }
-
-            AnimatedVisibility(
-                visible = selectedUri != null && viewModel.courseList.isEmpty() && !uiState.isLoading
-            ) {
-                AsyncImage(
-                    model = selectedUri,
-                    contentDescription = "选中的课表",
-                    contentScale = ContentScale.Fit,
+            } else if (viewModel.courseList.isEmpty()) {
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .heightIn(max = 280.dp)
-                        .clip(RoundedCornerShape(16.dp))
-                )
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (selectedUri != null) {
+                        AsyncImage(
+                            model = selectedUri,
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                        )
+                    } else {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(
+                                Icons.Rounded.CloudUpload,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp),
+                                tint = MaterialTheme.colorScheme.outlineVariant
+                            )
+                            Text(
+                                "点击右下角按钮导入课表文件",
+                                color = MaterialTheme.colorScheme.outline
+                            )
+                        }
+                    }
+                }
             }
 
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                contentPadding = PaddingValues(vertical = 8.dp)
+                contentPadding = PaddingValues(bottom = 80.dp, top = 8.dp)
             ) {
                 items(viewModel.courseList) { course ->
                     CourseCardItem(course)
@@ -311,48 +338,53 @@ private fun CourseCardItem(course: Course) {
             .fillMaxWidth()
             .padding(vertical = 6.dp),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHighest)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = course.courseName,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = "老师: ${course.courseTeacher} | 教室: ${course.courseLocation}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = "时间: ${course.weekDay} ${course.courseTime}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(2.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "周数: 第${course.startWeekDate}-${course.endWeekDate}周",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    course.courseName,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium
                 )
-                Text(
-                    text = "学分: ${course.courseCredit}",
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
-                )
+                Badge(containerColor = MaterialTheme.colorScheme.primaryContainer) {
+                    Text("${course.courseCredit} 学分", modifier = Modifier.padding(4.dp))
+                }
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            InfoRow(Icons.Rounded.Person, course.courseTeacher)
+            InfoRow(Icons.Rounded.LocationOn, course.courseLocation)
+            InfoRow(Icons.Rounded.Schedule, "${course.weekDay} ${course.courseTime}")
+            InfoRow(Icons.Rounded.DateRange, "第 ${course.startWeekDate}-${course.endWeekDate} 周")
         }
     }
 }
+
+@Composable
+fun InfoRow(icon: ImageVector, text: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(vertical = 1.dp)
+    ) {
+        Icon(
+            icon,
+            contentDescription = null,
+            modifier = Modifier.size(14.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+            text,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
 
 fun uriToBitmap(context: Context, uri: Uri): Bitmap? {
     return try {

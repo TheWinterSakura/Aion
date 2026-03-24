@@ -16,6 +16,7 @@ import com.example.classschedule.home_screen.AddCourse
 import com.example.classschedule.home_screen.CourseDetail
 import com.example.classschedule.home_screen.EditCourse
 import com.example.classschedule.home_screen.HomeScreen
+import com.example.classschedule.setting_screen.AppDetail
 import com.example.classschedule.setting_screen.DataManager
 import com.example.classschedule.setting_screen.EasImport
 import com.example.classschedule.setting_screen.ImportScheduleScreen
@@ -140,7 +141,7 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                     navController.navigate(LayoutManagerScreen)
                 },
                 navigateToAppDetail = {
-
+                    navController.navigate(AppDetailScreen)
                 },
                 navigateUp = {
                     navController.navigateUp()
@@ -178,6 +179,14 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
         composable<LayoutManagerScreen> {
             LayoutManager(
                 onBack = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable<AppDetailScreen> {
+            AppDetail(
+                navigateUp = {
                     navController.navigateUp()
                 }
             )

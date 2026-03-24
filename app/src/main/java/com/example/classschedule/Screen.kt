@@ -45,3 +45,6 @@ object DataManagerScreen
 @Serializable
 object LayoutManagerScreen
 
+@Serializable
+object AppDetailScreen
+
