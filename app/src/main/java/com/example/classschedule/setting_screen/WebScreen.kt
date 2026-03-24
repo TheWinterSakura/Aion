@@ -1,6 +1,6 @@
 @file:Suppress("COMPOSE_APPLIER_CALL_MISMATCH")
 
-package com.example.classschedule.screen
+package com.example.classschedule.setting_screen
 
 import android.annotation.SuppressLint
 import android.webkit.WebView

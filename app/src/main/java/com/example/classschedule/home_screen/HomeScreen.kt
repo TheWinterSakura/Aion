@@ -1,4 +1,4 @@
-package com.example.classschedule.screen
+package com.example.classschedule.home_screen
 
 import android.os.Build
 import androidx.annotation.RequiresApi

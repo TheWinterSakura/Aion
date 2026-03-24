@@ -1,4 +1,4 @@
-package com.example.classschedule.screen
+package com.example.classschedule.home_screen
 
 import android.content.Context
 import android.content.Intent

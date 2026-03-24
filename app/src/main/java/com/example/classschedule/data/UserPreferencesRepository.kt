@@ -22,6 +22,8 @@ class UserPreferencesRepository(
 
     val IS_GRID_LAYOUT = booleanPreferencesKey("is_grid_layout")
 
+    val API_KEY = stringPreferencesKey("api_key")
+
 
     val commencementDate: Flow<String> = dataStore.data
         .catch {
@@ -73,6 +75,18 @@ class UserPreferencesRepository(
             preferences[IS_GRID_LAYOUT] ?: false
         }
 
+    val apiKey: Flow<String> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.e(TAG, "Error reading preferences.", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }.map { preferences ->
+            preferences[API_KEY] ?: ""
+        }
+
     suspend fun saveStartDatePreference(commencementDate: String) {
         dataStore.edit { preferences ->
             preferences[this.COMMENCEMENT_DATE] = commencementDate
@@ -91,12 +105,17 @@ class UserPreferencesRepository(
         }
     }
 
-    suspend fun saveGridLayout(isGridLayout: Boolean){
+    suspend fun saveGridLayout(isGridLayout: Boolean) {
         dataStore.edit { preferences ->
             preferences[this.IS_GRID_LAYOUT] = isGridLayout
         }
     }
 
+    suspend fun saveApiKey(apiKey: String){
+        dataStore.edit { preferences ->
+            preferences[this.API_KEY] = apiKey
+        }
+    }
 
     private companion object {
         val startDate = stringPreferencesKey("commencement_date")

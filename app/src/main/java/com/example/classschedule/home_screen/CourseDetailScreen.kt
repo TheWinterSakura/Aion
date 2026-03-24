@@ -1,4 +1,4 @@
-package com.example.classschedule.screen
+package com.example.classschedule.home_screen
 
 import android.Manifest
 import android.app.AlarmManager
@@ -371,7 +371,7 @@ fun CourseDetail(
         AlertDialog(
             onDismissRequest = { showDeleteConfirmDialog = false },
             title = { Text("Delete Course") },
-            text = { Text("Are you sure you want to delete '${course?.courseName}'? This action cannot be undone.") },
+            text = { Text("你确定你要删除 '${course?.courseName}'? 这个操作不可被撤销") },
             icon = {
                 Icon(
                     Icons.Default.Warning,

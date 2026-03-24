@@ -1,4 +1,4 @@
-package com.example.classschedule.screen
+package com.example.classschedule.home_screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

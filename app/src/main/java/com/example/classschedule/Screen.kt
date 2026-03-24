@@ -27,3 +27,21 @@ data class WebScreen(val universityUrl: String)
 @Serializable
 object SettingScreen
 
+@Serializable
+object IdentifyScreen
+
+@Serializable
+object SettingHomeScreen
+
+@Serializable
+object SchoolDateScreen
+
+@Serializable
+object EasImportScreen
+
+@Serializable
+object DataManagerScreen
+
+@Serializable
+object LayoutManagerScreen
+

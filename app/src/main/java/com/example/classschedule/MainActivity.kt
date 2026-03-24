@@ -12,12 +12,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.classschedule.screen.AddCourse
-import com.example.classschedule.screen.CourseDetail
-import com.example.classschedule.screen.EditCourse
-import com.example.classschedule.screen.HomeScreen
-import com.example.classschedule.screen.ImportScheduleScreen
-import com.example.classschedule.screen.SetScreen
+import com.example.classschedule.home_screen.AddCourse
+import com.example.classschedule.home_screen.CourseDetail
+import com.example.classschedule.home_screen.EditCourse
+import com.example.classschedule.home_screen.HomeScreen
+import com.example.classschedule.setting_screen.DataManager
+import com.example.classschedule.setting_screen.EasImport
+import com.example.classschedule.setting_screen.ImportScheduleScreen
+import com.example.classschedule.setting_screen.LayoutManager
+import com.example.classschedule.setting_screen.ScheduleImportScreen
+import com.example.classschedule.setting_screen.SchoolDate
+import com.example.classschedule.setting_screen.SettingHome
 import com.example.classschedule.ui.theme.ClassScheduleTheme
 
 class MainActivity : ComponentActivity() {
@@ -60,7 +65,7 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                     )
                 },
                 navigateToSetting = {
-                    navController.navigate(SettingScreen)
+                    navController.navigate(SettingHomeScreen)
                 }
             )
         }
@@ -108,10 +113,72 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
             )
         }
 
-        composable<SettingScreen> {
-            SetScreen(
+
+        composable<IdentifyScreen> {
+            ScheduleImportScreen(
+                onNavigateUp = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable<SettingHomeScreen> {
+            SettingHome(
+                navigateToSchoolDate = {
+                    navController.navigate(SchoolDateScreen)
+                },
+                navigateToClassImportByLoad = {
+                    navController.navigate(EasImportScreen)
+                },
+                navigateToDataManager = {
+                    navController.navigate(DataManagerScreen)
+                },
+                navigateToClassImportByPDF = {
+                    navController.navigate(IdentifyScreen)
+                },
+                navigateToLayoutManager = {
+                    navController.navigate(LayoutManagerScreen)
+                },
+                navigateToAppDetail = {
+
+                },
+                navigateUp = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable<SchoolDateScreen> {
+            SchoolDate(
+                onNavigateBack = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable<EasImportScreen>{
+            EasImport(
                 onNavigateToWeb = { universityUrl ->
                     navController.navigate(WebScreen(universityUrl = universityUrl))
+                },
+                onNavigateBack = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable<DataManagerScreen> {
+            DataManager(
+                navigateUp = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable<LayoutManagerScreen> {
+            LayoutManager(
+                onBack = {
+                    navController.navigateUp()
                 }
             )
         }

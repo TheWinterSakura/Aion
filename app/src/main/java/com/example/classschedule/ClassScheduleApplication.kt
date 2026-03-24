@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.classschedule.data.UserPreferencesRepository
 import com.example.classschedule.notifications.AlertManagerClassScheduleRepository
+import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 
 
 private const val START_DATE_NAME = "start_date"
@@ -33,5 +34,6 @@ class ClassScheduleApplication : Application() {
         container = AppDataContainer(this)
         userPreferencesRepository = UserPreferencesRepository(dataStore)
         workManagerClassScheduleRepository = AlertManagerClassScheduleRepository(this)
+        PDFBoxResourceLoader.init(applicationContext)
     }
 }

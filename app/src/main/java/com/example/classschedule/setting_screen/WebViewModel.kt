@@ -1,9 +1,10 @@
-package com.example.classschedule.screen
+package com.example.classschedule.setting_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.analytical_method.ParserFactory
 import com.example.classschedule.data.CourseRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -34,7 +35,7 @@ class SpiderViewModel(
                 }
                 _spiderStatus.value = "🎉 导入成功！共获取 ${courseList.size} 节课程！"
 
-                kotlinx.coroutines.delay(1000)
+                delay(1000)
                 onParseSuccess()
             } catch (e: Exception) {
                 e.printStackTrace()
