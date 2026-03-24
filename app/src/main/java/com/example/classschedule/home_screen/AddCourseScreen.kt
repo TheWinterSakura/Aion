@@ -46,7 +46,6 @@ fun AddCourse(
     navigationUp: () -> Unit,
     viewModel: AddCourseViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-
     var courseName by remember { mutableStateOf("") }
     var startWeekDate by remember { mutableStateOf("") }
     var endWeekDate by remember { mutableStateOf("") }
@@ -67,9 +66,15 @@ fun AddCourse(
     var expanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
-    val week = listOf(
-        "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-    )
+    val week = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+    val isFormValid = courseName.isNotBlank() &&
+            startWeekDate.isNotBlank() &&
+            endWeekDate.isNotBlank() &&
+            weekDay.isNotBlank() &&
+            courseTime.isNotBlank() &&
+            courseCampus.isNotBlank() &&
+            courseLocation.isNotBlank()
 
     Scaffold(
         topBar = {
@@ -77,10 +82,7 @@ fun AddCourse(
                 title = { Text(text = "添加课程") },
                 navigationIcon = {
                     IconButton(onClick = { navigationUp() }) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "返回"
-                        )
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 }
             )
@@ -106,19 +108,19 @@ fun AddCourse(
                         courseTotalStudyHours = courseTotalStudyHours,
                         courseCredit = courseCredit
                     )
-                    viewModel.addCourse(
-                        course = newCourse,
-                        context = context,
-                        navigationUp = { navigationUp() }
-                    )
+                    viewModel.addCourse(course = newCourse, context = context, navigationUp = { navigationUp() })
                 },
+                enabled = isFormValid,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
                     .height(50.dp),
                 shape = MaterialTheme.shapes.medium
             ) {
-                Text(text = "保存课程", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = if (isFormValid) "保存课程" else "请完善必填信息",
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
         }
     ) { innerPadding ->
@@ -133,18 +135,20 @@ fun AddCourse(
             Spacer(modifier = Modifier.height(4.dp))
 
             AddCourseItem(
-                label = "课程名称",
+                label = "课程名称 *",
                 value = courseName,
                 onValueChange = { courseName = it }
             )
+
             AddCourseItem(
-                label = "课程起始周 (数字)",
+                label = "课程起始周 (数字) *",
                 value = startWeekDate,
                 onValueChange = { startWeekDate = it },
                 keyboardType = KeyboardType.Number
             )
+
             AddCourseItem(
-                label = "课程结束周 (数字)",
+                label = "课程结束周 (数字) *",
                 value = endWeekDate,
                 onValueChange = { endWeekDate = it },
                 keyboardType = KeyboardType.Number
@@ -155,17 +159,16 @@ fun AddCourse(
                 onExpandedChange = { expanded = it }
             ) {
                 OutlinedTextField(
-                    value = weekDay.ifEmpty { "请选择课程在星期几" },
+                    value = weekDay.ifEmpty { "请选择课程在星期几 *" },
                     onValueChange = {},
                     readOnly = true,
-                    label = { Text("星期") },
+                    label = { Text("星期 *") },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier.menuAnchor().fillMaxWidth(),
                     shape = MaterialTheme.shapes.medium,
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent
+                        unfocusedBorderColor = if(weekDay.isEmpty()) Color.Gray else MaterialTheme.colorScheme.outline
                     )
                 )
                 ExposedDropdownMenu(
@@ -185,71 +188,37 @@ fun AddCourse(
             }
 
             AddCourseItem(
-                label = "课程时间",
+                label = "课程时间 *",
                 value = courseTime,
-                onValueChange = { courseTime = it }
+                onValueChange = { courseTime = it },
+                placeholder = "(1-4节)1-5周",
+                supportingText = "格式参考: (1-4节)1-5周"
             )
+
             AddCourseItem(
-                label = "课程校区",
+                label = "课程校区 *",
                 value = courseCampus,
                 onValueChange = { courseCampus = it }
             )
+
             AddCourseItem(
-                label = "课程地点",
+                label = "课程地点 *",
                 value = courseLocation,
                 onValueChange = { courseLocation = it }
             )
-            AddCourseItem(
-                label = "课程教师",
-                value = courseTeacher,
-                onValueChange = { courseTeacher = it }
-            )
-            AddCourseItem(
-                label = "教学班",
-                value = courseTeachingClass,
-                onValueChange = { courseTeachingClass = it }
-            )
-            AddCourseItem(
-                label = "教学班组成",
-                value = courseTeachingClassComposition,
-                onValueChange = { courseTeachingClassComposition = it }
-            )
-            AddCourseItem(
-                label = "考核方式",
-                value = courseAssessmentMethods,
-                onValueChange = { courseAssessmentMethods = it }
-            )
-            AddCourseItem(
-                label = "选课备注",
-                value = courseSelectionNotes,
-                onValueChange = { courseSelectionNotes = it }
-            )
-            AddCourseItem(
-                label = "课程学时组成",
-                value = courseHourComposition,
-                onValueChange = { courseHourComposition = it }
-            )
-            AddCourseItem(
-                label = "周学时",
-                value = courseWeekStudyHours,
-                onValueChange = { courseWeekStudyHours = it },
-                keyboardType = KeyboardType.Number
-            )
-            AddCourseItem(
-                label = "总学时",
-                value = courseTotalStudyHours,
-                onValueChange = { courseTotalStudyHours = it },
-                keyboardType = KeyboardType.Number
-            )
-            AddCourseItem(
-                label = "学分",
-                value = courseCredit,
-                onValueChange = { courseCredit = it },
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Done // 最后一个输入框，键盘显示"完成"
-            )
 
-            // 底部加一点留白，防止被 BottomBar 遮挡
+            Text(text = "选填信息", style = MaterialTheme.typography.labelLarge, color = Color.Gray)
+
+            AddCourseItem(label = "课程教师", value = courseTeacher, onValueChange = { courseTeacher = it })
+            AddCourseItem(label = "教学班", value = courseTeachingClass, onValueChange = { courseTeachingClass = it })
+            AddCourseItem(label = "教学班组成", value = courseTeachingClassComposition, onValueChange = { courseTeachingClassComposition = it })
+            AddCourseItem(label = "考核方式", value = courseAssessmentMethods, onValueChange = { courseAssessmentMethods = it })
+            AddCourseItem(label = "选课备注", value = courseSelectionNotes, onValueChange = { courseSelectionNotes = it })
+            AddCourseItem(label = "课程学时组成", value = courseHourComposition, onValueChange = { courseHourComposition = it })
+            AddCourseItem(label = "周学时", value = courseWeekStudyHours, onValueChange = { courseWeekStudyHours = it }, keyboardType = KeyboardType.Number)
+            AddCourseItem(label = "总学时", value = courseTotalStudyHours, onValueChange = { courseTotalStudyHours = it }, keyboardType = KeyboardType.Number)
+            AddCourseItem(label = "学分", value = courseCredit, onValueChange = { courseCredit = it }, keyboardType = KeyboardType.Number, imeAction = ImeAction.Done)
+
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -260,18 +229,21 @@ fun AddCourseItem(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier, // 暴露 Modifier 以便更好的复用
+    modifier: Modifier = Modifier,
     singleLine: Boolean = true,
     minLines: Int = 1,
     keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Next
+    imeAction: ImeAction = ImeAction.Next,
+    placeholder: String? = null,
+    supportingText: String? = null
 ) {
-    // 优化点：移除了外层毫无意义的 Row 嵌套，直接渲染 OutlinedTextField 性能更好
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
-        modifier = modifier.fillMaxWidth(), // 直接充满宽度
+        placeholder = placeholder?.let { { Text(it, color = Color.LightGray) } },
+        supportingText = supportingText?.let { { Text(it, style = MaterialTheme.typography.bodySmall) } },
+        modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.medium,
         singleLine = singleLine,
         minLines = minLines,
