@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.Course
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,8 +51,13 @@ fun ScheduleImportScreen(
     val apiKey by viewModel.apiKey.collectAsState()
 
     var inputApiKey by remember(apiKey) { mutableStateOf(apiKey.removePrefix("Bearer ")) }
-    var isApiCardExpanded by remember { mutableStateOf(apiKey.isBlank()) }
+    var isApiCardExpanded by remember { mutableStateOf(false) }
     var showFabMenu by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(200)
+        isApiCardExpanded = !apiKey.isNotBlank()
+    }
 
     val pickMedia =
         rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->

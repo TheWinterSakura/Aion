@@ -24,7 +24,8 @@ import com.example.classschedule.AppViewModelProvider
 fun ImportScheduleScreen(
     navigateUp: () -> Unit,
     universityUrl: String,
-    viewModel: SpiderViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: SpiderViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToHome:()-> Unit
 ) {
     val statusText by viewModel.spiderStatus.collectAsState()
 
@@ -51,7 +52,7 @@ fun ImportScheduleScreen(
                                 schoolName = "河北师范大学",
                                 rawHtml = htmlStr,
                                 onParseSuccess = {
-                                    navigateUp()
+                                    navigateToHome()
                                 }
                             )
                         }

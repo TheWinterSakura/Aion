@@ -110,7 +110,15 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                 navigateUp = {
                     navController.navigateUp()
                 },
-                universityUrl = args.universityUrl
+                universityUrl = args.universityUrl,
+                navigateToHome = {
+                    navController.navigate(HomeScreen){
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
             )
         }
 
