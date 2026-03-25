@@ -26,7 +26,7 @@ data class TextMessage(
 )
 
 data class TextChatRequest(
-    val model: String = "qwen3.5-35b-a3b",
+    val model: String = "qwen3.5-plus-2026-02-15",
     val messages: List<TextMessage>,
     val temperature: Double = 0.01,
 )

@@ -134,36 +134,57 @@ class IdentifyViewModel(
         return "data:image/jpeg;base64,$base64Str"
     }
 
-    fun parseScheduleImage(bitmap: Bitmap , apiKey: String) {
+    fun parseScheduleImage(bitmap: List<Bitmap>, apiKey: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, success = false)
+            _uiState.value =
+                _uiState.value.copy(isLoading = true, errorMessage = null, success = false)
+            val base64List = mutableStateListOf<String>()
+            val list = mutableStateListOf<ContentPart>()
+            list.add(
+                ContentPart(type = "text", text = promptImage)
+            )
             try {
-                val base64Image = bitmapToBase64(bitmap)
+                bitmap.forEach {
+                    base64List.add(bitmapToBase64(it))
+                }
+                base64List.forEach {
+                    list.add(ContentPart(type = "image_url" , image_url = ImageUrl(it)))
+                }
                 val messages = listOf(
-                    VisionMessage("system", listOf(ContentPart(type = "text", text = "你是一个精确的课表解析器，只输出JSON。"))),
-                    VisionMessage("user", listOf(
-                        ContentPart(type = "image_url", image_url = ImageUrl(base64Image)),
-                        ContentPart(type = "text", text = promptImage)
-                    ))
+                    VisionMessage(
+                        "system",
+                        listOf(
+                            ContentPart(
+                                type = "text",
+                                text = "你是一个精确的课表解析器，只输出JSON。"
+                            )
+                        )
+                    ),
+                    VisionMessage(
+                        "user", list
+                    )
                 )
 
-                val response = ClassScheduleNetWork.analyzeImage(apiKey, VisionRequest(messages = messages))
+                val response =
+                    ClassScheduleNetWork.analyzeImage(apiKey, VisionRequest(messages = messages))
                 val jsonResult = response.choices.firstOrNull()?.message?.content
 
                 handleJsonResult(jsonResult)
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "解析失败: ${e.message}")
+                _uiState.value =
+                    _uiState.value.copy(isLoading = false, errorMessage = "解析失败: ${e.message}")
             }
         }
     }
 
-    fun parseScheduleFromPdf(context: Context, uri: Uri , apiKey: String) {
+    fun parseScheduleFromPdf(context: Context, uri: Uri, apiKey: String) {
         PDFBoxResourceLoader.init(context)
 
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, success = false)
+            _uiState.value =
+                _uiState.value.copy(isLoading = true, errorMessage = null, success = false)
 
             try {
                 val pdfText = context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -174,18 +195,24 @@ class IdentifyViewModel(
                 }
 
                 if (!pdfText.isNullOrBlank()) {
-                    processTextAnalysis(pdfText , apiKey = apiKey )
+                    processTextAnalysis(pdfText, apiKey = apiKey)
                 } else {
-                    _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "未能从 PDF 中读取到文字内容")
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = "未能从 PDF 中读取到文字内容"
+                    )
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "PDF读取失败: ${e.message}")
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = "PDF读取失败: ${e.message}"
+                )
             }
         }
     }
 
-    private suspend fun processTextAnalysis(classText: String , apiKey: String) {
+    private suspend fun processTextAnalysis(classText: String, apiKey: String) {
         try {
             val messages = listOf(
                 TextMessage(
@@ -198,14 +225,16 @@ class IdentifyViewModel(
                 )
             )
 
-            val response = ClassScheduleNetWork.analyzeText(apiKey, TextChatRequest(messages = messages))
+            val response =
+                ClassScheduleNetWork.analyzeText(apiKey, TextChatRequest(messages = messages))
             val jsonResult = response.choices.firstOrNull()?.message?.content
 
             handleJsonResult(jsonResult)
 
         } catch (e: Exception) {
             e.printStackTrace()
-            _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "解析失败: ${e.message}")
+            _uiState.value =
+                _uiState.value.copy(isLoading = false, errorMessage = "解析失败: ${e.message}")
         }
     }
 
@@ -226,17 +255,27 @@ class IdentifyViewModel(
                         }
                         _uiState.value = _uiState.value.copy(isLoading = false, success = true)
                     } else {
-                        _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "未识别到课程信息")
+                        _uiState.value = _uiState.value.copy(
+                            isLoading = false,
+                            errorMessage = "未识别到课程信息"
+                        )
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "JSON解析失败: 格式异常")
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = "JSON解析失败: 格式异常"
+                    )
                 }
             } else {
-                _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "大模型未返回有效的课表格式")
+                _uiState.value = _uiState.value.copy(
+                    isLoading = false,
+                    errorMessage = "大模型未返回有效的课表格式"
+                )
             }
         } else {
-            _uiState.value = _uiState.value.copy(isLoading = false, errorMessage = "网络请求失败，未获取到内容")
+            _uiState.value =
+                _uiState.value.copy(isLoading = false, errorMessage = "网络请求失败，未获取到内容")
         }
     }
 
@@ -260,7 +299,7 @@ class IdentifyViewModel(
 
     fun changeApiKey(
         apiKey: String
-    ){
+    ) {
         viewModelScope.launch {
             userRepository.saveApiKey(
                 apiKey = apiKey

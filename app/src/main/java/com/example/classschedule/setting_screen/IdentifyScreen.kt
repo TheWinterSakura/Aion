@@ -46,7 +46,8 @@ fun ScheduleImportScreen(
     onNavigateUp: () -> Unit
 ) {
     val context = LocalContext.current
-    var selectedUri by remember { mutableStateOf<Uri?>(null) }
+    val selectedUri = remember { mutableStateListOf<Uri>() }
+    val selectedBitmap = remember { mutableStateListOf<Bitmap>() }
     val uiState by viewModel.uiState.collectAsState()
     val apiKey by viewModel.apiKey.collectAsState()
 
@@ -60,16 +61,18 @@ fun ScheduleImportScreen(
     }
 
     val pickMedia =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-            uri?.let {
-                selectedUri = it
-                uriToBitmap(context, it)?.let { bitmap ->
-                    viewModel.parseScheduleImage(
-                        bitmap,
-                        apiKey
-                    )
+        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uri ->
+            selectedUri.clear()
+            selectedUri.addAll(uri)
+            uri.forEach { it ->
+                it.let { uri ->
+                    uriToBitmap(
+                        uri = uri,
+                        context = context
+                    ).let { bitmap -> selectedBitmap.add(bitmap!!) }
                 }
             }
+            viewModel.parseScheduleImage(selectedBitmap, apiKey)
         }
     val pdfPickerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -316,15 +319,17 @@ fun ScheduleImportScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     if (selectedUri != null) {
-                        AsyncImage(
-                            model = selectedUri,
-                            contentDescription = null,
-                            contentScale = ContentScale.Fit,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(16.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                        )
+                        selectedUri.forEach { uri ->
+                            AsyncImage(
+                                model = uri,
+                                contentDescription = null,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(16.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                            )
+                        }
                     } else {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Icon(
