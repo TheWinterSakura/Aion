@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -23,6 +24,7 @@ class UserPreferencesRepository(
     val IS_GRID_LAYOUT = booleanPreferencesKey("is_grid_layout")
 
     val API_KEY = stringPreferencesKey("api_key")
+    val COURSE_NUMBER_TOTAL = intPreferencesKey("course_number_total")
 
 
     val commencementDate: Flow<String> = dataStore.data
@@ -35,7 +37,7 @@ class UserPreferencesRepository(
             }
         }
         .map { preferences ->
-            preferences[COMMENCEMENT_DATE] ?: ""
+            preferences[COMMENCEMENT_DATE] ?: "2026-03-02"
         }
 
     val allWeek: Flow<String> = dataStore.data
@@ -87,6 +89,17 @@ class UserPreferencesRepository(
             preferences[API_KEY] ?: ""
         }
 
+    val courseNumberTotal: Flow<Int> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.e(TAG, "Error reading preferences.", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }.map { preferences ->
+            preferences[COURSE_NUMBER_TOTAL] ?: 20
+        }
     suspend fun saveStartDatePreference(commencementDate: String) {
         dataStore.edit { preferences ->
             preferences[this.COMMENCEMENT_DATE] = commencementDate
@@ -114,6 +127,12 @@ class UserPreferencesRepository(
     suspend fun saveApiKey(apiKey: String){
         dataStore.edit { preferences ->
             preferences[this.API_KEY] = apiKey
+        }
+    }
+
+    suspend fun saveCourseNumberTotal(courseTotal: Int){
+        dataStore.edit { preferences ->
+            preferences[this.COURSE_NUMBER_TOTAL] = courseTotal
         }
     }
 

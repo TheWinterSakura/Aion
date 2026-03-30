@@ -1,5 +1,6 @@
 package com.example.classschedule
 
+import EditScheduleScreen
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -153,6 +154,9 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                 },
                 navigateUp = {
                     navController.navigateUp()
+                },
+                navigateToCourseTimeScreen = {
+                    navController.navigate(CourseTimeScreen)
                 }
             )
         }
@@ -198,6 +202,10 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                     navController.navigateUp()
                 }
             )
+        }
+
+        composable<CourseTimeScreen> {
+            EditScheduleScreen()
         }
 
     }

@@ -96,6 +96,7 @@ fun CourseDetail(
     }
 
     val course by viewModel._course.collectAsState()
+    val courseTimeList by viewModel.courseTimeList.collectAsState()
     val context = LocalContext.current
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
@@ -194,7 +195,7 @@ fun CourseDetail(
                     viewModel.addSchedule(
                         context = context,
                         title = course?.courseName ?: "未查询到课程名称",
-                        location = course?.courseLocation?.split(' ')[1] ?: "未查询到课程地点",
+                        location = course?.courseLocation?.split(' ')?.getOrNull(1) ?: "未查询到课程地点",
                         weekDate = weekDate,
                         dayDate = dayDate,
                         startDate = startDate,
@@ -229,7 +230,7 @@ fun CourseDetail(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Text(
-                    text = course?.courseName ?: "Unknown Course",
+                    text = course?.courseName ?: "未知课程",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -249,7 +250,8 @@ fun CourseDetail(
                             course?.courseTime?.substringAfter('(')?.substringBefore(')') ?: ""
                         } ( ${
                             getClassTime(
-                                course?.courseTime ?: ""
+                                course?.courseTime ?: "",
+                                courseTimeList
                             )
                         } )"
                     )

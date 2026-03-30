@@ -45,3 +45,6 @@ object LayoutManagerScreen
 @Serializable
 object AppDetailScreen
 
+@Serializable
+object CourseTimeScreen
+

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.Course
 import com.example.classschedule.data.CourseRepository
+import com.example.classschedule.data.schedule.ScheduleRepository
 import com.example.classschedule.notifications.AlertManagerClassScheduleRepository
 import com.example.classschedule.notifications.Notification
 import com.example.classschedule.tools.getClassTime
@@ -29,9 +30,12 @@ import java.time.format.DateTimeFormatter
 class CourseDetailViewModel(
     private val repository: CourseRepository,
     private val alertManager: AlertManagerClassScheduleRepository,
+    private val courseTimeRepository: ScheduleRepository
 ) : ViewModel() {
 
     private val _courseId = MutableStateFlow(0)
+
+    val courseTimeList = courseTimeRepository.getAllScheduleFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val _course: StateFlow<Course?> = _courseId
@@ -78,7 +82,7 @@ class CourseDetailViewModel(
                     startDate = startDate,
                     weekDate = weekDate,
                     dayDate = dayDate,
-                    startTime = getClassTime(course.courseTime).substringBefore("-"),
+                    startTime = getClassTime(course.courseTime,courseTimeList.value).substringBefore("-"),
                     context = context
                 )
             }else{
@@ -105,7 +109,7 @@ class CourseDetailViewModel(
     ){
         val scheduleTime = getDayAfterWeeks(startDateStr = startDate, weeksPassed = weekDate.toLong(), dayOfWeek = dayDate)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        val startTime = getClassTime(courseTime).substringBefore("-")
+        val startTime = getClassTime(courseTime, allCourseTime = courseTimeList.value).substringBefore("-")
         if (startTime.split(':')[0].length <= 1 && startTime.split(':')[1].length <= 1){
             "时间格式错误".showToast()
             return

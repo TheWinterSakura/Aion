@@ -1,0 +1,13 @@
+package com.example.classschedule.data.schedule
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "schedule")
+data class Schedule(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val courseNumber: Int,
+    val startTime: String,
+    val endTime: String
+)

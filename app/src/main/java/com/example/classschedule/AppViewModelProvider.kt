@@ -20,7 +20,8 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             HomeViewModel(
                 repository = application.container.courseRepository,
-                repositoryPreferences = application.userPreferencesRepository
+                repositoryPreferences = application.userPreferencesRepository,
+                courseRepository = application.container.scheduleRepository
             )
         }
         initializer {
@@ -32,6 +33,7 @@ object AppViewModelProvider {
             CourseDetailViewModel(
                 repository = application.container.courseRepository,
                 alertManager = application.workManagerClassScheduleRepository,
+                courseTimeRepository = application.container.scheduleRepository
             )
         }
         initializer {

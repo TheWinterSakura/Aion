@@ -52,7 +52,8 @@ fun SettingHome(
     navigateToClassImportByPDF: () -> Unit,
     navigateToLayoutManager: () -> Unit,
     navigateToAppDetail: () -> Unit,
-    navigateUp: () -> Unit
+    navigateUp: () -> Unit,
+    navigateToCourseTimeScreen:()-> Unit
 ) {
     val context = LocalContext.current
     val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
@@ -93,6 +94,11 @@ fun SettingHome(
                     icon = Icons.Outlined.DateRange,
                     title = "学期时间设置",
                     onClick = navigateToSchoolDate
+                )
+                SettingItem(
+                    icon = Icons.Outlined.DateRange,
+                    title = "课程时间表设置",
+                    onClick = navigateToCourseTimeScreen
                 )
             }
 

@@ -23,6 +23,12 @@ class SchoolDateViewModel(
         initialValue = "1"
     )
 
+    val totalCourse = repository.courseNumberTotal.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
+        initialValue = 20
+    )
+
     fun saveCommencementDate(commencementDate: String) {
         viewModelScope.launch {
             repository.saveStartDatePreference(commencementDate)
@@ -32,6 +38,12 @@ class SchoolDateViewModel(
     fun saveAllWeek(allWeek: String) {
         viewModelScope.launch {
             repository.saveAllWeek(allWeek)
+        }
+    }
+
+    fun saveTotalCourse(totalCourse: String){
+        viewModelScope.launch {
+            repository.saveCourseNumberTotal(totalCourse.toInt())
         }
     }
 

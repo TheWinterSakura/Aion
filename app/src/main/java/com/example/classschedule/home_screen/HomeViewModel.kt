@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.CourseRepository
 import com.example.classschedule.data.UserPreferencesRepository
+import com.example.classschedule.data.schedule.ScheduleRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,7 +20,8 @@ import java.time.temporal.ChronoUnit
 
 class HomeViewModel(
     private val repository: CourseRepository,
-    private val repositoryPreferences: UserPreferencesRepository
+    private val repositoryPreferences: UserPreferencesRepository,
+    private val courseRepository: ScheduleRepository
 ) : ViewModel() {
 
     private val _week = MutableStateFlow<Int>(1)
@@ -27,6 +29,8 @@ class HomeViewModel(
     val hasLoad = _hasLoad.asStateFlow()
     private val _isTimerFinished = MutableStateFlow<Boolean>(false)
     val isTimerFinished = _isTimerFinished.asStateFlow()
+
+    val allCourseTime = courseRepository.getAllScheduleFlow()
 
 
     val isGridLayout = repositoryPreferences.isGridLayout.stateIn(

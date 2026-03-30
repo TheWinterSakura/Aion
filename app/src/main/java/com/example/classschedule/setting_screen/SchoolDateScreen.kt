@@ -53,6 +53,7 @@ fun SchoolDate(
 ) {
     val startDate by viewModel.startDate.collectAsState()
     val allWeek by viewModel.allWeek.collectAsState()
+    val totalCourse by viewModel.totalCourse.collectAsState()
 
     Scaffold(
         topBar = {
@@ -70,8 +71,10 @@ fun SchoolDate(
             TermSettingsContent(
                 startDate = startDate,
                 allWeek = allWeek,
+                totalCourseNumber = totalCourse,
                 onSaveStartDate = { viewModel.saveCommencementDate(it) },
-                onSaveAllWeek = { viewModel.saveAllWeek(it) }
+                onSaveAllWeek = { viewModel.saveAllWeek(it) },
+                onSaveAllCourseNumber = {viewModel.saveTotalCourse(it)},
             )
         }
     }
@@ -100,11 +103,14 @@ private fun TermSettingsContent(
     startDate: String,
     allWeek: String,
     onSaveStartDate: (String) -> Unit,
-    onSaveAllWeek: (String) -> Unit
+    onSaveAllWeek: (String) -> Unit,
+    totalCourseNumber: Int,
+    onSaveAllCourseNumber:(String)-> Unit
 ) {
     var newStartDate by remember { mutableStateOf("") }
     var newAllWeek by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
+    var newTotalCourse by remember { mutableStateOf("") }
     val datePickerState = rememberDatePickerState()
 
     val dateInteractionSource = remember { MutableInteractionSource() }
@@ -178,6 +184,33 @@ private fun TermSettingsContent(
             colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
             Icon(Icons.Default.Check, "保存总周数", tint = MaterialTheme.colorScheme.onPrimaryContainer)
+        }
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        OutlinedTextField(
+            value = newTotalCourse,
+            onValueChange = { newTotalCourse = it.filter { char -> char.isDigit() } },
+            label = { Text("一天课程节数字") },
+            placeholder = { Text("例如: 20") },
+            supportingText = { Text("当前: ${if (totalCourseNumber == 0) { "未设置" } else {
+                totalCourseNumber
+            } }") },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.weight(1f)
+        )
+
+        IconButton(
+            onClick = { if (newTotalCourse.isNotBlank()) onSaveAllCourseNumber(newTotalCourse) },
+            enabled = newTotalCourse.isNotBlank(),
+            colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            Icon(Icons.Default.Check, "保存总节数", tint = MaterialTheme.colorScheme.onPrimaryContainer)
         }
     }
 }

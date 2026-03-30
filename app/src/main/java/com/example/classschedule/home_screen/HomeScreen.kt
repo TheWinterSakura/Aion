@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.CourseSimple
+import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.tools.getClassTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -56,6 +57,7 @@ fun HomeScreen(
 ) {
     val scope = rememberCoroutineScope()
     val courseList by viewModel.courseList.collectAsState()
+    val courseTimeList by viewModel.allCourseTime.collectAsState()
 
     val allWeeks by viewModel.allWeek.collectAsState()
     var expanded by remember { mutableStateOf(false) }
@@ -219,7 +221,8 @@ fun HomeScreen(
                                     currentDayString,
                                     startDate
                                 )
-                            }
+                            },
+                            courseTimeList = courseTimeList
                         )
                     }
                 }
@@ -236,7 +239,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun DailyCourseList(courseList: List<CourseSimple>, navigateToCourseDetails: (Int) -> Unit) {
+fun DailyCourseList(courseList: List<CourseSimple>, navigateToCourseDetails: (Int) -> Unit , courseTimeList: List<Schedule>) {
     if (courseList.isEmpty()) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -258,7 +261,7 @@ fun DailyCourseList(courseList: List<CourseSimple>, navigateToCourseDetails: (In
             items(items = courseList, key = { item -> item.id }) { item ->
                 ScheduleCard(
                     courseName = item.courseName,
-                    courseTime = getClassTime(item.courseTime),
+                    courseTime = getClassTime(item.courseTime, allCourseTime = courseTimeList ),
                     courseLocation = item.courseLocation,
                     onClick = { navigateToCourseDetails(item.id) }
                 )
