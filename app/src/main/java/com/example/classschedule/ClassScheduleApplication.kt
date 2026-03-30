@@ -8,7 +8,7 @@ import com.example.classschedule.data.AppContainer
 import com.example.classschedule.data.AppDataContainer
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.classschedule.data.UserPreferencesRepository
+import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.notifications.AlertManagerClassScheduleRepository
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 

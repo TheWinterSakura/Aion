@@ -17,9 +17,15 @@ interface ScheduleDao {
     @Update
     suspend fun update(schedule: Schedule)
 
+    @Update
+    suspend fun updateAll(schedules: List<Schedule>)
+
     @Delete
     suspend fun delete(schedule: Schedule)
 
     @Query("SELECT * FROM schedule")
     fun getAllScheduleFlow(): Flow<List<Schedule>>
+
+    @Query("DELETE FROM schedule WHERE  courseNumber = :courseNumber")
+    suspend fun deleteByCourseNumber(courseNumber: Int)
 }

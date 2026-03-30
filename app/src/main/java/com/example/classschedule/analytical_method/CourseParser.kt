@@ -1,6 +1,6 @@
 package com.example.classschedule.analytical_method
 
-import com.example.classschedule.data.Course
+import com.example.classschedule.data.course.Course
 
 interface CourseParser {
     val schoolId: String

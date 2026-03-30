@@ -7,8 +7,8 @@ import android.provider.CalendarContract
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.classschedule.data.Course
-import com.example.classschedule.data.CourseRepository
+import com.example.classschedule.data.course.Course
+import com.example.classschedule.data.course.CourseRepository
 import com.example.classschedule.data.schedule.ScheduleRepository
 import com.example.classschedule.notifications.AlertManagerClassScheduleRepository
 import com.example.classschedule.notifications.Notification

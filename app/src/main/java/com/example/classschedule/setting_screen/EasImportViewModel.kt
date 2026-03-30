@@ -3,7 +3,7 @@ package com.example.classschedule.setting_screen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.classschedule.data.UserPreferencesRepository
+import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.school.University
 import com.example.classschedule.school.loadUniversitiesFromAssets
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +20,7 @@ class EasImportViewModel(
 
     val universityUrl = repository.universityUrl.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.Companion.WhileSubscribed(5_000),
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = ""
     )
 

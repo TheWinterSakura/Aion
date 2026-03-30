@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
-import com.example.classschedule.data.CourseSimple
+import com.example.classschedule.data.course.CourseSimple
 import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.tools.getClassTime
 import kotlinx.coroutines.delay
@@ -58,6 +58,7 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val courseList by viewModel.courseList.collectAsState()
     val courseTimeList by viewModel.allCourseTime.collectAsState()
+    val totalCourseNumber by viewModel.totalCourseNumber.collectAsState()
 
     val allWeeks by viewModel.allWeek.collectAsState()
     var expanded by remember { mutableStateOf(false) }
@@ -201,7 +202,8 @@ fun HomeScreen(
                         weekDays = viewModel.week,
                         navigateToCourseDetails = { id, weekDay ->
                             navigateToCourseDetails(id, currentWeek.toString(), weekDay, startDate)
-                        }
+                        },
+                        totalCourseNUmber = totalCourseNumber
                     )
                 } else {
                     HorizontalPager(
@@ -342,11 +344,12 @@ fun ScheduleCard(
 fun WeeklyGridLayout(
     courseList: List<CourseSimple>,
     weekDays: List<String>,
-    navigateToCourseDetails: (Int, String) -> Unit
+    navigateToCourseDetails: (Int, String) -> Unit,
+    totalCourseNUmber: Int = 20
 ) {
     val timeColumnWidth = 36.dp
     val sectionHeight = 65.dp
-    val maxSections = 13
+    val maxSections = totalCourseNUmber
 
     val cardColors = listOf(
         Color(0xFFE3F2FD), Color(0xFFF3E5F5), Color(0xFFE8F5E9),

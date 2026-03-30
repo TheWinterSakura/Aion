@@ -4,8 +4,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.classschedule.data.CourseRepository
-import com.example.classschedule.data.UserPreferencesRepository
+import com.example.classschedule.data.course.CourseRepository
+import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.data.schedule.ScheduleRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,6 +49,12 @@ class HomeViewModel(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
         initialValue = ""
+    )
+
+    val totalCourseNumber = repositoryPreferences.courseNumberTotal.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = 20
     )
 
     val week = listOf(

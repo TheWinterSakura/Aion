@@ -3,7 +3,7 @@ package com.example.classschedule.setting_screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.analytical_method.ParserFactory
-import com.example.classschedule.data.CourseRepository
+import com.example.classschedule.data.course.CourseRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

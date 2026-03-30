@@ -1,4 +1,4 @@
-package com.example.classschedule.data
+package com.example.classschedule.data.course
 
 import kotlinx.coroutines.flow.Flow
 

@@ -1,4 +1,4 @@
-package com.example.classschedule.data
+package com.example.classschedule.data.course
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

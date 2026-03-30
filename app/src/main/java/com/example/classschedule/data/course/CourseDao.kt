@@ -1,4 +1,4 @@
-package com.example.classschedule.data
+package com.example.classschedule.data.course
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-
 
 @Dao
 interface CourseDao {

@@ -1,6 +1,26 @@
 package com.example.classschedule.setting_screen
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.classschedule.data.schedule.Schedule
+import com.example.classschedule.data.schedule.ScheduleRepository
+import kotlinx.coroutines.launch
 
-class CourseTimeViewModel: ViewModel() {
+class CourseTimeViewModel(
+    private val scheduleRepository: ScheduleRepository
+) : ViewModel() {
+
+    val scheduleList = scheduleRepository.getAllScheduleFlow()
+
+    fun insertCourseTime(schedule: Schedule) {
+        viewModelScope.launch {
+            scheduleRepository.insertCourseTime(schedule)
+        }
+    }
+
+    fun updateAll(scheduleList: List<Schedule>) {
+        viewModelScope.launch {
+            scheduleRepository.updateAll(scheduleList)
+        }
+    }
 }

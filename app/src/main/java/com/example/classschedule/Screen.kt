@@ -46,5 +46,5 @@ object LayoutManagerScreen
 object AppDetailScreen
 
 @Serializable
-object CourseTimeScreen
+data class CourseTimeScreen(val totalCourseNumber: Int)
 

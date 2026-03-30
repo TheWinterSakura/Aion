@@ -113,7 +113,7 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                 },
                 universityUrl = args.universityUrl,
                 navigateToHome = {
-                    navController.navigate(HomeScreen){
+                    navController.navigate(HomeScreen) {
                         popUpTo(navController.graph.id) {
                             inclusive = true
                         }
@@ -155,8 +155,8 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                 navigateUp = {
                     navController.navigateUp()
                 },
-                navigateToCourseTimeScreen = {
-                    navController.navigate(CourseTimeScreen)
+                navigateToCourseTimeScreen = { totalCourseNumber ->
+                    navController.navigate(CourseTimeScreen(totalCourseNumber))
                 }
             )
         }
@@ -169,7 +169,7 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
             )
         }
 
-        composable<EasImportScreen>{
+        composable<EasImportScreen> {
             EasImport(
                 onNavigateToWeb = { universityUrl ->
                     navController.navigate(WebScreen(universityUrl = universityUrl))
@@ -204,8 +204,14 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
             )
         }
 
-        composable<CourseTimeScreen> {
-            EditScheduleScreen()
+        composable<CourseTimeScreen> { args ->
+            val backStackEntry = args.toRoute<CourseTimeScreen>()
+            EditScheduleScreen(
+                navigateUp = {
+                    navController.navigateUp()
+                },
+                totalCourseNumber = backStackEntry.totalCourseNumber
+            )
         }
 
     }

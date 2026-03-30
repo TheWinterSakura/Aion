@@ -3,8 +3,8 @@ package com.example.classschedule.home_screen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.classschedule.data.Course
-import com.example.classschedule.data.CourseRepository
+import com.example.classschedule.data.course.Course
+import com.example.classschedule.data.course.CourseRepository
 import com.example.classschedule.tools.showToast
 import kotlinx.coroutines.launch
 

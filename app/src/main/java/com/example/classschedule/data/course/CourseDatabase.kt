@@ -1,4 +1,4 @@
-package com.example.classschedule.data
+package com.example.classschedule.data.course
 
 import android.content.Context
 import androidx.room.Database

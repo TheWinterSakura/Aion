@@ -1,6 +1,6 @@
 package com.example.classschedule.retrofit.model
 
-import com.example.classschedule.data.Course
+import com.example.classschedule.data.course.Course
 
 
 data class CourseWrapper(val courses: List<Course>)

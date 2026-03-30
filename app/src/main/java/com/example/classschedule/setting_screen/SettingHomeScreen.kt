@@ -34,6 +34,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +44,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.classschedule.AppViewModelProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,10 +57,13 @@ fun SettingHome(
     navigateToLayoutManager: () -> Unit,
     navigateToAppDetail: () -> Unit,
     navigateUp: () -> Unit,
-    navigateToCourseTimeScreen:()-> Unit
+    navigateToCourseTimeScreen:(Int)-> Unit,
+    viewModel: SettingHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
     val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
+    val totalCourseNumber by viewModel.totalCourse.collectAsState()
+
 
     Scaffold(
         topBar = {
@@ -98,7 +105,9 @@ fun SettingHome(
                 SettingItem(
                     icon = Icons.Outlined.DateRange,
                     title = "课程时间表设置",
-                    onClick = navigateToCourseTimeScreen
+                    onClick = {
+                        navigateToCourseTimeScreen(totalCourseNumber)
+                    }
                 )
             }
 

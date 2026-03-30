@@ -5,24 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
-class LayOutManagerViewModel(
-    private val repository: UserPreferencesRepository,
+class SettingHomeViewModel(
+    private val preferenceRepository: UserPreferencesRepository,
 ): ViewModel() {
 
-
-    val isGridLayout = repository.isGridLayout.stateIn(
+    val totalCourse = preferenceRepository.courseNumberTotal.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = false
+        initialValue = 2
     )
 
-    fun saveIsGridLayout(
-        isGridLayout: Boolean
-    ) {
-        viewModelScope.launch {
-            repository.saveGridLayout(isGridLayout = isGridLayout)
-        }
-    }
 }

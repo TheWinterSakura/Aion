@@ -2,7 +2,7 @@ package com.example.classschedule.setting_screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.classschedule.data.CourseRepository
+import com.example.classschedule.data.course.CourseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 

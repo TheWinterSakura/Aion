@@ -1,11 +1,13 @@
 package com.example.classschedule.data
 
 import android.content.Context
+import com.example.classschedule.data.course.CourseDatabase
+import com.example.classschedule.data.course.CourseRepository
+import com.example.classschedule.data.course.OfflineCourseRepository
 import com.example.classschedule.data.schedule.OfflineScheduleRepository
 import com.example.classschedule.data.schedule.ScheduleDatabase
 import com.example.classschedule.data.schedule.ScheduleRepository
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
 

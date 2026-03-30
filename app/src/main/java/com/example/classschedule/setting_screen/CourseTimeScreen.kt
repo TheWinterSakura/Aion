@@ -1,29 +1,77 @@
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Schedule
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimeInput
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberTimePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.schedule.Schedule
+import com.example.classschedule.setting_screen.CourseTimeViewModel
+import com.example.classschedule.tools.showToast
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditScheduleScreen(initialData: List<Schedule> = emptyList()) {
-    val scheduleList = remember {
-        mutableStateListOf<Schedule>().apply {
-            if (initialData.isNotEmpty()) addAll(initialData)
-            else repeat(50) { i -> add(Schedule(courseNumber = i + 1, startTime = "00:00", endTime = "00:00")) }
+fun EditScheduleScreen(
+    viewModel: CourseTimeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateUp: () -> Unit,
+    totalCourseNumber: Int = 20
+) {
+    val initialData by viewModel.scheduleList.collectAsState()
+
+    val scheduleList = remember { mutableStateListOf<Schedule>() }
+
+    LaunchedEffect(initialData) {
+        if (initialData.isNotEmpty()) {
+            scheduleList.clear()
+            scheduleList.addAll(initialData)
+        } else if (scheduleList.isEmpty()) {
+            repeat(totalCourseNumber) { i ->
+                scheduleList.add(
+                    Schedule(courseNumber = i + 1, startTime = "00:00", endTime = "00:00")
+                )
+            }
         }
     }
 
@@ -35,14 +83,33 @@ fun EditScheduleScreen(initialData: List<Schedule> = emptyList()) {
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("编辑时间表", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
-                navigationIcon = { IconButton(onClick = { }) { Icon(Icons.Default.ArrowBack, null) } },
-                actions = { TextButton(onClick = { /* 保存 */ }) { Text("保存") } }
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navigateUp()
+                    }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null) }
+                },
+                actions = {
+                    TextButton(onClick = {
+                        if (initialData.isNotEmpty()){
+                            viewModel.updateAll(scheduleList = scheduleList)
+                            "修改成功".showToast()
+                        }else{
+                            scheduleList.forEach { schedule ->
+                                viewModel.insertCourseTime(schedule)
+                            }
+                            "添加成功".showToast()
+                        }
+                        navigateUp()
+                    }) { Text("保存") }
+                }
             )
         },
         containerColor = Color(0xFFF7F8FA)
     ) { padding ->
         LazyColumn(
-            modifier = Modifier.padding(padding).fillMaxSize(),
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -53,7 +120,7 @@ fun EditScheduleScreen(initialData: List<Schedule> = emptyList()) {
                         .padding(bottom = 10.dp)
                 ) {
                     Text(
-                        text = "要用多少节就调整多少节的时间，多余的节数忽略即可。如果想修改课表显示的节数，请去设置课表数据中的「一天课程节数」",
+                        text = "要用多少节就调整多少节的时间，多余的节数忽略即可。如果想修改课表显示的节数，请去设置当中的学期时间设置中的「一天课程节数」",
                         fontSize = 14.sp,
                         color = Color(0xFF666666),
                         lineHeight = 20.sp
@@ -68,7 +135,10 @@ fun EditScheduleScreen(initialData: List<Schedule> = emptyList()) {
                 }
             }
 
-            itemsIndexed(scheduleList) { index, item ->
+            itemsIndexed(
+                items = scheduleList,
+                key = { _, item -> item.courseNumber }
+            ) { index, item ->
                 ScheduleItemRow(
                     schedule = item,
                     onStartClick = { editingIndex = index; isEditingStart = true; showPicker = true },
@@ -90,7 +160,8 @@ fun EditScheduleScreen(initialData: List<Schedule> = emptyList()) {
             onConfirm = { hour, min ->
                 val timeStr = formatTimeInt(hour, min)
                 val old = scheduleList[editingIndex]
-                scheduleList[editingIndex] = if (isEditingStart) old.copy(startTime = timeStr) else old.copy(endTime = timeStr)
+                scheduleList[editingIndex] =
+                    if (isEditingStart) old.copy(startTime = timeStr) else old.copy(endTime = timeStr)
                 showPicker = false
             }
         )
@@ -106,7 +177,11 @@ fun EnhancedTimePickerDialog(
     onDismiss: () -> Unit,
     onConfirm: (Int, Int) -> Unit
 ) {
-    val state = rememberTimePickerState(initialHour = initialHour, initialMinute = initialMinute, is24Hour = true)
+    val state = rememberTimePickerState(
+        initialHour = initialHour,
+        initialMinute = initialMinute,
+        is24Hour = true
+    )
 
     var showingPickerMode by remember { mutableStateOf(true) }
 
@@ -122,10 +197,14 @@ fun EnhancedTimePickerDialog(
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -153,7 +232,9 @@ fun EnhancedTimePickerDialog(
 @Composable
 fun ScheduleItemRow(schedule: Schedule, onStartClick: () -> Unit, onEndClick: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text("第 ${schedule.courseNumber} 节", modifier = Modifier.weight(1f), fontSize = 16.sp)
@@ -171,7 +252,9 @@ fun TimeCapsule(text: String, onClick: () -> Unit) {
         shape = RoundedCornerShape(20.dp),
         color = Color.White,
         tonalElevation = 1.dp,
-        modifier = Modifier.width(95.dp).height(40.dp)
+        modifier = Modifier
+            .width(95.dp)
+            .height(40.dp)
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(text = text, fontSize = 15.sp, fontWeight = FontWeight.Medium)

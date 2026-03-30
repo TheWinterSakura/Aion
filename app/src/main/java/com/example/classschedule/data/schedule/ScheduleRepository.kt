@@ -1,7 +1,6 @@
 package com.example.classschedule.data.schedule
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -14,7 +13,12 @@ interface ScheduleRepository {
 
     suspend fun delete(schedule: Schedule)
 
+    suspend fun updateAll(scheduleList: List<Schedule>)
+
     fun getAllScheduleFlow(): StateFlow<List<Schedule>>
+
+    suspend fun deleteByCourseNumber(courseNumber: Int)
+
 }
 
 class OfflineScheduleRepository(
@@ -35,4 +39,8 @@ class OfflineScheduleRepository(
             started = SharingStarted.Eagerly,
             initialValue = emptyList()
         )
+
+    override suspend fun updateAll(scheduleList: List<Schedule>) = scheduleDao.updateAll(scheduleList)
+
+    override suspend fun deleteByCourseNumber(courseNumber: Int) = scheduleDao.deleteByCourseNumber(courseNumber)
 }

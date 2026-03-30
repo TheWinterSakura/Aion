@@ -8,9 +8,9 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.classschedule.data.Course
-import com.example.classschedule.data.CourseRepository
-import com.example.classschedule.data.UserPreferencesRepository
+import com.example.classschedule.data.course.Course
+import com.example.classschedule.data.course.CourseRepository
+import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.retrofit.ClassScheduleNetWork
 import com.example.classschedule.retrofit.model.ContentPart
 import com.example.classschedule.retrofit.model.CourseWrapper
@@ -47,7 +47,7 @@ class IdentifyViewModel(
     private val gson = Gson()
     val apiKey = userRepository.apiKey.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.Companion.WhileSubscribed(5_000),
+        started = SharingStarted.WhileSubscribed(5_000),
         initialValue = ""
     )
 

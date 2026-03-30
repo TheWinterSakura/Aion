@@ -38,7 +38,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
-import com.example.classschedule.data.Course
+import com.example.classschedule.data.course.Course
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
