@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -50,15 +51,19 @@ fun LayoutManager(
             )
         }
     ) { padding ->
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)) {
 
-        LayoutManagementSection(
-            isGridLayout = isGridLayout,
-            onLayoutChange = { viewModel.saveIsGridLayout(it) },
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
-        )
+            LayoutManagementSection(
+                isGridLayout = isGridLayout,
+                onLayoutChange = { viewModel.saveIsGridLayout(it) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            )
+            WidgetGuideCard()
+        }
     }
 }
 
@@ -105,5 +110,20 @@ private fun LayoutManagementSection(
                 onCheckedChange = onLayoutChange
             )
         }
+    }
+}
+
+@Composable
+fun WidgetGuideCard() {
+    SettingsCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        title = "将课表添加到桌面"
+    ) {
+        Text(
+            "无需打开 App，抬手就能看到下一节课,长按桌面找到app小组件即可",
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }

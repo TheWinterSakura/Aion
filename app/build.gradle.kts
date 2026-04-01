@@ -16,10 +16,10 @@ android {
 
     defaultConfig {
         applicationId = "com.example.classschedule"
-        minSdk = 24
+        minSdk = 31
         targetSdk = 36
         versionCode = 1
-        versionName = "1.2.1"
+        versionName = "1.3.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -41,6 +41,10 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "2.0.21"
     }
 }
 
@@ -83,4 +87,6 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("com.tom-roush:pdfbox-android:2.0.27.0")
     implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.glance:glance-appwidget:1.1.1")
+    implementation("androidx.glance:glance-material3:1.1.0")
 }

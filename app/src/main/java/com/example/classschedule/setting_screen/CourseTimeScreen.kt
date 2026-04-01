@@ -1,3 +1,6 @@
+package com.example.classschedule.setting_screen
+
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,22 +15,28 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimeInput
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,16 +49,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.schedule.Schedule
-import com.example.classschedule.setting_screen.CourseTimeViewModel
 import com.example.classschedule.tools.showToast
-
+import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,8 +67,9 @@ fun EditScheduleScreen(
     totalCourseNumber: Int = 20
 ) {
     val initialData by viewModel.scheduleList.collectAsState()
-
     val scheduleList = remember { mutableStateListOf<Schedule>() }
+    val autoCalcEnabled by viewModel.autoCalcEnabled.collectAsState()
+    var classDuration by remember { mutableStateOf("45") }
 
     LaunchedEffect(initialData) {
         if (initialData.isNotEmpty()) {
@@ -83,17 +92,22 @@ fun EditScheduleScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("编辑时间表", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                ),
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navigateUp()
-                    }) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null) }
+                    IconButton(onClick = navigateUp) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                    }
                 },
                 actions = {
                     TextButton(onClick = {
                         if (initialData.isNotEmpty()){
                             viewModel.updateAll(scheduleList = scheduleList)
                             "修改成功".showToast()
-                        }else{
+                        } else {
                             scheduleList.forEach { schedule ->
                                 viewModel.insertCourseTime(schedule)
                             }
@@ -104,7 +118,7 @@ fun EditScheduleScreen(
                 }
             )
         },
-        containerColor = Color(0xFFF7F8FA)
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -117,21 +131,76 @@ fun EditScheduleScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 10.dp)
+                        .padding(bottom = 6.dp)
                 ) {
                     Text(
                         text = "要用多少节就调整多少节的时间，多余的节数忽略即可。如果想修改课表显示的节数，请去设置当中的学期时间设置中的「一天课程节数」",
                         fontSize = 14.sp,
-                        color = Color(0xFF666666),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 20.sp
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = "请注意是 24 小时制！",
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold
                     )
+                }
+            }
+
+            item {
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    colors = CardDefaults.elevatedCardColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    ),
+                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column {
+                                Text(
+                                    text = "自动计算结束时间",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = "设定开始时间后，自动算出结束时间",
+                                    fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            Switch(
+                                checked = autoCalcEnabled,
+                                onCheckedChange = { viewModel.changeAutoCalcEnabled(it) }
+                            )
+                        }
+
+                        AnimatedVisibility(visible = autoCalcEnabled) {
+                            OutlinedTextField(
+                                value = classDuration,
+                                onValueChange = {
+                                    if (it.isEmpty() || it.matches(Regex("^\\d+$"))) {
+                                        classDuration = it
+                                    }
+                                },
+                                label = { Text("每节课时长 (分钟)") },
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 12.dp),
+                                singleLine = true
+                            )
+                        }
+                    }
                 }
             }
 
@@ -160,8 +229,30 @@ fun EditScheduleScreen(
             onConfirm = { hour, min ->
                 val timeStr = formatTimeInt(hour, min)
                 val old = scheduleList[editingIndex]
-                scheduleList[editingIndex] =
-                    if (isEditingStart) old.copy(startTime = timeStr) else old.copy(endTime = timeStr)
+
+                if (isEditingStart && autoCalcEnabled) {
+                    val duration = classDuration.toIntOrNull() ?: 0
+                    if (duration > 0) {
+                        try {
+                            val startLocalTime = LocalTime.of(hour, min)
+                            val endLocalTime = startLocalTime.plusMinutes(duration.toLong())
+                            val endTimeStr = formatTimeInt(endLocalTime.hour, endLocalTime.minute)
+
+                            scheduleList[editingIndex] = old.copy(
+                                startTime = timeStr,
+                                endTime = endTimeStr
+                            )
+                        } catch (e: Exception) {
+                            scheduleList[editingIndex] = old.copy(startTime = timeStr)
+                        }
+                    } else {
+                        scheduleList[editingIndex] = old.copy(startTime = timeStr)
+                    }
+                } else if (isEditingStart) {
+                    scheduleList[editingIndex] = old.copy(startTime = timeStr)
+                } else {
+                    scheduleList[editingIndex] = old.copy(endTime = timeStr)
+                }
                 showPicker = false
             }
         )
@@ -187,7 +278,7 @@ fun EnhancedTimePickerDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false), // 让弹窗宽度自适应
+        properties = androidx.compose.ui.window.DialogProperties(usePlatformDefaultWidth = false),
         confirmButton = {
             TextButton(onClick = { onConfirm(state.hour, state.minute) }) { Text("确定") }
         },
@@ -208,7 +299,7 @@ fun EnhancedTimePickerDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(title, style = MaterialTheme.typography.labelLarge)
+                    Text(title, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
 
                     IconButton(onClick = { showingPickerMode = !showingPickerMode }) {
                         Icon(
@@ -237,10 +328,19 @@ fun ScheduleItemRow(schedule: Schedule, onStartClick: () -> Unit, onEndClick: ()
             .padding(vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text("第 ${schedule.courseNumber} 节", modifier = Modifier.weight(1f), fontSize = 16.sp)
+        Text(
+            text = "第 ${schedule.courseNumber} 节",
+            modifier = Modifier.weight(1f),
+            fontSize = 16.sp,
+            color = MaterialTheme.colorScheme.onSurface
+        )
 
         TimeCapsule(text = schedule.startTime, onClick = onStartClick)
-        Text("-", modifier = Modifier.padding(horizontal = 8.dp), color = Color.LightGray)
+        Text(
+            text = "-",
+            modifier = Modifier.padding(horizontal = 8.dp),
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
         TimeCapsule(text = schedule.endTime, onClick = onEndClick)
     }
 }
@@ -250,14 +350,19 @@ fun TimeCapsule(text: String, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(20.dp),
-        color = Color.White,
-        tonalElevation = 1.dp,
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        tonalElevation = 0.dp,
         modifier = Modifier
             .width(95.dp)
             .height(40.dp)
     ) {
         Box(contentAlignment = Alignment.Center) {
-            Text(text = text, fontSize = 15.sp, fontWeight = FontWeight.Medium)
+            Text(
+                text = text,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }

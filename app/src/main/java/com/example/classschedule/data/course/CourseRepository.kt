@@ -19,10 +19,12 @@ interface CourseRepository {
     suspend fun updateCourse(item: Course)
 
     suspend fun deleteAll()
+
+    fun getTodayCourseSimple(currentWeekDate: Int, today: String): Flow<List<CourseSimple>>
 }
 
 class OfflineCourseRepository(private val courseDao: CourseDao) : CourseRepository {
-    override fun getAllICourseSimple(currentWeekDate:Int): Flow<List<CourseSimple>> =
+    override fun getAllICourseSimple(currentWeekDate: Int): Flow<List<CourseSimple>> =
         courseDao.getAllCourseSimple(currentWeekDate = currentWeekDate)
 
     override fun getCourseStream(id: Int): Flow<Course?> = courseDao.getCourseById(id)
@@ -34,4 +36,10 @@ class OfflineCourseRepository(private val courseDao: CourseDao) : CourseReposito
     override suspend fun updateCourse(item: Course) = courseDao.update(item)
 
     override suspend fun deleteAll() = courseDao.deleteAll()
+
+    override fun getTodayCourseSimple(
+        currentWeekDate: Int,
+        today: String,
+    ): Flow<List<CourseSimple>> =
+        courseDao.getTodayCourseSimple(currentWeekDate, today)
 }

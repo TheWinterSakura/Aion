@@ -1,6 +1,5 @@
 package com.example.classschedule
 
-import EditScheduleScreen
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,6 +19,7 @@ import com.example.classschedule.home_screen.HomeScreen
 import com.example.classschedule.setting_screen.AppDetail
 import com.example.classschedule.setting_screen.DataManager
 import com.example.classschedule.setting_screen.EasImport
+import com.example.classschedule.setting_screen.EditScheduleScreen
 import com.example.classschedule.setting_screen.ImportScheduleScreen
 import com.example.classschedule.setting_screen.LayoutManager
 import com.example.classschedule.setting_screen.ScheduleImportScreen
@@ -184,6 +184,14 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
             DataManager(
                 navigateUp = {
                     navController.navigateUp()
+                },
+                onNavigateToHomeScreen = {
+                    navController.navigate(HomeScreen){
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
                 }
             )
         }

@@ -38,7 +38,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -57,13 +56,12 @@ fun SettingHome(
     navigateToLayoutManager: () -> Unit,
     navigateToAppDetail: () -> Unit,
     navigateUp: () -> Unit,
-    navigateToCourseTimeScreen:(Int)-> Unit,
+    navigateToCourseTimeScreen: (Int) -> Unit,
     viewModel: SettingHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
     val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
     val totalCourseNumber by viewModel.totalCourse.collectAsState()
-
 
     Scaffold(
         topBar = {
@@ -74,7 +72,11 @@ fun SettingHome(
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                ),
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
                         Icon(Icons.AutoMirrored.Outlined.KeyboardArrowLeft, "back")
@@ -82,7 +84,7 @@ fun SettingHome(
                 }
             )
         },
-        containerColor = Color.White
+        containerColor = MaterialTheme.colorScheme.background
     ) { paddingValues ->
         val scrollState = rememberScrollState()
 
@@ -92,7 +94,7 @@ fun SettingHome(
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -105,6 +107,7 @@ fun SettingHome(
                 SettingItem(
                     icon = Icons.Outlined.DateRange,
                     title = "课程时间表设置",
+                    isUnderline = false,
                     onClick = {
                         navigateToCourseTimeScreen(totalCourseNumber)
                     }
@@ -120,6 +123,7 @@ fun SettingHome(
                 SettingItem(
                     icon = Icons.Outlined.AutoAwesome,
                     title = "智能图片/PDF 导入",
+                    isUnderline = false,
                     onClick = navigateToClassImportByPDF
                 )
             }
@@ -162,13 +166,14 @@ fun SettingGroup(
             text = title,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp),
+            modifier = Modifier.padding(start = 12.dp, bottom = 8.dp),
             letterSpacing = 0.5.sp
         )
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = Color(0xFFF8F8F8)
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
         ) {
             Column {
                 content()
@@ -185,51 +190,53 @@ fun SettingItem(
     endText: String = "",
     onClick: () -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(22.dp)
-        )
-
-        Text(
-            text = title,
-            style = MaterialTheme.typography.bodyLarge,
-            color = Color(0xFF222222),
+    Column {
+        Row(
             modifier = Modifier
-                .weight(1f)
-                .padding(start = 14.dp)
-        )
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(horizontal = 16.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(22.dp)
+            )
 
-        if (endText.isNotEmpty()) {
             Text(
-                text = endText,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.Gray,
-                modifier = Modifier.padding(end = 4.dp)
+                text = title,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 14.dp)
+            )
+
+            if (endText.isNotEmpty()) {
+                Text(
+                    text = endText,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(end = 4.dp)
+                )
+            }
+
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                modifier = Modifier.size(20.dp)
             )
         }
 
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-            contentDescription = null,
-            tint = Color(0xFFCCCCCC),
-            modifier = Modifier.size(20.dp)
-        )
-    }
-
-    if (isUnderline) {
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            thickness = 0.5.dp,
-            color = Color(0xFFEEEEEE)
-        )
+        if (isUnderline) {
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                thickness = 0.5.dp,
+                color = MaterialTheme.colorScheme.outlineVariant
+            )
+        }
     }
 }

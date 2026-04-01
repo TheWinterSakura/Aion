@@ -28,4 +28,7 @@ interface CourseDao {
 
     @Query("DELETE FROM course")
     suspend fun deleteAll()
+
+    @Query("SELECT courseName, courseTime, courseLocation, id, weekDay FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate AND weekDay = :today")
+    fun getTodayCourseSimple(currentWeekDate: Int,today: String): Flow<List<CourseSimple>>
 }

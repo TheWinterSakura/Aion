@@ -2,6 +2,7 @@ package com.example.classschedule.setting_screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,10 +39,11 @@ import com.example.classschedule.tools.showToast
 @Composable
 fun DataManager(
     viewModel: DataManagerViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navigateUp:()-> Unit
+    navigateUp:()-> Unit,
+    onNavigateToHomeScreen:()-> Unit
 ) {
     Scaffold(
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 title = { Text("数据管理") },
@@ -62,7 +64,8 @@ fun DataManager(
     ) { innerPadding ->
         DataManagementSection(
             onDeleteAll = { viewModel.deleteAll() },
-            modifier = Modifier.padding(innerPadding).fillMaxWidth()
+            modifier = Modifier.padding(horizontal = 12.dp).padding(innerPadding),
+            onNavigateToHomeScreen = {onNavigateToHomeScreen()}
         )
     }
 }
@@ -70,7 +73,8 @@ fun DataManager(
 @Composable
 private fun DataManagementSection(
     onDeleteAll: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    onNavigateToHomeScreen:()-> Unit
 ) {
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
@@ -85,6 +89,7 @@ private fun DataManagementSection(
                         onDeleteAll()
                         "删除所有数据成功".showToast()
                         showDeleteConfirmDialog = false
+                        onNavigateToHomeScreen()
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) { Text("确认删除") }
