@@ -159,7 +159,7 @@ private fun TermSettingsContent(
                 TextButton(
                     onClick = {
                         showCourseWarningDialog = false
-                        val newTotalCourseInt = newTotalCourse.toIntOrNull() ?: 7788
+                        val newTotalCourseInt = newTotalCourse.toIntOrNull()!!
 
                         if (newTotalCourseInt > totalCourseNumber) {
                             onSaveAllCourseNumber(newTotalCourse)
@@ -178,9 +178,6 @@ private fun TermSettingsContent(
                             for (i in (newTotalCourseInt + 1)..totalCourseNumber) {
                                 viewModel.deleteByCourseNumber(i)
                             }
-
-                        } else if (newTotalCourseInt == 7788) {
-                            "请输入数字".showToast()
 
                         } else {
                             "出现未知错误，请重试".showToast()
@@ -293,6 +290,13 @@ private fun TermSettingsContent(
                 if (newTotalCourse.isNotBlank()) {
                     val newCount = newTotalCourse.toIntOrNull() ?: 0
                     if (newCount != totalCourseNumber) {
+                        if (newCount > 100) {
+                            "最多只能设置100节课".showToast()
+                            return@IconButton
+                        } else if (newCount <= 0) {
+                            "课程数不能小于或等于0".showToast()
+                            return@IconButton
+                        }
                         showCourseWarningDialog = true
                     } else {
                         newTotalCourse = ""

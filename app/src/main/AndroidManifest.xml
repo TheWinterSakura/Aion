@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/uchihasasuke_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
+        android:extractNativeLibs="false"
         android:theme="@style/Theme.ClassSchedule">
         <activity
             android:name=".MainActivity"

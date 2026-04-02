@@ -1,12 +1,12 @@
 package com.example.classschedule.home_screen
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.course.CourseRepository
-import com.example.classschedule.data.user_preferences.UserPreferencesRepository
+import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.data.schedule.ScheduleRepository
+import com.example.classschedule.data.user_preferences.UserPreferencesRepository
+import com.example.classschedule.tools.getDayAfterWeeks
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,13 +14,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 
 class HomeViewModel(
     private val repository: CourseRepository,
-    private val repositoryPreferences: UserPreferencesRepository,
+    repositoryPreferences: UserPreferencesRepository,
     private val courseRepository: ScheduleRepository
 ) : ViewModel() {
 
@@ -31,6 +32,8 @@ class HomeViewModel(
     val isTimerFinished = _isTimerFinished.asStateFlow()
 
     val allCourseTime = courseRepository.getAllScheduleFlow()
+
+    var monDateStr = MutableStateFlow("")
 
 
     val isGridLayout = repositoryPreferences.isGridLayout.stateIn(
@@ -86,7 +89,6 @@ class HomeViewModel(
         _week.value = currentWeekDate
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun calculateCurrentWeek(startDateStr: String): Int {
         val startDate = LocalDate.parse(startDateStr)
         val currentDate = LocalDate.now()
@@ -95,11 +97,28 @@ class HomeViewModel(
         return currentWeek.toInt()
     }
 
-    fun changeLoad(){
+    fun changeLoad() {
         _hasLoad.value = !_hasLoad.value
     }
 
-    fun changeIsFinished(){
+    fun changeIsFinished() {
         _isTimerFinished.value = true
+    }
+
+    fun getMonDateStr(
+        startDate: String,
+        weeksPassed: Long
+    ) {
+        monDateStr.value = getDayAfterWeeks(
+            startDateStr = startDate,
+            weeksPassed = weeksPassed,
+            dayOfWeek = "Monday"
+        )
+    }
+
+    fun insertCourseTime(schedule: Schedule){
+        viewModelScope.launch {
+            courseRepository.insertCourseTime(schedule)
+        }
     }
 }

@@ -84,7 +84,7 @@ import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.course.CourseSimple
 import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.tools.getClassTime
-import com.example.classschedule.tools.getDayAfterWeeks
+import com.example.classschedule.tools.showToast
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -108,11 +108,12 @@ fun HomeScreen(
     val hasLoad by viewModel.hasLoad.collectAsState()
     val isGridLayout by viewModel.isGridLayout.collectAsState()
     val isTimerFinished by viewModel.isTimerFinished.collectAsState()
+    val monDateStr by viewModel.monDateStr.collectAsState()
 
     var expanded by remember { mutableStateOf(false) }
     var currentWeek by rememberSaveable { mutableIntStateOf(1) }
 
-    LaunchedEffect(startDate, hasLoad) {
+    LaunchedEffect(startDate) {
         if (startDate.isNotBlank() && !hasLoad) {
             currentWeek = viewModel.calculateCurrentWeek(startDateStr = startDate)
             viewModel.changeLoad()
@@ -122,10 +123,30 @@ fun HomeScreen(
     LaunchedEffect(currentWeek) {
         delay(150)
         viewModel.loadSimpleCourse(currentWeekDate = currentWeek)
+        viewModel.getMonDateStr(startDate = startDate, weeksPassed = (currentWeek - 1).toLong())
     }
 
-    LaunchedEffect(startDate,courseList) {
-        if (startDate.isNotBlank() && !isTimerFinished && courseTimeList.isNotEmpty()) {
+
+    LaunchedEffect(Unit) {
+        if (!isTimerFinished) {
+            delay(150)
+            if (currentWeek != 0) {
+                viewModel.getMonDateStr(
+                    startDate = startDate,
+                    weeksPassed = (currentWeek - 1).toLong()
+                )
+            }
+            if (courseTimeList.isEmpty()) {
+                repeat(totalCourseNumber) { i ->
+                    viewModel.insertCourseTime(
+                        Schedule(
+                            courseNumber = i + 1,
+                            startTime = "00:00",
+                            endTime = "00:00"
+                        )
+                    )
+                }
+            }
             viewModel.changeIsFinished()
         }
     }
@@ -245,12 +266,19 @@ fun HomeScreen(
                         transitionSpec = {
                             val duration = 400
                             if (targetState > initialState) {
-                                (slideInHorizontally(tween(duration)) { width -> width } + fadeIn(tween(duration))) togetherWith
-                                        (slideOutHorizontally(tween(duration)) { width -> -width } + fadeOut(tween(duration)))
-                            }
-                            else {
-                                (slideInHorizontally(tween(duration)) { width -> -width } + fadeIn(tween(duration))) togetherWith
-                                        (slideOutHorizontally(tween(duration)) { width -> width } + fadeOut(tween(duration)))
+                                (slideInHorizontally(tween(duration)) { width -> width } + fadeIn(
+                                    tween(duration)
+                                )) togetherWith
+                                        (slideOutHorizontally(tween(duration)) { width -> -width } + fadeOut(
+                                            tween(duration)
+                                        ))
+                            } else {
+                                (slideInHorizontally(tween(duration)) { width -> -width } + fadeIn(
+                                    tween(duration)
+                                )) togetherWith
+                                        (slideOutHorizontally(tween(duration)) { width -> width } + fadeOut(
+                                            tween(duration)
+                                        ))
                             }
                         },
                         label = "week_switch_animation",
@@ -260,13 +288,15 @@ fun HomeScreen(
                             courseList = courseList,
                             weekDays = viewModel.week,
                             navigateToCourseDetails = { id, weekDay ->
-                                navigateToCourseDetails(id, targetWeek.toString(), weekDay, startDate)
+                                navigateToCourseDetails(
+                                    id,
+                                    targetWeek.toString(),
+                                    weekDay,
+                                    startDate
+                                )
                             },
                             totalCourseNUmber = totalCourseNumber,
                             courseTimeList = courseTimeList,
-                            startDate = startDate,
-                            weeksPassed = (targetWeek - 1).toLong(),
-
                             onNextWeek = {
                                 val maxWeek = allWeeks.toIntOrNull() ?: 20
                                 if (currentWeek < maxWeek) {
@@ -277,7 +307,8 @@ fun HomeScreen(
                                 if (currentWeek > 1) {
                                     currentWeek--
                                 }
-                            }
+                            },
+                            monDateStr = monDateStr
                         )
                     }
                 } else {
@@ -419,10 +450,9 @@ fun WeeklyGridLayout(
     navigateToCourseDetails: (Int, String) -> Unit,
     totalCourseNUmber: Int = 20,
     courseTimeList: List<Schedule>,
-    startDate: String,
-    weeksPassed: Long,
     onNextWeek: () -> Unit,
-    onPrevWeek: () -> Unit
+    onPrevWeek: () -> Unit,
+    monDateStr: String
 ) {
     val timeColumnWidth = 36.dp
     val sectionHeight = 65.dp
@@ -466,10 +496,8 @@ fun WeeklyGridLayout(
                 val shortName = day.take(3)
                 WeekDay(
                     title = shortName,
-                    fullDayName = day,
                     modifier = Modifier.weight(1f),
-                    weeksPassed = weeksPassed,
-                    startDate = startDate
+                    monDateStr = monDateStr
                 )
             }
         }
@@ -611,25 +639,45 @@ fun WeeklyGridLayout(
 @Composable
 fun WeekDay(
     title: String,
-    fullDayName: String,
     modifier: Modifier,
-    startDate: String,
-    weeksPassed: Long
+    monDateStr: String,
 ) {
-    val formattedDate = remember(startDate, weeksPassed, fullDayName) {
-        val rawDate = getDayAfterWeeks(
-            startDateStr = startDate,
-            weeksPassed = weeksPassed,
-            dayOfWeek = fullDayName
-        )
-        try {
-            val parsedDate = LocalDate.parse(rawDate)
-            val formatter = DateTimeFormatter.ofPattern("M/dd")
-            parsedDate.format(formatter)
-        } catch (e: Exception) {
-            rawDate
-        }
-    }
+    val parsedDate = LocalDate.parse(monDateStr)
+    val formatter = DateTimeFormatter.ofPattern("M/dd")
+
+    val formattedDate =
+        when (title) {
+            "Mon" -> parsedDate.format(formatter)
+            "Tue" -> {
+                parsedDate.plusDays(1).format(formatter)
+            }
+
+            "Wed" -> {
+                parsedDate.plusDays(2).format(formatter)
+            }
+
+            "Thu" -> {
+                parsedDate.plusDays(3).format(formatter)
+            }
+
+            "Fri" -> {
+                parsedDate.plusDays(4).format(formatter)
+            }
+
+            "Sat" -> {
+                parsedDate.plusDays(5).format(formatter)
+            }
+
+            "Sun" -> {
+                parsedDate.plusDays(6).format(formatter)
+            }
+
+            else -> {
+                "时间获取失败".showToast()
+                "failure"
+            }
+
+        }.toString()
 
     Column(
         modifier = modifier,

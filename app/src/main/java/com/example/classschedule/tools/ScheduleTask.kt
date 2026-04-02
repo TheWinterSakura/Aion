@@ -1,14 +1,11 @@
 package com.example.classschedule.tools
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun getDayAfterWeeks(startDateStr: String, weeksPassed: Long, dayOfWeek: String): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val startDate = LocalDate.parse(startDateStr, formatter)
