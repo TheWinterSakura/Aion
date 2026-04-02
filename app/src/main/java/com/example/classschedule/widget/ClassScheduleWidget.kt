@@ -1,7 +1,6 @@
 package com.example.classschedule.widget
 
 import android.content.Context
-import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -9,10 +8,10 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalSize
+import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
-import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
@@ -59,29 +58,31 @@ class CourseWidget : GlanceAppWidget() {
             val size = LocalSize.current
             val isSmallWidget = size.width < 180.dp
 
-            val intent = Intent(context, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            }
+            val action = actionStartActivity<MainActivity>()
 
-            Column(
+            Box(
                 modifier = GlanceModifier
                     .fillMaxSize()
                     .background(WidgetBgColor)
                     .cornerRadius(16.dp)
                     .padding(12.dp)
-                    .clickable(actionStartActivity(intent))
+                    .clickable(action)
             ) {
-                HeaderRow(dayOfWeekStr)
+                Column(modifier = GlanceModifier.fillMaxSize()) {
+                    HeaderRow(dayOfWeekStr)
 
-                if (todayCourses.isEmpty()) {
-                    EmptyState()
-                } else {
-                    if (isSmallWidget) {
-                        SmallCourseList(todayCourses)
+                    if (todayCourses.isEmpty()) {
+                        EmptyState()
                     } else {
-                        LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
-                            items(todayCourses) { course ->
-                                CourseWidgetItem(course, isSmallWidget = false)
+                        if (isSmallWidget) {
+                            SmallCourseList(todayCourses)
+                        } else {
+                            LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
+                                items(todayCourses) { course ->
+                                    Box(modifier = GlanceModifier.clickable(action)) {
+                                        CourseWidgetItem(course, isSmallWidget = false)
+                                    }
+                                }
                             }
                         }
                     }

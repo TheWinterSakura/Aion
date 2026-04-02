@@ -8,8 +8,10 @@ import com.example.classschedule.data.AppContainer
 import com.example.classschedule.data.AppDataContainer
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.notifications.AlertManagerClassScheduleRepository
+import com.example.classschedule.widget.AppExitRefreshObserver
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 
 
@@ -35,5 +37,6 @@ class ClassScheduleApplication : Application() {
         userPreferencesRepository = UserPreferencesRepository(dataStore)
         workManagerClassScheduleRepository = AlertManagerClassScheduleRepository(this)
         PDFBoxResourceLoader.init(applicationContext)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppExitRefreshObserver(this))
     }
 }

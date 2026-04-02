@@ -1,6 +1,11 @@
 package com.example.classschedule.home_screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -12,8 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
@@ -36,10 +43,13 @@ fun EditCourse(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "修改课程") },
+                title = { Text(text = "修改课程", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = navigationUp) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "返回"
+                        )
                     }
                 }
             )
@@ -47,7 +57,9 @@ fun EditCourse(
     ) { innerPadding ->
         if (course == null) {
             Box(
-                modifier = Modifier.fillMaxSize().padding(innerPadding),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator()
@@ -62,7 +74,8 @@ fun EditCourse(
                         context = context,
                         navigationUp = navigationUp
                     )
-                }
+                },
+                viewModel = viewModel
             )
         }
     }
@@ -73,13 +86,18 @@ fun EditCourse(
 fun EditCourseForm(
     modifier: Modifier = Modifier,
     initialCourse: Course,
-    onSaveClick: (Course) -> Unit
+    onSaveClick: (Course) -> Unit,
+    viewModel: EditCourseViewModel
 ) {
     var courseName by remember { mutableStateOf(initialCourse.courseName) }
-    var startWeekDate by remember { mutableIntStateOf(initialCourse.startWeekDate) }
-    var endWeekDate by remember { mutableIntStateOf(initialCourse.endWeekDate) }
+    var startWeekDate by remember { mutableStateOf(initialCourse.startWeekDate.toString()) }
+    var endWeekDate by remember { mutableStateOf(initialCourse.endWeekDate.toString()) }
     var weekDay by remember { mutableStateOf(initialCourse.weekDay) }
-    var courseTime by remember { mutableStateOf(initialCourse.courseTime) }
+
+    var showPeriodDialog by remember { mutableStateOf(false) }
+    var startPeriod by remember { mutableIntStateOf(1) }
+    var endPeriod by remember { mutableIntStateOf(2) }
+
     var courseCampus by remember { mutableStateOf(initialCourse.courseCampus) }
     var courseLocation by remember { mutableStateOf(initialCourse.courseLocation) }
     var courseTeacher by remember { mutableStateOf(initialCourse.courseTeacher) }
@@ -91,75 +109,176 @@ fun EditCourseForm(
     var courseWeekStudyHours by remember { mutableStateOf(initialCourse.courseWeekStudyHours) }
     var courseTotalStudyHours by remember { mutableStateOf(initialCourse.courseTotalStudyHours) }
     var courseCredit by remember { mutableStateOf(initialCourse.courseCredit) }
-    var expanded by remember { mutableStateOf(false) }
+    val maxPeriodsPerDay by viewModel.maxPeriodsPerDay.collectAsState()
 
-    val week = listOf(
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday"
-    )
 
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
+    var weekExpanded by remember { mutableStateOf(false) }
+    val weekList =
+        listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+    LaunchedEffect(initialCourse.courseTime) {
+        val regex = Regex("\\((\\d+)-(\\d+)节\\)")
+        val match = regex.find(initialCourse.courseTime)
+        if (match != null) {
+            startPeriod = match.groupValues[1].toIntOrNull() ?: 1
+            endPeriod = match.groupValues[2].toIntOrNull() ?: 2
+        }
+    }
+
+    Column(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            AddCourseItemEdit(label = "课程名称", value = courseName, onValueChange = { courseName = it })
-            AddCourseItemEdit(label = "课程起始周", value = startWeekDate.toString(), onValueChange = { startWeekDate = it.toInt() })
-            AddCourseItemEdit(label = "课程结束周", value = endWeekDate.toString(), onValueChange = { endWeekDate = it.toInt() })
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = it }
-            ) {
-                OutlinedTextField(
-                    value = weekDay.ifEmpty { "请选择课程在星期几" },
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text("星期") },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier.menuAnchor().fillMaxWidth(),
-                    shape = MaterialTheme.shapes.medium,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MaterialTheme.colorScheme.primary,
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent
+            Spacer(modifier = Modifier.height(4.dp))
+
+            FormCard(title = "基本信息") {
+                AddCourseItemEdit(
+                    label = "课程名称",
+                    value = courseName,
+                    onValueChange = { courseName = it })
+                AddCourseItemEdit(
+                    label = "课程教师",
+                    value = courseTeacher,
+                    onValueChange = { courseTeacher = it })
+                AddCourseItemEdit(
+                    label = "课程校区",
+                    value = courseCampus,
+                    onValueChange = { courseCampus = it })
+                AddCourseItemEdit(
+                    label = "课程地点",
+                    value = courseLocation,
+                    onValueChange = { courseLocation = it })
+            }
+
+            FormCard(title = "时间安排") {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AddCourseItemEdit(
+                        modifier = Modifier.weight(1f),
+                        label = "起始周",
+                        value = startWeekDate,
+                        onValueChange = { startWeekDate = it },
+                        keyboardType = KeyboardType.Number
                     )
-                )
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
+                    AddCourseItemEdit(
+                        modifier = Modifier.weight(1f),
+                        label = "结束周",
+                        value = endWeekDate,
+                        onValueChange = { endWeekDate = it },
+                        keyboardType = KeyboardType.Number
+                    )
+                }
+
+                ExposedDropdownMenuBox(
+                    expanded = weekExpanded,
+                    onExpandedChange = { weekExpanded = it },
+                    modifier = Modifier.padding(top = 8.dp)
                 ) {
-                    week.forEach { weekDayChoose ->
-                        DropdownMenuItem(
-                            text = { Text(text = weekDayChoose) },
-                            onClick = {
-                                weekDay = weekDayChoose
-                                expanded = false
-                            }
-                        )
+                    OutlinedTextField(
+                        value = weekDay.ifEmpty { "请选择星期" },
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text("星期") },
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = weekExpanded) },
+                        modifier = Modifier
+                            .menuAnchor()
+                            .fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        colors = OutlinedTextFieldDefaults.colors()
+                    )
+                    ExposedDropdownMenu(
+                        expanded = weekExpanded,
+                        onDismissRequest = { weekExpanded = false }
+                    ) {
+                        weekList.forEach { weekDayChoose ->
+                            DropdownMenuItem(
+                                text = { Text(text = weekDayChoose) },
+                                onClick = {
+                                    weekDay = weekDayChoose
+                                    weekExpanded = false
+                                }
+                            )
+                        }
                     }
                 }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) { showPeriodDialog = true }
+                ) {
+                    OutlinedTextField(
+                        value = "$startPeriod-${endPeriod}节",
+                        onValueChange = {},
+                        readOnly = true,
+                        enabled = false,
+                        label = { Text("课程节数") },
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = MaterialTheme.shapes.medium,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                            disabledBorderColor = MaterialTheme.colorScheme.outline,
+                            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    )
+                }
             }
-            AddCourseItemEdit(label = "课程时间", value = courseTime, onValueChange = { courseTime = it })
-            AddCourseItemEdit(label = "课程校区", value = courseCampus, onValueChange = { courseCampus = it })
-            AddCourseItemEdit(label = "课程地点", value = courseLocation, onValueChange = { courseLocation = it })
-            AddCourseItemEdit(label = "课程教师", value = courseTeacher, onValueChange = { courseTeacher = it })
-            AddCourseItemEdit(label = "教学班", value = courseTeachingClass, onValueChange = { courseTeachingClass = it })
-            AddCourseItemEdit(label = "教学班组成", value = courseTeachingClassComposition, onValueChange = { courseTeachingClassComposition = it })
-            AddCourseItemEdit(label = "考核方式", value = courseAssessmentMethods, onValueChange = { courseAssessmentMethods = it })
-            AddCourseItemEdit(label = "选课备注", value = courseSelectionNotes, onValueChange = { courseSelectionNotes = it })
-            AddCourseItemEdit(label = "课程学时组成", value = courseHourComposition, onValueChange = { courseHourComposition = it })
-            AddCourseItemEdit(label = "周学时", value = courseWeekStudyHours, onValueChange = { courseWeekStudyHours = it })
-            AddCourseItemEdit(label = "总学时", value = courseTotalStudyHours, onValueChange = { courseTotalStudyHours = it })
-            AddCourseItemEdit(label = "学分", value = courseCredit, onValueChange = { courseCredit = it })
+
+            FormCard(title = "教学班信息") {
+                AddCourseItemEdit(
+                    label = "教学班",
+                    value = courseTeachingClass,
+                    onValueChange = { courseTeachingClass = it })
+                AddCourseItemEdit(
+                    label = "教学班组成",
+                    value = courseTeachingClassComposition,
+                    onValueChange = { courseTeachingClassComposition = it })
+                AddCourseItemEdit(
+                    label = "考核方式",
+                    value = courseAssessmentMethods,
+                    onValueChange = { courseAssessmentMethods = it })
+            }
+
+            FormCard(title = "学时与学分") {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AddCourseItemEdit(
+                        modifier = Modifier.weight(1f),
+                        label = "学分",
+                        value = courseCredit,
+                        onValueChange = { courseCredit = it },
+                        keyboardType = KeyboardType.Number
+                    )
+                    AddCourseItemEdit(
+                        modifier = Modifier.weight(1f),
+                        label = "周学时",
+                        value = courseWeekStudyHours,
+                        onValueChange = { courseWeekStudyHours = it },
+                        keyboardType = KeyboardType.Number
+                    )
+                    AddCourseItemEdit(
+                        modifier = Modifier.weight(1f),
+                        label = "总学时",
+                        value = courseTotalStudyHours,
+                        onValueChange = { courseTotalStudyHours = it },
+                        keyboardType = KeyboardType.Number
+                    )
+                }
+                AddCourseItemEdit(
+                    label = "课程学时组成",
+                    value = courseHourComposition,
+                    onValueChange = { courseHourComposition = it })
+                AddCourseItemEdit(
+                    label = "选课备注",
+                    value = courseSelectionNotes,
+                    onValueChange = { courseSelectionNotes = it })
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
         }
@@ -173,10 +292,10 @@ fun EditCourseForm(
                     val newCourse = Course(
                         id = initialCourse.id,
                         weekDay = weekDay,
-                        startWeekDate = startWeekDate,
-                        endWeekDate = endWeekDate,
+                        startWeekDate = startWeekDate.toIntOrNull() ?: 0,
+                        endWeekDate = endWeekDate.toIntOrNull() ?: 0,
                         courseName = courseName,
-                        courseTime = courseTime,
+                        courseTime = "($startPeriod-${endPeriod}节)",
                         courseCampus = courseCampus,
                         courseLocation = courseLocation,
                         courseTeacher = courseTeacher,
@@ -195,10 +314,54 @@ fun EditCourseForm(
                     .fillMaxWidth()
                     .padding(16.dp)
                     .height(50.dp),
-                shape = MaterialTheme.shapes.medium
+                shape = MaterialTheme.shapes.large
             ) {
                 Text(text = "保存修改", style = MaterialTheme.typography.titleMedium)
             }
+        }
+    }
+
+    if (showPeriodDialog) {
+        PeriodSelectionDialog(
+            maxPeriods = maxPeriodsPerDay,
+            initialStart = startPeriod,
+            initialEnd = endPeriod,
+            onDismiss = { showPeriodDialog = false },
+            onConfirm = { start, end ->
+                startPeriod = start
+                endPeriod = end
+                showPeriodDialog = false
+            }
+        )
+    }
+}
+
+@Composable
+fun FormCard(
+    title: String,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(
+                alpha = 0.5f
+            )
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = MaterialTheme.shapes.large
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            content()
         }
     }
 }
@@ -206,6 +369,7 @@ fun EditCourseForm(
 
 @Composable
 fun AddCourseItemEdit(
+    modifier: Modifier = Modifier,
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
@@ -214,29 +378,135 @@ fun AddCourseItemEdit(
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next
 ) {
-    Row(
-        modifier = Modifier
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        modifier = modifier
             .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(top = 8.dp)
-    ) {
-        OutlinedTextField(
-            value = value,
-            onValueChange = onValueChange,
-            label = { Text(label) },
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium,
-            singleLine = singleLine,
-            minLines = minLines,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = keyboardType,
-                imeAction = if (!singleLine) ImeAction.Default else imeAction
-            ),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedContainerColor = Color.Transparent,
-                focusedContainerColor = Color.Transparent
-            )
+            .padding(top = 8.dp),
+        shape = MaterialTheme.shapes.medium,
+        singleLine = singleLine,
+        minLines = minLines,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = keyboardType,
+            imeAction = if (!singleLine) ImeAction.Default else imeAction
+        ),
+        colors = OutlinedTextFieldDefaults.colors(
+            unfocusedContainerColor = Color.Transparent,
+            focusedContainerColor = Color.Transparent
         )
-    }
+    )
+}
+
+
+@Composable
+fun PeriodSelectionDialog(
+    maxPeriods: Int,
+    initialStart: Int,
+    initialEnd: Int,
+    onDismiss: () -> Unit,
+    onConfirm: (Int, Int) -> Unit
+) {
+    var tempStart by remember { mutableIntStateOf(initialStart) }
+    var tempEnd by remember { mutableIntStateOf(initialEnd) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = "选择课程节数", fontWeight = FontWeight.Bold) },
+        text = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(240.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "起始节",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    LazyColumn(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        items((1..maxPeriods).toList()) { period ->
+                            val isSelected = tempStart == period
+                            Text(
+                                text = "第 $period 节",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent, shape = MaterialTheme.shapes.small)
+                                    .clickable {
+                                        tempStart = period
+                                        if (tempEnd < tempStart) tempEnd = tempStart
+                                    }
+                                    .padding(vertical = 12.dp),
+                                textAlign = TextAlign.Center,
+                                color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+
+                Text(
+                    "至",
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    fontWeight = FontWeight.Bold
+                )
+
+                Column(
+                    modifier = Modifier.weight(1f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "结束节",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    LazyColumn(
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        items((1..maxPeriods).toList()) { period ->
+                            val isSelected = tempEnd == period
+                            Text(
+                                text = "第 $period 节",
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent, shape = MaterialTheme.shapes.small)
+                                    .clickable {
+                                        if (period >= tempStart) {
+                                            tempEnd = period
+                                        }
+                                    }
+                                    .padding(vertical = 12.dp),
+                                textAlign = TextAlign.Center,
+                                color = if (period < tempStart) Color.Gray.copy(alpha = 0.5f)
+                                else if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
+                                else MaterialTheme.colorScheme.onSurface,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(tempStart, tempEnd) }) {
+                Text("确定")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("取消")
+            }
+        }
+    )
 }

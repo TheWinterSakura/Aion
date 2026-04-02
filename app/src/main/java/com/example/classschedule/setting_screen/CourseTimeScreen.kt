@@ -1,5 +1,6 @@
 package com.example.classschedule.setting_screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +42,7 @@ import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
@@ -70,6 +72,47 @@ fun EditScheduleScreen(
     val scheduleList = remember { mutableStateListOf<Schedule>() }
     val autoCalcEnabled by viewModel.autoCalcEnabled.collectAsState()
     var classDuration by remember { mutableStateOf("45") }
+    var isSaving by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
+
+    val hasChanges by remember {
+        derivedStateOf {
+            if (initialData.isEmpty()) {
+                scheduleList.any { it.startTime != "00:00" || it.endTime != "00:00" }
+            } else {
+                scheduleList.toList() != initialData
+            }
+        }
+    }
+
+    val handleBackNavigation = {
+        if (hasChanges && !isSaving) {
+            showDialog = true
+        } else {
+            navigateUp()
+        }
+    }
+
+    BackHandler(enabled = hasChanges && !isSaving) {
+        showDialog = true
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("确认退出？") },
+            text = { Text("您有未保存的内容，确定要离开吗？") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDialog = false
+                    navigateUp()
+                }) { Text("退出") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) { Text("取消") }
+            }
+        )
+    }
 
     LaunchedEffect(initialData) {
         if (initialData.isNotEmpty()) {
@@ -98,19 +141,21 @@ fun EditScheduleScreen(
                     navigationIconContentColor = MaterialTheme.colorScheme.onSurface
                 ),
                 navigationIcon = {
-                    IconButton(onClick = navigateUp) {
+                    IconButton(onClick = handleBackNavigation) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
                     }
                 },
                 actions = {
                     TextButton(onClick = {
-                        if (initialData.isNotEmpty()){
+                        if (initialData.isNotEmpty()) {
                             viewModel.updateAll(scheduleList = scheduleList)
+                            isSaving = true
                             "修改成功".showToast()
                         } else {
                             scheduleList.forEach { schedule ->
                                 viewModel.insertCourseTime(schedule)
                             }
+                            isSaving = true
                             "添加成功".showToast()
                         }
                         navigateUp()
@@ -210,7 +255,9 @@ fun EditScheduleScreen(
             ) { index, item ->
                 ScheduleItemRow(
                     schedule = item,
-                    onStartClick = { editingIndex = index; isEditingStart = true; showPicker = true },
+                    onStartClick = {
+                        editingIndex = index; isEditingStart = true; showPicker = true
+                    },
                     onEndClick = { editingIndex = index; isEditingStart = false; showPicker = true }
                 )
             }
@@ -299,7 +346,11 @@ fun EnhancedTimePickerDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(title, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurface)
+                    Text(
+                        title,
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
 
                     IconButton(onClick = { showingPickerMode = !showingPickerMode }) {
                         Icon(

@@ -1,15 +1,58 @@
 package com.example.classschedule.home_screen
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.List
-import androidx.compose.material.icons.rounded.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.DateRange
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.LocationOn
+import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,12 +76,15 @@ fun AddCourse(
     var startWeekDate by remember { mutableStateOf("") }
     var endWeekDate by remember { mutableStateOf("") }
     var weekDay by remember { mutableStateOf("") }
-    var courseTimeStart by remember { mutableStateOf("") }
-    var courseTimeEnd by remember { mutableStateOf("") }
+
+    var showPeriodDialog by remember { mutableStateOf(false) }
+    var startPeriod by remember { mutableIntStateOf(1) }
+    var endPeriod by remember { mutableIntStateOf(2) }
+
+    val maxPeriodsPerDay by viewModel.maxPeriodsPerDay.collectAsState()
+
     var courseCampus by remember { mutableStateOf("") }
     var courseLocation by remember { mutableStateOf("") }
-
-    // 选填
     var courseTeacher by remember { mutableStateOf("") }
     var courseTeachingClass by remember { mutableStateOf("") }
     var courseTeachingClassComposition by remember { mutableStateOf("") }
@@ -58,10 +104,8 @@ fun AddCourse(
             startWeekDate.isNotBlank() &&
             endWeekDate.isNotBlank() &&
             weekDay.isNotBlank() &&
-            courseTimeStart.isNotBlank() &&
             courseCampus.isNotBlank() &&
-            courseLocation.isNotBlank() &&
-            courseTimeEnd.isNotBlank()
+            courseLocation.isNotBlank()
 
     Scaffold(
         topBar = {
@@ -89,7 +133,7 @@ fun AddCourse(
                             startWeekDate = startWeekDate.toIntOrNull() ?: 0,
                             endWeekDate = endWeekDate.toIntOrNull() ?: 0,
                             courseName = courseName,
-                            courseTime = ("$courseTimeStart-${courseTimeEnd}节"),
+                            courseTime = "($startPeriod-${endPeriod}节)",
                             courseCampus = courseCampus,
                             courseLocation = courseLocation,
                             courseTeacher = courseTeacher,
@@ -143,7 +187,10 @@ fun AddCourse(
                 colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     AddCourseItem(
                         label = "课程名称 *",
                         value = courseName,
@@ -165,7 +212,10 @@ fun AddCourse(
                 colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         AddCourseItem(
                             modifier = Modifier.weight(1f),
@@ -195,10 +245,16 @@ fun AddCourse(
                             readOnly = true,
                             label = { Text("星期 *") },
                             leadingIcon = {
-                                Icon(Icons.Rounded.DateRange, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+                                Icon(
+                                    Icons.Rounded.DateRange,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
                             },
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                            modifier = Modifier.menuAnchor().fillMaxWidth(),
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth(),
                             shape = MaterialTheme.shapes.medium,
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -221,29 +277,38 @@ fun AddCourse(
                         }
                     }
 
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        AddCourseItem(
-                            modifier = Modifier.weight(1f),
-                            label = "起始节 *",
-                            value = courseTimeStart,
-                            leadingIcon = Icons.Rounded.Notifications,
-                            onValueChange = { if (it.matches(Regex("^\\d*$"))) courseTimeStart = it },
-                            keyboardType = KeyboardType.Number
-                        )
-                        AddCourseItem(
-                            modifier = Modifier.weight(1f),
-                            label = "结束节 *",
-                            value = courseTimeEnd,
-                            leadingIcon = Icons.Rounded.Notifications,
-                            onValueChange = { if (it.matches(Regex("^\\d*$"))) courseTimeEnd = it },
-                            keyboardType = KeyboardType.Number,
+                    // 课程节数选择 (点击弹窗)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) { showPeriodDialog = true }
+                    ) {
+                        OutlinedTextField(
+                            value = "$startPeriod-${endPeriod}节",
+                            onValueChange = {},
+                            readOnly = true,
+                            enabled = false,
+                            label = { Text("课程节数 *") },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Rounded.Notifications,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = MaterialTheme.shapes.medium,
+                            colors = OutlinedTextFieldDefaults.colors(
+                                disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                                disabledBorderColor = MaterialTheme.colorScheme.outline,
+                                disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         )
                     }
-                    Text(
-                        text = "提示：如课程为1-4节，两框分别填1和4；如只有一节课，两框填相同的数字",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
                 }
             }
 
@@ -253,7 +318,10 @@ fun AddCourse(
                 colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     AddCourseItem(
                         label = "课程校区 *",
                         value = courseCampus,
@@ -275,7 +343,10 @@ fun AddCourse(
                 colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         AddCourseItem(
                             modifier = Modifier.weight(1f), label = "学分", value = courseCredit,
@@ -283,15 +354,35 @@ fun AddCourse(
                             keyboardType = KeyboardType.Number
                         )
                         AddCourseItem(
-                            modifier = Modifier.weight(1f), label = "总学时", value = courseTotalStudyHours,
-                            onValueChange = { courseTotalStudyHours = it }, keyboardType = KeyboardType.Number
+                            modifier = Modifier.weight(1f),
+                            label = "总学时",
+                            value = courseTotalStudyHours,
+                            onValueChange = { courseTotalStudyHours = it },
+                            keyboardType = KeyboardType.Number
                         )
                     }
-                    AddCourseItem(label = "教学班", value = courseTeachingClass, onValueChange = { courseTeachingClass = it })
-                    AddCourseItem(label = "教学班组成", value = courseTeachingClassComposition, onValueChange = { courseTeachingClassComposition = it })
-                    AddCourseItem(label = "考核方式", value = courseAssessmentMethods, onValueChange = { courseAssessmentMethods = it })
-                    AddCourseItem(label = "课程学时组成", value = courseHourComposition, onValueChange = { courseHourComposition = it })
-                    AddCourseItem(label = "周学时", value = courseWeekStudyHours, onValueChange = { courseWeekStudyHours = it }, keyboardType = KeyboardType.Number)
+                    AddCourseItem(
+                        label = "教学班",
+                        value = courseTeachingClass,
+                        onValueChange = { courseTeachingClass = it })
+                    AddCourseItem(
+                        label = "教学班组成",
+                        value = courseTeachingClassComposition,
+                        onValueChange = { courseTeachingClassComposition = it })
+                    AddCourseItem(
+                        label = "考核方式",
+                        value = courseAssessmentMethods,
+                        onValueChange = { courseAssessmentMethods = it })
+                    AddCourseItem(
+                        label = "课程学时组成",
+                        value = courseHourComposition,
+                        onValueChange = { courseHourComposition = it })
+                    AddCourseItem(
+                        label = "周学时",
+                        value = courseWeekStudyHours,
+                        onValueChange = { courseWeekStudyHours = it },
+                        keyboardType = KeyboardType.Number
+                    )
                     AddCourseItem(
                         label = "选课备注", value = courseSelectionNotes,
                         onValueChange = { courseSelectionNotes = it },
@@ -303,6 +394,20 @@ fun AddCourse(
 
             Spacer(modifier = Modifier.height(32.dp))
         }
+    }
+
+    if (showPeriodDialog) {
+        PeriodSelectionDialog(
+            maxPeriods = maxPeriodsPerDay,
+            initialStart = startPeriod,
+            initialEnd = endPeriod,
+            onDismiss = { showPeriodDialog = false },
+            onConfirm = { start, end ->
+                startPeriod = start
+                endPeriod = end
+                showPeriodDialog = false
+            }
+        )
     }
 }
 

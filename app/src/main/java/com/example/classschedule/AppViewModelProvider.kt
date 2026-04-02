@@ -28,7 +28,10 @@ object AppViewModelProvider {
         }
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
-            AddCourseViewModel(repository = application.container.courseRepository)
+            AddCourseViewModel(
+                repository = application.container.courseRepository,
+                userPreferencesRepository = application.userPreferencesRepository
+            )
         }
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
@@ -40,7 +43,10 @@ object AppViewModelProvider {
         }
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
-            EditCourseViewModel(repository = application.container.courseRepository)
+            EditCourseViewModel(
+                repository = application.container.courseRepository,
+                userPreferencesRepository = application.userPreferencesRepository
+            )
         }
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)

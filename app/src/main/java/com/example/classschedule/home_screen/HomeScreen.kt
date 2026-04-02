@@ -112,10 +112,12 @@ fun HomeScreen(
 
     var expanded by remember { mutableStateOf(false) }
     var currentWeek by rememberSaveable { mutableIntStateOf(1) }
+    var localDateCurrentWeek by rememberSaveable { mutableIntStateOf(1) }
 
     LaunchedEffect(startDate) {
         if (startDate.isNotBlank() && !hasLoad) {
             currentWeek = viewModel.calculateCurrentWeek(startDateStr = startDate)
+            localDateCurrentWeek = currentWeek
             viewModel.changeLoad()
         }
     }
@@ -171,11 +173,20 @@ fun HomeScreen(
                                         .clickable { expanded = true }
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
-                                    Text(
-                                        text = "第 $currentWeek 周",
-                                        fontSize = 20.sp,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                                    if (currentWeek == localDateCurrentWeek) {
+                                        Text(
+                                            text = "第 $currentWeek 周",
+                                            fontSize = 20.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = Color(0xFF87CEEB)
+                                        )
+                                    } else {
+                                        Text(
+                                            text = "第 $currentWeek 周",
+                                            fontSize = 20.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
                                     Icon(
                                         Icons.Default.ArrowDropDown,
                                         contentDescription = "选择周数"
@@ -190,7 +201,13 @@ fun HomeScreen(
                                     val weeksCount = allWeeks.toIntOrNull() ?: 20
                                     repeat(weeksCount) { i ->
                                         DropdownMenuItem(
-                                            text = { Text("第 ${i + 1} 周") },
+                                            text = {
+                                                if (i + 1 == localDateCurrentWeek) {
+                                                    Text("第 ${i + 1} 周(本周)", color = Color(0xFF87CEEB))
+                                                } else {
+                                                    Text("第 ${i + 1} 周")
+                                                }
+                                            },
                                             onClick = {
                                                 currentWeek = i + 1
                                                 expanded = false

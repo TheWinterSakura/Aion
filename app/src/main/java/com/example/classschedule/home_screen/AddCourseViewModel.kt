@@ -5,11 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.course.Course
 import com.example.classschedule.data.course.CourseRepository
+import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.tools.showToast
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class AddCourseViewModel(
-    private val repository: CourseRepository
+    private val repository: CourseRepository,
+    userPreferencesRepository: UserPreferencesRepository
 ): ViewModel() {
     fun addCourse(
         course: Course,
@@ -26,4 +30,10 @@ class AddCourseViewModel(
             }
         }
     }
+
+    val maxPeriodsPerDay = userPreferencesRepository.courseNumberTotal.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 20,
+    )
 }
