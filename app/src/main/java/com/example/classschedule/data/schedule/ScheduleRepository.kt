@@ -19,7 +19,7 @@ interface ScheduleRepository {
 
     suspend fun deleteByCourseNumber(courseNumber: Int)
 
-
+    suspend fun deleteAll()
 }
 
 class OfflineScheduleRepository(
@@ -44,4 +44,6 @@ class OfflineScheduleRepository(
     override suspend fun updateAll(scheduleList: List<Schedule>) = scheduleDao.updateAll(scheduleList)
 
     override suspend fun deleteByCourseNumber(courseNumber: Int) = scheduleDao.deleteByCourseNumber(courseNumber)
+
+    override suspend fun deleteAll() = scheduleDao.deleteAll()
 }

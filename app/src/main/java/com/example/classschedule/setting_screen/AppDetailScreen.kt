@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.retrofit.model.GitHubRelease
+import com.example.classschedule.setting_viewmodel.AppDetailViewModel
 import com.example.classschedule.tools.showToast
 
 @OptIn(ExperimentalMaterial3Api::class)

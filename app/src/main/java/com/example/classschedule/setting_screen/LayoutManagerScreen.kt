@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
+import com.example.classschedule.setting_viewmodel.LayOutManagerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

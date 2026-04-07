@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
+import com.example.classschedule.setting_viewmodel.SettingHomeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

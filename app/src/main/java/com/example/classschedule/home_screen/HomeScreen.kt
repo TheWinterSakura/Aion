@@ -83,6 +83,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.course.CourseSimple
 import com.example.classschedule.data.schedule.Schedule
+import com.example.classschedule.home_viewmodel.HomeViewModel
 import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.showToast
 import kotlinx.coroutines.delay

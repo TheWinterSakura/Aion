@@ -76,6 +76,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
+import com.example.classschedule.home_viewmodel.CourseDetailViewModel
 import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.showToast
 

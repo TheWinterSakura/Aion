@@ -3,21 +3,21 @@ package com.example.classschedule
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.classschedule.home_screen.AddCourseViewModel
-import com.example.classschedule.home_screen.CourseDetailViewModel
-import com.example.classschedule.home_screen.EditCourseViewModel
-import com.example.classschedule.home_screen.HomeViewModel
-import com.example.classschedule.setting_screen.AddCourseByJsonViewModel
-import com.example.classschedule.setting_screen.CourseTimeViewModel
-import com.example.classschedule.setting_screen.DataManagerViewModel
-import com.example.classschedule.setting_screen.EasImportViewModel
-import com.example.classschedule.setting_screen.ExportClassScheduleViewModel
-import com.example.classschedule.setting_screen.ExportClassTimeViewModel
-import com.example.classschedule.setting_screen.IdentifyViewModel
-import com.example.classschedule.setting_screen.LayOutManagerViewModel
-import com.example.classschedule.setting_screen.SchoolDateViewModel
-import com.example.classschedule.setting_screen.SettingHomeViewModel
-import com.example.classschedule.setting_screen.SpiderViewModel
+import com.example.classschedule.home_viewmodel.AddCourseViewModel
+import com.example.classschedule.home_viewmodel.CourseDetailViewModel
+import com.example.classschedule.home_viewmodel.EditCourseViewModel
+import com.example.classschedule.home_viewmodel.HomeViewModel
+import com.example.classschedule.setting_viewmodel.AddCourseByJsonViewModel
+import com.example.classschedule.setting_viewmodel.CourseTimeViewModel
+import com.example.classschedule.setting_viewmodel.DataManagerViewModel
+import com.example.classschedule.setting_viewmodel.EasImportViewModel
+import com.example.classschedule.setting_viewmodel.ExportClassScheduleViewModel
+import com.example.classschedule.setting_viewmodel.ExportClassTimeViewModel
+import com.example.classschedule.setting_viewmodel.IdentifyViewModel
+import com.example.classschedule.setting_viewmodel.LayOutManagerViewModel
+import com.example.classschedule.setting_viewmodel.SchoolDateViewModel
+import com.example.classschedule.setting_viewmodel.SettingHomeViewModel
+import com.example.classschedule.setting_viewmodel.SpiderViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -96,7 +96,8 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             CourseTimeViewModel(
-                scheduleRepository = application.container.scheduleRepository
+                scheduleRepository = application.container.scheduleRepository,
+                userPreferencesRepository = application.userPreferencesRepository
             )
         }
 

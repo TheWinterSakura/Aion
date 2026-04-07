@@ -1,4 +1,4 @@
-package com.example.classschedule.home_screen
+package com.example.classschedule.home_viewmodel
 
 import android.content.Context
 import android.content.Intent
@@ -45,7 +45,7 @@ class CourseDetailViewModel(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.Companion.WhileSubscribed(5000),
             initialValue = null
         )
 
@@ -82,7 +82,7 @@ class CourseDetailViewModel(
                     startDate = startDate,
                     weekDate = weekDate,
                     dayDate = dayDate,
-                    startTime = getClassTime(course.courseTime,courseTimeList.value).substringBefore("-"),
+                    startTime = getClassTime(course.courseTime, courseTimeList.value).substringBefore("-"),
                     context = context
                 )
             }else{
@@ -107,7 +107,11 @@ class CourseDetailViewModel(
         dayDate: String,
         courseTime: String
     ){
-        val scheduleTime = getDayAfterWeeks(startDateStr = startDate, weeksPassed = weekDate.toLong(), dayOfWeek = dayDate)
+        val scheduleTime = getDayAfterWeeks(
+            startDateStr = startDate,
+            weeksPassed = weekDate.toLong(),
+            dayOfWeek = dayDate
+        )
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         val startTime = getClassTime(courseTime, allCourseTime = courseTimeList.value).substringBefore("-")
         if (startTime.split(':')[0].length <= 1 && startTime.split(':')[1].length <= 1){

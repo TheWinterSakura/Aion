@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.course.Course
+import com.example.classschedule.home_viewmodel.AddCourseViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

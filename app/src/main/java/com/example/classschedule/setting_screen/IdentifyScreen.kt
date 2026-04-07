@@ -37,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.course.Course
+import com.example.classschedule.setting_viewmodel.IdentifyViewModel
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)

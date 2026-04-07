@@ -1,4 +1,4 @@
-package com.example.classschedule.home_screen
+package com.example.classschedule.home_viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-
 
 class HomeViewModel(
     private val repository: CourseRepository,
@@ -38,25 +37,25 @@ class HomeViewModel(
 
     val isGridLayout = repositoryPreferences.isGridLayout.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = false
     )
 
     val startDate = repositoryPreferences.commencementDate.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = ""
     )
 
     val allWeek = repositoryPreferences.allWeek.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = ""
     )
 
     val totalCourseNumber = repositoryPreferences.courseNumberTotal.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = 20
     )
 
@@ -79,7 +78,7 @@ class HomeViewModel(
         }
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.Companion.WhileSubscribed(5000),
         initialValue = emptyList()
     )
 

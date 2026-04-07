@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.schedule.Schedule
+import com.example.classschedule.setting_viewmodel.SchoolDateViewModel
 import com.example.classschedule.tools.showToast
 import java.text.SimpleDateFormat
 import java.util.Date

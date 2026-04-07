@@ -1,4 +1,4 @@
-package com.example.classschedule.setting_screen
+package com.example.classschedule.setting_viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,7 +14,7 @@ class LayOutManagerViewModel(
 
     val isGridLayout = repository.isGridLayout.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = false
     )
 

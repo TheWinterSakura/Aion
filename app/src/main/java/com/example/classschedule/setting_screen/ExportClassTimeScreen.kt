@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
+import com.example.classschedule.setting_viewmodel.ExportClassTimeViewModel
 import com.example.classschedule.tools.showToast
 
 @OptIn(ExperimentalMaterial3Api::class)

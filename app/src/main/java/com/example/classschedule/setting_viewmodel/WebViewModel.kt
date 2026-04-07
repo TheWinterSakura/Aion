@@ -1,4 +1,4 @@
-package com.example.classschedule.setting_screen
+package com.example.classschedule.setting_viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

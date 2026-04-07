@@ -1,4 +1,4 @@
-package com.example.classschedule.setting_screen
+package com.example.classschedule.setting_viewmodel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -20,7 +20,7 @@ class EasImportViewModel(
 
     val universityUrl = repository.universityUrl.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = ""
     )
 

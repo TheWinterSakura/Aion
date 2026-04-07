@@ -1,4 +1,4 @@
-package com.example.classschedule.setting_screen
+package com.example.classschedule.setting_viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,19 +16,19 @@ class SchoolDateViewModel(
 
     val startDate = repository.commencementDate.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = ""
     )
 
     val allWeek = repository.allWeek.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = "1"
     )
 
     val totalCourse = repository.courseNumberTotal.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Companion.WhileSubscribed(5_000),
         initialValue = 20
     )
 

@@ -28,4 +28,7 @@ interface ScheduleDao {
 
     @Query("DELETE FROM schedule WHERE  courseNumber = :courseNumber")
     suspend fun deleteByCourseNumber(courseNumber: Int)
+
+    @Query("DELETE FROM schedule")
+    suspend fun deleteAll()
 }

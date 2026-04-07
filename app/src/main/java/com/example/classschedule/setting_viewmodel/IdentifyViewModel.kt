@@ -1,4 +1,4 @@
-package com.example.classschedule.setting_screen
+package com.example.classschedule.setting_viewmodel
 
 import android.content.Context
 import android.graphics.Bitmap

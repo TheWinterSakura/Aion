@@ -1,4 +1,4 @@
-package com.example.classschedule.home_screen
+package com.example.classschedule.home_viewmodel
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -33,7 +33,7 @@ class AddCourseViewModel(
 
     val maxPeriodsPerDay = userPreferencesRepository.courseNumberTotal.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.Companion.WhileSubscribed(5000),
         initialValue = 20,
     )
 }

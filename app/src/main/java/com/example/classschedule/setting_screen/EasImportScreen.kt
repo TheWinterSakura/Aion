@@ -48,6 +48,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.school.University
+import com.example.classschedule.setting_viewmodel.EasImportViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
