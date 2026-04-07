@@ -86,7 +86,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.google.code.gson:gson:2.11.0")
-    implementation("androidx.activity:activity-compose:1.8.2")
     implementation("com.tom-roush:pdfbox-android:2.0.27.0")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.glance:glance-appwidget:1.1.1")

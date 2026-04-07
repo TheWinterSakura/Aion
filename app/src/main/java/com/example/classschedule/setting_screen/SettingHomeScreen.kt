@@ -1,7 +1,9 @@
 package com.example.classschedule.setting_screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -11,27 +13,31 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.AutoAwesome
-import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.CloudDownload
+import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material.icons.outlined.DateRange
+import androidx.compose.material.icons.outlined.DocumentScanner
+import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.IosShare
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Storage
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -40,6 +46,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -60,9 +67,9 @@ fun SettingHome(
     navigateToAppDetail: () -> Unit,
     navigateUp: () -> Unit,
     navigateToCourseTimeScreen: (Int) -> Unit,
-    navigateToExportClassSchedule:()-> Unit,
-    navigateToExportClassScheduleTimeScreen:()-> Unit,
-    navigateToJsonScreen:()-> Unit,
+    navigateToExportClassSchedule: () -> Unit,
+    navigateToExportClassScheduleTimeScreen: () -> Unit,
+    navigateToJsonScreen: () -> Unit,
     viewModel: SettingHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
@@ -74,18 +81,18 @@ fun SettingHome(
             TopAppBar(
                 title = {
                     Text(
-                        "设置",
+                        text = "设置",
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground
                 ),
                 navigationIcon = {
                     IconButton(onClick = navigateUp) {
-                        Icon(Icons.AutoMirrored.Outlined.KeyboardArrowLeft, "back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
                     }
                 }
             )
@@ -100,7 +107,7 @@ fun SettingHome(
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
             Spacer(modifier = Modifier.height(4.dp))
 
@@ -111,7 +118,7 @@ fun SettingHome(
                     onClick = navigateToSchoolDate
                 )
                 SettingItem(
-                    icon = Icons.Outlined.DateRange,
+                    icon = Icons.Outlined.Schedule,
                     title = "课程时间表设置",
                     isUnderline = false,
                     onClick = {
@@ -122,17 +129,17 @@ fun SettingHome(
 
             SettingGroup(title = "导入方式") {
                 SettingItem(
-                    icon = Icons.Outlined.CloudDownload,
+                    icon = Icons.Outlined.AccountBalance,
                     title = "教务系统导入",
                     onClick = navigateToClassImportByLoad
                 )
                 SettingItem(
-                    icon = Icons.Outlined.AutoAwesome,
+                    icon = Icons.Outlined.DocumentScanner,
                     title = "智能图片/PDF 导入",
                     onClick = navigateToClassImportByPDF
                 )
                 SettingItem(
-                    icon = Icons.Outlined.Add,
+                    icon = Icons.Outlined.FolderOpen,
                     title = "分享文件导入",
                     onClick = navigateToJsonScreen,
                     isUnderline = false
@@ -141,13 +148,12 @@ fun SettingHome(
 
             SettingGroup(title = "导出数据") {
                 SettingItem(
-                    icon = Icons.Outlined.Check,
+                    icon = Icons.Outlined.IosShare,
                     title = "导出课程数据",
                     onClick = navigateToExportClassSchedule
                 )
-
                 SettingItem(
-                    icon = Icons.Outlined.Check,
+                    icon = Icons.Outlined.IosShare,
                     title = "导出课程时间数据",
                     isUnderline = false,
                     onClick = navigateToExportClassScheduleTimeScreen
@@ -161,13 +167,12 @@ fun SettingHome(
                     onClick = navigateToDataManager
                 )
                 SettingItem(
-                    icon = Icons.Outlined.Palette,
+                    icon = Icons.Outlined.Dashboard,
                     title = "界面布局管理",
                     isUnderline = false,
                     onClick = navigateToLayoutManager
                 )
             }
-
 
             SettingGroup(title = "关于") {
                 SettingItem(
@@ -179,7 +184,7 @@ fun SettingHome(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
@@ -192,18 +197,21 @@ fun SettingGroup(
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = title,
-            style = MaterialTheme.typography.labelLarge,
+            style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 12.dp, bottom = 8.dp),
+            fontWeight = FontWeight.Bold,
             letterSpacing = 0.5.sp
         )
-        Surface(
+        Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
-            Column {
+            Column(modifier = Modifier.clip(RoundedCornerShape(16.dp))) {
                 content()
             }
         }
@@ -223,23 +231,34 @@ fun SettingItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onClick)
-                .padding(horizontal = 16.dp, vertical = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 14.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(22.dp)
-            )
+
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
 
             Text(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 14.dp)
+                modifier = Modifier.weight(1f)
             )
 
             if (endText.isNotEmpty()) {
@@ -247,23 +266,23 @@ fun SettingItem(
                     text = endText,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(end = 4.dp)
+                    modifier = Modifier.padding(end = 8.dp)
                 )
             }
 
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                 modifier = Modifier.size(20.dp)
             )
         }
 
         if (isUnderline) {
             HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 16.dp),
+                modifier = Modifier.padding(start = 68.dp, end = 16.dp),
                 thickness = 0.5.dp,
-                color = MaterialTheme.colorScheme.outlineVariant
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
             )
         }
     }

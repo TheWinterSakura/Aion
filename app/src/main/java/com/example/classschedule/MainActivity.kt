@@ -6,12 +6,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.classschedule.ui.PredictiveBackGestureHandler
 import com.example.classschedule.home_screen.AddCourse
 import com.example.classschedule.home_screen.CourseDetail
 import com.example.classschedule.home_screen.EditCourse
@@ -50,9 +59,48 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainNavScreen(finishAffinity: () -> Unit) {
     val navController = rememberNavController()
+    val slideSpring = spring<IntOffset>(
+        dampingRatio = Spring.DampingRatioNoBouncy,
+        stiffness = Spring.StiffnessMediumLow
+    )
+
     NavHost(
         navController = navController,
         startDestination = HomeScreen,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                animationSpec = slideSpring
+            ) + fadeIn(animationSpec = tween(220))
+        },
+        exitTransition = {
+            if (targetState.destination.hasRoute(AddCourseScreen::class) ||
+                targetState.destination.hasRoute(EditCourseScreen::class)) {
+                fadeOut(tween(300), targetAlpha = 0.5f)
+            } else {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = slideSpring
+                ) + fadeOut(animationSpec = tween(220))
+            }
+        },
+        popEnterTransition = {
+            if (initialState.destination.hasRoute(AddCourseScreen::class) ||
+                initialState.destination.hasRoute(EditCourseScreen::class)) {
+                fadeIn(tween(300))
+            } else {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = slideSpring
+                ) + fadeIn(animationSpec = tween(220))
+            }
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = slideSpring
+            ) + fadeOut(animationSpec = tween(220))
+        }
     ) {
         composable<HomeScreen> {
             HomeScreen(
@@ -75,196 +123,262 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
             )
         }
 
-        composable<AddCourseScreen> {
-            AddCourse(
-                navigationUp = {
-                    navController.navigateUp()
-                }
-            )
+        composable<AddCourseScreen>(
+            enterTransition = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up, spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                ))
+            },
+            exitTransition = {
+                fadeOut(tween(300), targetAlpha = 0.8f)
+            },
+            popEnterTransition = {
+                fadeIn(tween(300))
+            },
+            popExitTransition = {
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down, spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                ))
+            }
+        ) {
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                AddCourse(
+                    navigationUp = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
 
         composable<CourseDetailScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<CourseDetailScreen>()
-            CourseDetail(
-                courseId = args.id,
-                weekDate = args.weekDate,
-                dayDate = args.dayDate,
-                startDate = args.startDate,
-                navigationUp = {
-                    navController.navigateUp()
-                },
-                navigateToEdit = { id ->
-                    navController.navigate(EditCourseScreen(id = id))
-                }
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                CourseDetail(
+                    courseId = args.id,
+                    weekDate = args.weekDate,
+                    dayDate = args.dayDate,
+                    startDate = args.startDate,
+                    navigationUp = {
+                        navController.navigateUp()
+                    },
+                    navigateToEdit = { id ->
+                        navController.navigate(EditCourseScreen(id = id))
+                    }
+                )
+            }
         }
 
-        composable<EditCourseScreen> { backStackEntry ->
+        composable<EditCourseScreen>(
+            enterTransition = {
+                slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Up, spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                ))
+            },
+            exitTransition = {
+                fadeOut(tween(300), targetAlpha = 0.8f)
+            },
+            popEnterTransition = {
+                fadeIn(tween(300))
+            },
+            popExitTransition = {
+                slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Down, spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                ))
+            }
+        ) { backStackEntry ->
             val args = backStackEntry.toRoute<EditCourseScreen>()
-            EditCourse(
-                id = args.id,
-                navigationUp = {
-                    navController.navigateUp()
-                })
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                EditCourse(
+                    id = args.id,
+                    navigationUp = {
+                        navController.navigateUp()
+                    })
+            }
         }
 
         composable<WebScreen> { backStackEntry ->
             val args = backStackEntry.toRoute<WebScreen>()
-            ImportScheduleScreen(
-                navigateUp = {
-                    navController.navigateUp()
-                },
-                universityUrl = args.universityUrl,
-                navigateToHome = {
-                    navController.navigate(HomeScreen) {
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                ImportScheduleScreen(
+                    navigateUp = {
+                        navController.navigateUp()
+                    },
+                    universityUrl = args.universityUrl,
+                    navigateToHome = {
+                        navController.navigate(HomeScreen) {
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
                         }
-                        launchSingleTop = true
                     }
-                }
-            )
+                )
+            }
         }
 
-
         composable<IdentifyScreen> {
-            ScheduleImportScreen(
-                onNavigateUp = {
-                    navController.navigateUp()
-                }
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                ScheduleImportScreen(
+                    onNavigateUp = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
 
         composable<SettingHomeScreen> {
-            SettingHome(
-                navigateToSchoolDate = {
-                    navController.navigate(SchoolDateScreen)
-                },
-                navigateToClassImportByLoad = {
-                    navController.navigate(EasImportScreen)
-                },
-                navigateToDataManager = {
-                    navController.navigate(DataManagerScreen)
-                },
-                navigateToClassImportByPDF = {
-                    navController.navigate(IdentifyScreen)
-                },
-                navigateToLayoutManager = {
-                    navController.navigate(LayoutManagerScreen)
-                },
-                navigateToAppDetail = {
-                    navController.navigate(AppDetailScreen)
-                },
-                navigateUp = {
-                    navController.navigateUp()
-                },
-                navigateToCourseTimeScreen = { totalCourseNumber ->
-                    navController.navigate(CourseTimeScreen(totalCourseNumber))
-                },
-                navigateToExportClassSchedule = {
-                    navController.navigate(ExportClassScheduleScreen)
-                },
-                navigateToExportClassScheduleTimeScreen = {
-                    navController.navigate(ExportClassTimeScreen)
-                },
-                navigateToJsonScreen = {
-                    navController.navigate(AddCourseByJsonScreen)
-                }
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                SettingHome(
+                    navigateToSchoolDate = {
+                        navController.navigate(SchoolDateScreen)
+                    },
+                    navigateToClassImportByLoad = {
+                        navController.navigate(EasImportScreen)
+                    },
+                    navigateToDataManager = {
+                        navController.navigate(DataManagerScreen)
+                    },
+                    navigateToClassImportByPDF = {
+                        navController.navigate(IdentifyScreen)
+                    },
+                    navigateToLayoutManager = {
+                        navController.navigate(LayoutManagerScreen)
+                    },
+                    navigateToAppDetail = {
+                        navController.navigate(AppDetailScreen)
+                    },
+                    navigateUp = {
+                        navController.navigateUp()
+                    },
+                    navigateToCourseTimeScreen = { totalCourseNumber ->
+                        navController.navigate(CourseTimeScreen(totalCourseNumber))
+                    },
+                    navigateToExportClassSchedule = {
+                        navController.navigate(ExportClassScheduleScreen)
+                    },
+                    navigateToExportClassScheduleTimeScreen = {
+                        navController.navigate(ExportClassTimeScreen)
+                    },
+                    navigateToJsonScreen = {
+                        navController.navigate(AddCourseByJsonScreen)
+                    }
+                )
+            }
         }
 
         composable<SchoolDateScreen> {
-            SchoolDate(
-                onNavigateBack = {
-                    navController.navigateUp()
-                }
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                SchoolDate(
+                    onNavigateBack = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
 
         composable<EasImportScreen> {
-            EasImport(
-                onNavigateToWeb = { universityUrl ->
-                    navController.navigate(WebScreen(universityUrl = universityUrl))
-                },
-                onNavigateBack = {
-                    navController.navigateUp()
-                }
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                EasImport(
+                    onNavigateToWeb = { universityUrl ->
+                        navController.navigate(WebScreen(universityUrl = universityUrl))
+                    },
+                    onNavigateBack = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
 
         composable<DataManagerScreen> {
-            DataManager(
-                navigateUp = {
-                    navController.navigateUp()
-                },
-                onNavigateToHomeScreen = {
-                    navController.navigate(HomeScreen){
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                DataManager(
+                    navigateUp = {
+                        navController.navigateUp()
+                    },
+                    onNavigateToHomeScreen = {
+                        navController.navigate(HomeScreen){
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
                         }
-                        launchSingleTop = true
                     }
-                }
-            )
+                )
+            }
         }
 
         composable<LayoutManagerScreen> {
-            LayoutManager(
-                onBack = {
-                    navController.navigateUp()
-                }
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                LayoutManager(
+                    onBack = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
 
         composable<AppDetailScreen> {
-            AppDetail(
-                navigateUp = {
-                    navController.navigateUp()
-                }
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                AppDetail(
+                    navigateUp = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
 
         composable<CourseTimeScreen> { args ->
             val backStackEntry = args.toRoute<CourseTimeScreen>()
-            EditScheduleScreen(
-                navigateUp = {
-                    navController.navigateUp()
-                },
-                totalCourseNumber = backStackEntry.totalCourseNumber
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                EditScheduleScreen(
+                    navigateUp = {
+                        navController.navigateUp()
+                    },
+                    totalCourseNumber = backStackEntry.totalCourseNumber
+                )
+            }
         }
 
         composable<ExportClassScheduleScreen> {
-            ExportClassSchedule(
-                onNavigateUp = {
-                    navController.navigateUp()
-                }
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                ExportClassSchedule(
+                    onNavigateUp = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
 
         composable<ExportClassTimeScreen>{
-            ExportClassTime(
-                onNavigateUp = {
-                    navController.navigateUp()
-                }
-            )
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                ExportClassTime(
+                    onNavigateUp = {
+                        navController.navigateUp()
+                    }
+                )
+            }
         }
 
         composable<AddCourseByJsonScreen> {
-            AddCourseByJson(
-                navigateUp = {
-                    navController.navigateUp()
-                },
-                navigateToHome = {
-                    navController.navigate(HomeScreen){
-                        popUpTo(navController.graph.id) {
-                            inclusive = true
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                AddCourseByJson(
+                    navigateUp = {
+                        navController.navigateUp()
+                    },
+                    navigateToHome = {
+                        navController.navigate(HomeScreen){
+                            popUpTo(navController.graph.id) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
                         }
-                        launchSingleTop = true
                     }
-                }
-            )
+                )
+            }
         }
-
     }
 }
