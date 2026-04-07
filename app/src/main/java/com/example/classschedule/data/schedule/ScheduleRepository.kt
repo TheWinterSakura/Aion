@@ -19,6 +19,7 @@ interface ScheduleRepository {
 
     suspend fun deleteByCourseNumber(courseNumber: Int)
 
+
 }
 
 class OfflineScheduleRepository(

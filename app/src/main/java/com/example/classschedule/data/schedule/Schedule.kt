@@ -2,7 +2,9 @@ package com.example.classschedule.data.schedule
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "schedule")
 data class Schedule(
     @PrimaryKey(autoGenerate = true)

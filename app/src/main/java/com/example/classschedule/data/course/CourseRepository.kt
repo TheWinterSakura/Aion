@@ -21,6 +21,10 @@ interface CourseRepository {
     suspend fun deleteAll()
 
     fun getTodayCourseSimple(currentWeekDate: Int, today: String): Flow<List<CourseSimple>>
+
+    suspend fun getAllCourse(): List<Course>
+
+    suspend fun insertCourseList(courseList: List<Course>)
 }
 
 class OfflineCourseRepository(private val courseDao: CourseDao) : CourseRepository {
@@ -42,4 +46,10 @@ class OfflineCourseRepository(private val courseDao: CourseDao) : CourseReposito
         today: String,
     ): Flow<List<CourseSimple>> =
         courseDao.getTodayCourseSimple(currentWeekDate, today)
+
+    override suspend fun getAllCourse(): List<Course> =
+        courseDao.getAllCourse()
+
+    override suspend fun insertCourseList(courseList: List<Course>) =
+        courseDao.insertCourseList(courseList = courseList)
 }

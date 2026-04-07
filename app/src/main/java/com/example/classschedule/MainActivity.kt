@@ -16,10 +16,13 @@ import com.example.classschedule.home_screen.AddCourse
 import com.example.classschedule.home_screen.CourseDetail
 import com.example.classschedule.home_screen.EditCourse
 import com.example.classschedule.home_screen.HomeScreen
+import com.example.classschedule.setting_screen.AddCourseByJson
 import com.example.classschedule.setting_screen.AppDetail
 import com.example.classschedule.setting_screen.DataManager
 import com.example.classschedule.setting_screen.EasImport
 import com.example.classschedule.setting_screen.EditScheduleScreen
+import com.example.classschedule.setting_screen.ExportClassSchedule
+import com.example.classschedule.setting_screen.ExportClassTime
 import com.example.classschedule.setting_screen.ImportScheduleScreen
 import com.example.classschedule.setting_screen.LayoutManager
 import com.example.classschedule.setting_screen.ScheduleImportScreen
@@ -157,6 +160,15 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                 },
                 navigateToCourseTimeScreen = { totalCourseNumber ->
                     navController.navigate(CourseTimeScreen(totalCourseNumber))
+                },
+                navigateToExportClassSchedule = {
+                    navController.navigate(ExportClassScheduleScreen)
+                },
+                navigateToExportClassScheduleTimeScreen = {
+                    navController.navigate(ExportClassTimeScreen)
+                },
+                navigateToJsonScreen = {
+                    navController.navigate(AddCourseByJsonScreen)
                 }
             )
         }
@@ -219,6 +231,38 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                     navController.navigateUp()
                 },
                 totalCourseNumber = backStackEntry.totalCourseNumber
+            )
+        }
+
+        composable<ExportClassScheduleScreen> {
+            ExportClassSchedule(
+                onNavigateUp = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable<ExportClassTimeScreen>{
+            ExportClassTime(
+                onNavigateUp = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable<AddCourseByJsonScreen> {
+            AddCourseByJson(
+                navigateUp = {
+                    navController.navigateUp()
+                },
+                navigateToHome = {
+                    navController.navigate(HomeScreen){
+                        popUpTo(navController.graph.id) {
+                            inclusive = true
+                        }
+                        launchSingleTop = true
+                    }
+                }
             )
         }
 

@@ -7,9 +7,12 @@ import com.example.classschedule.home_screen.AddCourseViewModel
 import com.example.classschedule.home_screen.CourseDetailViewModel
 import com.example.classschedule.home_screen.EditCourseViewModel
 import com.example.classschedule.home_screen.HomeViewModel
+import com.example.classschedule.setting_screen.AddCourseByJsonViewModel
 import com.example.classschedule.setting_screen.CourseTimeViewModel
 import com.example.classschedule.setting_screen.DataManagerViewModel
 import com.example.classschedule.setting_screen.EasImportViewModel
+import com.example.classschedule.setting_screen.ExportClassScheduleViewModel
+import com.example.classschedule.setting_screen.ExportClassTimeViewModel
 import com.example.classschedule.setting_screen.IdentifyViewModel
 import com.example.classschedule.setting_screen.LayOutManagerViewModel
 import com.example.classschedule.setting_screen.SchoolDateViewModel
@@ -101,6 +104,27 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             SettingHomeViewModel(
                 preferenceRepository = application.userPreferencesRepository,
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
+            ExportClassScheduleViewModel(
+                repository = application.container.courseRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
+            ExportClassTimeViewModel(
+                repository = application.container.scheduleRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
+            AddCourseByJsonViewModel(
+                repository = application.container.courseRepository
             )
         }
     }

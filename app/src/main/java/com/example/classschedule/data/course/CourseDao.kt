@@ -31,4 +31,10 @@ interface CourseDao {
 
     @Query("SELECT courseName, courseTime, courseLocation, id, weekDay FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate AND weekDay = :today")
     fun getTodayCourseSimple(currentWeekDate: Int,today: String): Flow<List<CourseSimple>>
+
+    @Query("SELECT * FROM course")
+    suspend fun getAllCourse(): List<Course>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertCourseList(courseList: List<Course>)
 }

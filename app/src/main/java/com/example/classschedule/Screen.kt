@@ -48,3 +48,12 @@ object AppDetailScreen
 @Serializable
 data class CourseTimeScreen(val totalCourseNumber: Int)
 
+@Serializable
+object ExportClassScheduleScreen
+
+@Serializable
+object ExportClassTimeScreen
+
+@Serializable
+object AddCourseByJsonScreen
+

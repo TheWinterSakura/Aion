@@ -17,7 +17,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowLeft
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Info
@@ -57,6 +59,9 @@ fun SettingHome(
     navigateToAppDetail: () -> Unit,
     navigateUp: () -> Unit,
     navigateToCourseTimeScreen: (Int) -> Unit,
+    navigateToExportClassSchedule:()-> Unit,
+    navigateToExportClassScheduleTimeScreen:()-> Unit,
+    navigateToJsonScreen:()-> Unit,
     viewModel: SettingHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
@@ -123,8 +128,28 @@ fun SettingHome(
                 SettingItem(
                     icon = Icons.Outlined.AutoAwesome,
                     title = "智能图片/PDF 导入",
-                    isUnderline = false,
                     onClick = navigateToClassImportByPDF
+                )
+                SettingItem(
+                    icon = Icons.Outlined.Add,
+                    title = "分享文件导入",
+                    onClick = navigateToJsonScreen,
+                    isUnderline = false
+                )
+            }
+
+            SettingGroup(title = "导出数据") {
+                SettingItem(
+                    icon = Icons.Outlined.Check,
+                    title = "导出课程数据",
+                    onClick = navigateToExportClassSchedule
+                )
+
+                SettingItem(
+                    icon = Icons.Outlined.Check,
+                    title = "导出课程时间数据",
+                    isUnderline = false,
+                    onClick = navigateToExportClassScheduleTimeScreen
                 )
             }
 
@@ -137,9 +162,11 @@ fun SettingHome(
                 SettingItem(
                     icon = Icons.Outlined.Palette,
                     title = "界面布局管理",
+                    isUnderline = false,
                     onClick = navigateToLayoutManager
                 )
             }
+
 
             SettingGroup(title = "关于") {
                 SettingItem(
