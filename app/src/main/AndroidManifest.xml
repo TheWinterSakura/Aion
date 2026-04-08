@@ -17,8 +17,8 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:extractNativeLibs="false"
-        android:enableOnBackInvokedCallback="true"
-        android:theme="@style/Theme.ClassSchedule">
+        android:theme="@style/Theme.ClassSchedule"
+        android:enableOnBackInvokedCallback="true">
 
         <activity
             android:name=".MainActivity"

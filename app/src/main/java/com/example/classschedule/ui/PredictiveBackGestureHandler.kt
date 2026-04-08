@@ -7,6 +7,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -16,7 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
@@ -69,24 +70,28 @@ fun PredictiveBackGestureHandler(
             onBack()
         } catch (e: CancellationException) {
             scope.launch {
-                launch { scale.animateTo(1f, spring(stiffness = 350f, dampingRatio = 0.72f)) }
-                launch { translationX.animateTo(0f, spring(stiffness = 350f, dampingRatio = 0.72f)) }
-                launch { translationY.animateTo(0f, spring(stiffness = 350f, dampingRatio = 0.72f)) }
-                launch { cornerRadiusDp.animateTo(0f, spring(stiffness = 350f, dampingRatio = 0.72f)) }
+                launch { scale.animateTo(1f, spring(stiffness = 350f, dampingRatio = 1f)) }
+                launch { translationX.animateTo(0f, spring(stiffness = 350f, dampingRatio = 1f)) }
+                launch { translationY.animateTo(0f, spring(stiffness = 350f, dampingRatio = 1f)) }
+                launch { cornerRadiusDp.animateTo(0f, spring(stiffness = 350f, dampingRatio = 1f)) }
                 overlayAlpha = 0f
             }
         }
     }
+
+    val surface = MaterialTheme.colorScheme.surface
+    val overlayColor = if (surface.luminance() > 0.5f) androidx.compose.ui.graphics.Color.Black
+                       else androidx.compose.ui.graphics.Color.White
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .drawBehind {
                 if (overlayAlpha > 0f) {
-                    drawRect(Color.Black.copy(alpha = overlayAlpha))
+                    drawRect(overlayColor.copy(alpha = overlayAlpha))
                 }
             }
-            .clip(RoundedCornerShape(cornerRadiusDp.value.dp))
+            .clip(RoundedCornerShape(cornerRadiusDp.value.coerceAtLeast(0f).dp))
             .graphicsLayer {
                 scaleX = scale.value
                 scaleY = scale.value

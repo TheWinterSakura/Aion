@@ -1,26 +1,23 @@
 package com.example.classschedule
 
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.classschedule.ui.PredictiveBackGestureHandler
 import com.example.classschedule.home_screen.AddCourse
 import com.example.classschedule.home_screen.CourseDetail
 import com.example.classschedule.home_screen.EditCourse
@@ -37,10 +34,10 @@ import com.example.classschedule.setting_screen.LayoutManager
 import com.example.classschedule.setting_screen.ScheduleImportScreen
 import com.example.classschedule.setting_screen.SchoolDate
 import com.example.classschedule.setting_screen.SettingHome
+import com.example.classschedule.ui.PredictiveBackGestureHandler
 import com.example.classschedule.ui.theme.ClassScheduleTheme
 
 class MainActivity : ComponentActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -54,7 +51,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavScreen(finishAffinity: () -> Unit) {

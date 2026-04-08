@@ -17,16 +17,19 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -40,10 +43,9 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -51,11 +53,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScrollableTabRow
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -74,9 +79,11 @@ import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -111,9 +118,18 @@ fun HomeScreen(
     val isTimerFinished by viewModel.isTimerFinished.collectAsState()
     val monDateStr by viewModel.monDateStr.collectAsState()
 
-    var expanded by remember { mutableStateOf(false) }
     var currentWeek by rememberSaveable { mutableIntStateOf(1) }
     var localDateCurrentWeek by rememberSaveable { mutableIntStateOf(1) }
+
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val quarterHeight = screenHeight / 3
+
+    var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false
+    )
+
 
     LaunchedEffect(startDate) {
         if (startDate.isNotBlank() && !hasLoad) {
@@ -160,62 +176,50 @@ fun HomeScreen(
         pageCount = { viewModel.week.size.coerceAtLeast(1) }
     )
 
+    if (showBottomSheet){
+        WeekSelectionSheet(
+            onDismiss = { showBottomSheet = false },
+            sheetState = sheetState,
+            quarterHeight = quarterHeight,
+            allWeekCount = allWeeks.toIntOrNull() ?: 20,
+            currentWeek = currentWeek,
+            onClick = { weekNum ->
+                currentWeek = weekNum
+            },
+            localDateWeek = localDateCurrentWeek
+        )
+    }
+
     if (isTimerFinished) {
         Scaffold(
             topBar = {
                 Column {
                     TopAppBar(
                         title = {
-                            Box {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .clip(RoundedCornerShape(8.dp))
-                                        .clickable { expanded = true }
-                                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                                ) {
-                                    if (currentWeek == localDateCurrentWeek) {
-                                        Text(
-                                            text = "第 $currentWeek 周",
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight.Bold,
-                                            color = Color(0xFF87CEEB)
-                                        )
-                                    } else {
-                                        Text(
-                                            text = "第 $currentWeek 周",
-                                            fontSize = 20.sp,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                    }
-                                    Icon(
-                                        Icons.Default.ArrowDropDown,
-                                        contentDescription = "选择周数"
-                                    )
-                                }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .clickable { showBottomSheet = true }
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                            ) {
+                                Text(
+                                    text = "第 $currentWeek 周",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (currentWeek == localDateCurrentWeek)
+                                        MaterialTheme.colorScheme.primary
+                                    else
+                                        MaterialTheme.colorScheme.onSurface
+                                )
 
-                                DropdownMenu(
-                                    expanded = expanded,
-                                    onDismissRequest = { expanded = false },
-                                    modifier = Modifier.heightIn(max = 400.dp)
-                                ) {
-                                    val weeksCount = allWeeks.toIntOrNull() ?: 20
-                                    repeat(weeksCount) { i ->
-                                        DropdownMenuItem(
-                                            text = {
-                                                if (i + 1 == localDateCurrentWeek) {
-                                                    Text("第 ${i + 1} 周(本周)", color = Color(0xFF87CEEB))
-                                                } else {
-                                                    Text("第 ${i + 1} 周")
-                                                }
-                                            },
-                                            onClick = {
-                                                currentWeek = i + 1
-                                                expanded = false
-                                            }
-                                        )
-                                    }
-                                }
+                                Spacer(modifier = Modifier.width(2.dp))
+
+                                Icon(
+                                    imageVector = Icons.Default.ArrowDropDown,
+                                    contentDescription = "选择周数",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
                             }
                         },
                         actions = {
@@ -712,5 +716,101 @@ fun WeekDay(
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WeekSelectionSheet(
+    onDismiss: () -> Unit,
+    sheetState: SheetState,
+    quarterHeight: Dp,
+    allWeekCount: Int,
+    currentWeek: Int,
+    localDateWeek: Int,
+    onClick: (Int) -> Unit
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        dragHandle = { BottomSheetDefaults.DragHandle() },
+        containerColor = MaterialTheme.colorScheme.surface,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .defaultMinSize(minHeight = quarterHeight)
+                .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = "选择周数",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(5),
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(bottom = 32.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(allWeekCount) { index ->
+                    val weekNum = index + 1
+                    val isSelected = weekNum == currentWeek
+                    val isRealThisWeek = weekNum == localDateWeek
+
+                    val containerColor = when {
+                        isSelected -> MaterialTheme.colorScheme.primary
+                        isRealThisWeek -> MaterialTheme.colorScheme.primaryContainer
+                        else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    }
+                    val contentColor = when {
+                        isSelected -> MaterialTheme.colorScheme.onPrimary
+                        isRealThisWeek -> MaterialTheme.colorScheme.onPrimaryContainer
+                        else -> MaterialTheme.colorScheme.onSurfaceVariant
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .aspectRatio(1f)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(containerColor)
+                            .clickable {
+                                onClick(weekNum)
+                                onDismiss()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "$weekNum",
+                                fontSize = 18.sp,
+                                color = contentColor,
+                                fontWeight = if (isSelected || isRealThisWeek) FontWeight.Bold else FontWeight.Medium
+                            )
+
+                            if (isRealThisWeek) {
+                                Text(
+                                    text = "本周",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = contentColor.copy(alpha = 0.8f)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
