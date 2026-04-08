@@ -10,6 +10,8 @@ import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -62,9 +64,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainNavScreen(finishAffinity: () -> Unit) {
     val navController = rememberNavController()
-    val slideSpring = spring<IntOffset>(
+
+    val enterSpring = spring<IntOffset>(
         dampingRatio = Spring.DampingRatioNoBouncy,
         stiffness = Spring.StiffnessMediumLow
+    )
+    val exitSpring = spring<IntOffset>(
+        dampingRatio = Spring.DampingRatioNoBouncy,
+        stiffness = Spring.StiffnessMedium
     )
 
     NavHost(
@@ -73,36 +80,34 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
         enterTransition = {
             slideIntoContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = slideSpring
-            ) + fadeIn(animationSpec = tween(220))
+                animationSpec = enterSpring
+            )
         },
         exitTransition = {
             if (targetState.destination.hasRoute(AddCourseScreen::class) ||
                 targetState.destination.hasRoute(EditCourseScreen::class)) {
-                fadeOut(tween(300), targetAlpha = 0.5f)
+                scaleOut(targetScale = 0.97f, animationSpec = tween(350)) +
+                fadeOut(tween(350), targetAlpha = 0.6f)
             } else {
-                slideOutOfContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Left,
-                    animationSpec = slideSpring
-                ) + fadeOut(animationSpec = tween(220))
+                scaleOut(targetScale = 0.95f, animationSpec = tween(300)) +
+                fadeOut(tween(300), targetAlpha = 0.5f)
             }
         },
         popEnterTransition = {
             if (initialState.destination.hasRoute(AddCourseScreen::class) ||
                 initialState.destination.hasRoute(EditCourseScreen::class)) {
-                fadeIn(tween(300))
+                scaleIn(initialScale = 0.97f, animationSpec = tween(350)) +
+                fadeIn(tween(350))
             } else {
-                slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = slideSpring
-                ) + fadeIn(animationSpec = tween(220))
+                scaleIn(initialScale = 0.95f, animationSpec = tween(280)) +
+                fadeIn(tween(280))
             }
         },
         popExitTransition = {
             slideOutOfContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = slideSpring
-            ) + fadeOut(animationSpec = tween(220))
+                animationSpec = exitSpring
+            )
         }
     ) {
         composable<HomeScreen> {
