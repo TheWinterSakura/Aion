@@ -7,8 +7,10 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -93,6 +95,7 @@ import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.home_viewmodel.HomeViewModel
 import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.showToast
+import com.example.classschedule.ui.ColorPickerBottomSheet
 import com.example.classschedule.ui.theme.LocalCourseColors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -176,6 +179,21 @@ fun HomeScreen(
         initialPage = initialDayIndex,
         pageCount = { viewModel.week.size.coerceAtLeast(1) }
     )
+
+    var showColorPicker by remember { mutableStateOf(false) }
+    var colorPickerTargetId by remember { mutableStateOf(0) }
+    var colorPickerInitialColor by remember { mutableStateOf<String?>(null) }
+
+    if (showColorPicker) {
+        ColorPickerBottomSheet(
+            initialColor = colorPickerInitialColor,
+            onDismiss = { showColorPicker = false },
+            onColorSelected = { color ->
+                viewModel.updateCourseColor(colorPickerTargetId, color)
+                showColorPicker = false
+            }
+        )
+    }
 
     if (showBottomSheet){
         WeekSelectionSheet(
@@ -322,16 +340,17 @@ fun HomeScreen(
                             courseTimeList = courseTimeList,
                             onNextWeek = {
                                 val maxWeek = allWeeks.toIntOrNull() ?: 20
-                                if (currentWeek < maxWeek) {
-                                    currentWeek++
-                                }
+                                if (currentWeek < maxWeek) currentWeek++
                             },
                             onPrevWeek = {
-                                if (currentWeek > 1) {
-                                    currentWeek--
-                                }
+                                if (currentWeek > 1) currentWeek--
                             },
-                            monDateStr = monDateStr
+                            monDateStr = monDateStr,
+                            onLongClickCourse = { id, currentColor ->
+                                colorPickerTargetId = id
+                                colorPickerInitialColor = currentColor
+                                showColorPicker = true
+                            }
                         )
                     }
                 } else {
@@ -354,7 +373,12 @@ fun HomeScreen(
                                         startDate
                                     )
                                 },
-                                courseTimeList = courseTimeList
+                                courseTimeList = courseTimeList,
+                                onColorChange = { id, currentColor ->
+                                    colorPickerTargetId = id
+                                    colorPickerInitialColor = currentColor
+                                    showColorPicker = true
+                                }
                             )
                         }
                     }
@@ -372,7 +396,8 @@ fun HomeScreen(
 fun DailyCourseList(
     courseList: List<CourseSimple>,
     navigateToCourseDetails: (Int) -> Unit,
-    courseTimeList: List<Schedule>
+    courseTimeList: List<Schedule>,
+    onColorChange: (id: Int, color: String?) -> Unit
 ) {
     if (courseList.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -393,23 +418,37 @@ fun DailyCourseList(
                     courseName = item.courseName,
                     courseTime = getClassTime(item.courseTime, allCourseTime = courseTimeList),
                     courseLocation = item.courseLocation,
-                    onClick = { navigateToCourseDetails(item.id) }
+                    courseColor = item.color,
+                    onClick = { navigateToCourseDetails(item.id) },
+                    onLongClick = { onColorChange(item.id, item.color) }
                 )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ScheduleCard(
     courseName: String,
     courseTime: String,
     courseLocation: String,
-    onClick: () -> Unit
+    courseColor: String?,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
+    // 颜色条：自定义色 or 主题 primary
+    val accentColor = remember(courseColor) {
+        if (courseColor != null) {
+            try { Color(android.graphics.Color.parseColor(courseColor)) }
+            catch (e: Exception) { null }
+        } else null
+    }
+
     ElevatedCard(
-        onClick = onClick, modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
         colors = CardDefaults.elevatedCardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
     ) {
@@ -418,7 +457,7 @@ fun ScheduleCard(
                 modifier = Modifier
                     .width(6.dp)
                     .fillMaxHeight()
-                    .background(MaterialTheme.colorScheme.primary)
+                    .background(accentColor ?: MaterialTheme.colorScheme.primary)
             )
             Column(
                 modifier = Modifier
@@ -475,7 +514,8 @@ fun WeeklyGridLayout(
     courseTimeList: List<Schedule>,
     onNextWeek: () -> Unit,
     onPrevWeek: () -> Unit,
-    monDateStr: String
+    monDateStr: String,
+    onLongClickCourse: (id: Int, currentColor: String?) -> Unit
 ) {
     val timeColumnWidth = 36.dp
     val sectionHeight = 65.dp
@@ -603,6 +643,12 @@ fun WeeklyGridLayout(
 
                                 val colorIndex =
                                     kotlin.math.abs(course.courseName.hashCode()) % courseColors.colors.size
+                                val cardBgColor = remember(course.color) {
+                                    if (course.color != null) {
+                                        try { Color(android.graphics.Color.parseColor(course.color)) }
+                                        catch (e: Exception) { null }
+                                    } else null
+                                } ?: courseColors.colors[colorIndex]
 
                                 Box(
                                     modifier = Modifier
@@ -611,13 +657,13 @@ fun WeeklyGridLayout(
                                         .height(sectionHeight * span)
                                         .padding(1.5.dp)
                                         .clip(RoundedCornerShape(8.dp))
-                                        .background(courseColors.colors[colorIndex])
-                                        .clickable {
-                                            navigateToCourseDetails(
-                                                course.id,
-                                                currentDay
-                                            )
-                                        }
+                                        .background(cardBgColor)
+                                        .combinedClickable(
+                                            onClick = { navigateToCourseDetails(course.id, currentDay) },
+                                            onLongClick = {
+                                                onLongClickCourse(course.id, course.color)
+                                            }
+                                        )
                                         .padding(4.dp),
                                     contentAlignment = Alignment.Center
                                 ) {

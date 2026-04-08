@@ -25,6 +25,8 @@ interface CourseRepository {
     suspend fun getAllCourse(): List<Course>
 
     suspend fun insertCourseList(courseList: List<Course>)
+
+    suspend fun updateCourseColor(id: Int, color: String?)
 }
 
 class OfflineCourseRepository(private val courseDao: CourseDao) : CourseRepository {
@@ -52,4 +54,7 @@ class OfflineCourseRepository(private val courseDao: CourseDao) : CourseReposito
 
     override suspend fun insertCourseList(courseList: List<Course>) =
         courseDao.insertCourseList(courseList = courseList)
+
+    override suspend fun updateCourseColor(id: Int, color: String?) =
+        courseDao.updateColor(id, color)
 }

@@ -10,7 +10,7 @@ data class Course(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val weekDay: String,
-    val startWeekDate:Int,
+    val startWeekDate: Int,
     val endWeekDate: Int,
     var courseName: String,
     var courseTime: String,
@@ -25,6 +25,7 @@ data class Course(
     var courseWeekStudyHours: String,
     var courseTotalStudyHours: String,
     var courseCredit: String,
+    var color: String? = null,
 )
 
 data class CourseSimple(
@@ -33,4 +34,5 @@ data class CourseSimple(
     val courseLocation: String,
     val weekDay: String,
     val id: Int,
+    val color: String? = null,
 )

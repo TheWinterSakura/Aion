@@ -120,4 +120,10 @@ class HomeViewModel(
             courseRepository.insertCourseTime(schedule)
         }
     }
+
+    fun updateCourseColor(id: Int, color: String?) {
+        viewModelScope.launch {
+            repository.updateCourseColor(id, color)
+        }
+    }
 }

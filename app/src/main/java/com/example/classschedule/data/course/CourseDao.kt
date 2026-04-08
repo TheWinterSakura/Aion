@@ -20,7 +20,7 @@ interface CourseDao {
     @Delete
     suspend fun delete(course: Course)
 
-    @Query("SELECT courseName, courseTime, courseLocation, id, weekDay FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate")
+    @Query("SELECT courseName, courseTime, courseLocation, id, weekDay, color FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate")
     fun getAllCourseSimple(currentWeekDate: Int): Flow<List<CourseSimple>>
 
     @Query("SELECT * FROM course WHERE id = :id")
@@ -29,12 +29,15 @@ interface CourseDao {
     @Query("DELETE FROM course")
     suspend fun deleteAll()
 
-    @Query("SELECT courseName, courseTime, courseLocation, id, weekDay FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate AND weekDay = :today")
-    fun getTodayCourseSimple(currentWeekDate: Int,today: String): Flow<List<CourseSimple>>
+    @Query("SELECT courseName, courseTime, courseLocation, id, weekDay, color FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate AND weekDay = :today")
+    fun getTodayCourseSimple(currentWeekDate: Int, today: String): Flow<List<CourseSimple>>
 
     @Query("SELECT * FROM course")
     suspend fun getAllCourse(): List<Course>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCourseList(courseList: List<Course>)
+
+    @Query("UPDATE course SET color = :color WHERE id = :id")
+    suspend fun updateColor(id: Int, color: String?)
 }
