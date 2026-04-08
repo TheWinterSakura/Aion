@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.AccountBalance
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Dashboard
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.DocumentScanner
@@ -72,6 +73,8 @@ fun SettingHome(
     navigateToExportClassScheduleTimeScreen: () -> Unit,
     navigateToJsonScreen: () -> Unit,
     navigateToThemeColor: () -> Unit,
+    navigateToCourseTableManager: () -> Unit,
+    navigateToTimeTableManager: () -> Unit,
     viewModel: SettingHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
@@ -121,11 +124,14 @@ fun SettingHome(
                 )
                 SettingItem(
                     icon = Icons.Outlined.Schedule,
-                    title = "课程时间表设置",
+                    title = "时间表管理",
+                    onClick = navigateToTimeTableManager
+                )
+                SettingItem(
+                    icon = Icons.Outlined.CalendarMonth,
+                    title = "课程表管理",
                     isUnderline = false,
-                    onClick = {
-                        navigateToCourseTimeScreen(totalCourseNumber)
-                    }
+                    onClick = navigateToCourseTableManager
                 )
             }
 

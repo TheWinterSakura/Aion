@@ -35,7 +35,7 @@ class CourseDetailViewModel(
 
     private val _courseId = MutableStateFlow(0)
 
-    val courseTimeList = courseTimeRepository.getAllScheduleFlow()
+    val courseTimeList = courseTimeRepository.getAllScheduleFlow(tableId = 1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val _course: StateFlow<Course?> = _courseId

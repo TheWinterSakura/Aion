@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Schedule::class], version = 1, exportSchema = false)
+@Database(entities = [Schedule::class, TimeTable::class], version = 2, exportSchema = false)
 abstract class ScheduleDatabase : RoomDatabase() {
     abstract fun ScheduleDao(): ScheduleDao
+    abstract fun timeTableDao(): TimeTableDao
     companion object {
         @Volatile
         private var Instance: ScheduleDatabase? = null

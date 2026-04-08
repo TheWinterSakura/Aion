@@ -15,9 +15,9 @@ interface ScheduleRepository {
 
     suspend fun updateAll(scheduleList: List<Schedule>)
 
-    fun getAllScheduleFlow(): StateFlow<List<Schedule>>
+    fun getAllScheduleFlow(tableId: Int = 1): StateFlow<List<Schedule>>
 
-    suspend fun deleteByCourseNumber(courseNumber: Int)
+    suspend fun deleteByCourseNumber(courseNumber: Int, tableId: Int = 1)
 
     suspend fun deleteAll()
 }
@@ -34,8 +34,8 @@ class OfflineScheduleRepository(
 
     override suspend fun delete(schedule: Schedule) = scheduleDao.delete(schedule)
 
-    override fun getAllScheduleFlow(): StateFlow<List<Schedule>> =
-        scheduleDao.getAllScheduleFlow().stateIn(
+    override fun getAllScheduleFlow(tableId: Int): StateFlow<List<Schedule>> =
+        scheduleDao.getAllScheduleFlow(tableId).stateIn(
             scope = appScope,
             started = SharingStarted.Eagerly,
             initialValue = emptyList()
@@ -43,7 +43,8 @@ class OfflineScheduleRepository(
 
     override suspend fun updateAll(scheduleList: List<Schedule>) = scheduleDao.updateAll(scheduleList)
 
-    override suspend fun deleteByCourseNumber(courseNumber: Int) = scheduleDao.deleteByCourseNumber(courseNumber)
+    override suspend fun deleteByCourseNumber(courseNumber: Int, tableId: Int) =
+        scheduleDao.deleteByCourseNumber(courseNumber, tableId)
 
     override suspend fun deleteAll() = scheduleDao.deleteAll()
 }

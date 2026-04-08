@@ -20,8 +20,8 @@ interface CourseDao {
     @Delete
     suspend fun delete(course: Course)
 
-    @Query("SELECT courseName, courseTime, courseLocation, id, weekDay, color FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate")
-    fun getAllCourseSimple(currentWeekDate: Int): Flow<List<CourseSimple>>
+    @Query("SELECT courseName, courseTime, courseLocation, id, weekDay, color, tableId FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate AND tableId = :tableId")
+    fun getAllCourseSimple(currentWeekDate: Int, tableId: Int = 1): Flow<List<CourseSimple>>
 
     @Query("SELECT * FROM course WHERE id = :id")
     fun getCourseById(id: Int): Flow<Course?>
@@ -29,8 +29,8 @@ interface CourseDao {
     @Query("DELETE FROM course")
     suspend fun deleteAll()
 
-    @Query("SELECT courseName, courseTime, courseLocation, id, weekDay, color FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate AND weekDay = :today")
-    fun getTodayCourseSimple(currentWeekDate: Int, today: String): Flow<List<CourseSimple>>
+    @Query("SELECT courseName, courseTime, courseLocation, id, weekDay, color, tableId FROM course WHERE startWeekDate <= :currentWeekDate AND endWeekDate >= :currentWeekDate AND weekDay = :today AND tableId = :tableId")
+    fun getTodayCourseSimple(currentWeekDate: Int, today: String, tableId: Int = 1): Flow<List<CourseSimple>>
 
     @Query("SELECT * FROM course")
     suspend fun getAllCourse(): List<Course>

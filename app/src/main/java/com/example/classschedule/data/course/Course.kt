@@ -26,6 +26,7 @@ data class Course(
     var courseTotalStudyHours: String,
     var courseCredit: String,
     var color: String? = null,
+    val tableId: Int = 1,
 )
 
 data class CourseSimple(
@@ -35,4 +36,5 @@ data class CourseSimple(
     val weekDay: String,
     val id: Int,
     val color: String? = null,
+    val tableId: Int = 1,
 )

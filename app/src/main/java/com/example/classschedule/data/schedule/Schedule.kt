@@ -11,5 +11,6 @@ data class Schedule(
     val id: Int = 0,
     val courseNumber: Int,
     val startTime: String,
-    val endTime: String
+    val endTime: String,
+    val tableId: Int = 1,
 )

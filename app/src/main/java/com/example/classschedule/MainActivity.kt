@@ -39,7 +39,9 @@ import com.example.classschedule.setting_screen.LayoutManager
 import com.example.classschedule.setting_screen.ScheduleImportScreen
 import com.example.classschedule.setting_screen.SchoolDate
 import com.example.classschedule.setting_screen.SettingHome
+import com.example.classschedule.setting_screen.CourseTableManagerScreen
 import com.example.classschedule.setting_screen.ThemeColorScreen
+import com.example.classschedule.setting_screen.TimeTableManagerScreen
 import com.example.classschedule.setting_viewmodel.ThemeColorViewModel
 import com.example.classschedule.ui.PredictiveBackGestureHandler
 import com.example.classschedule.ui.theme.ClassScheduleTheme
@@ -254,7 +256,9 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                     navigateToExportClassSchedule = { navController.navigate(ExportClassScheduleScreen) },
                     navigateToExportClassScheduleTimeScreen = { navController.navigate(ExportClassTimeScreen) },
                     navigateToJsonScreen = { navController.navigate(AddCourseByJsonScreen) },
-                    navigateToThemeColor = { navController.navigate(ThemeColorScreen) }
+                    navigateToThemeColor = { navController.navigate(ThemeColorScreen) },
+                    navigateToCourseTableManager = { navController.navigate(CourseTableManagerScreen) },
+                    navigateToTimeTableManager = { navController.navigate(TimeTableManagerScreen) }
                 )
             }
         }
@@ -369,6 +373,46 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
         composable<ThemeColorScreen> {
             PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
                 ThemeColorScreen(navigateUp = { navController.navigateUp() })
+            }
+        }
+
+        composable<CourseTableManagerScreen> {
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                CourseTableManagerScreen(
+                    navigateUp = { navController.navigateUp() },
+                    navigateToHome = {
+                        navController.navigate(HomeScreen) {
+                            popUpTo(navController.graph.id) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                )
+            }
+        }
+
+        composable<TimeTableManagerScreen> {
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                val settingVm: com.example.classschedule.setting_viewmodel.SettingHomeViewModel =
+                    viewModel(factory = AppViewModelProvider.Factory)
+                val total by settingVm.totalCourse.collectAsState()
+                TimeTableManagerScreen(
+                    navigateUp = { navController.navigateUp() },
+                    navigateToEdit = { tableId, tableName, totalNum ->
+                        navController.navigate(CourseTimeEditScreen(tableId, tableName, totalNum))
+                    },
+                    totalCourseNumber = total
+                )
+            }
+        }
+
+        composable<CourseTimeEditScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<CourseTimeEditScreen>()
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                EditScheduleScreen(
+                    navigateUp = { navController.navigateUp() },
+                    totalCourseNumber = args.totalCourseNumber,
+                    timeTableId = args.timeTableId
+                )
             }
         }
     }

@@ -60,3 +60,12 @@ object AddCourseByJsonScreen
 @Serializable
 object ThemeColorScreen
 
+@Serializable
+object CourseTableManagerScreen
+
+@Serializable
+object TimeTableManagerScreen
+
+@Serializable
+data class CourseTimeEditScreen(val timeTableId: Int, val timeTableName: String, val totalCourseNumber: Int)
+

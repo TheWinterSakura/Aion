@@ -26,6 +26,8 @@ class UserPreferencesRepository(
     val API_KEY = stringPreferencesKey("api_key")
     val COURSE_NUMBER_TOTAL = intPreferencesKey("course_number_total")
     val THEME_COLOR = stringPreferencesKey("theme_color")
+    val ACTIVE_COURSE_TABLE_ID = intPreferencesKey("active_course_table_id")
+    val ACTIVE_TIME_TABLE_ID = intPreferencesKey("active_time_table_id")
 
 
     val commencementDate: Flow<String> = dataStore.data
@@ -153,6 +155,26 @@ class UserPreferencesRepository(
         dataStore.edit { preferences ->
             preferences[this.THEME_COLOR] = themeColor
         }
+    }
+
+    val activeCourseTableId: Flow<Int> = dataStore.data
+        .catch {
+            if (it is IOException) { Log.e(TAG, "Error reading preferences.", it); emit(emptyPreferences()) }
+            else throw it
+        }.map { it[ACTIVE_COURSE_TABLE_ID] ?: 1 }
+
+    val activeTimeTableId: Flow<Int> = dataStore.data
+        .catch {
+            if (it is IOException) { Log.e(TAG, "Error reading preferences.", it); emit(emptyPreferences()) }
+            else throw it
+        }.map { it[ACTIVE_TIME_TABLE_ID] ?: 1 }
+
+    suspend fun saveActiveCourseTableId(id: Int) {
+        dataStore.edit { it[ACTIVE_COURSE_TABLE_ID] = id }
+    }
+
+    suspend fun saveActiveTimeTableId(id: Int) {
+        dataStore.edit { it[ACTIVE_TIME_TABLE_ID] = id }
     }
 
     private companion object {

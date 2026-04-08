@@ -76,9 +76,12 @@ import java.time.LocalTime
 fun EditScheduleScreen(
     viewModel: CourseTimeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateUp: () -> Unit,
-    totalCourseNumber: Int = 20
+    totalCourseNumber: Int = 20,
+    timeTableId: Int = 1
 ) {
     val context = LocalContext.current
+
+    LaunchedEffect(timeTableId) { viewModel.setTableId(timeTableId) }
     val initialData by viewModel.scheduleList.collectAsState()
     val scheduleList = remember { mutableStateListOf<Schedule>() }
     val autoCalcEnabled by viewModel.autoCalcEnabled.collectAsState()

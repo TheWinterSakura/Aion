@@ -4,23 +4,19 @@ import kotlinx.coroutines.flow.Flow
 
 interface CourseRepository {
 
-    fun getAllICourseSimple(currentWeekDate: Int): Flow<List<CourseSimple>>
-
+    fun getAllICourseSimple(currentWeekDate: Int, tableId: Int = 1): Flow<List<CourseSimple>>
 
     fun getCourseStream(id: Int): Flow<Course?>
 
-
     suspend fun insertCourse(item: Course)
 
-
     suspend fun deleteCourse(item: Course)
-
 
     suspend fun updateCourse(item: Course)
 
     suspend fun deleteAll()
 
-    fun getTodayCourseSimple(currentWeekDate: Int, today: String): Flow<List<CourseSimple>>
+    fun getTodayCourseSimple(currentWeekDate: Int, today: String, tableId: Int = 1): Flow<List<CourseSimple>>
 
     suspend fun getAllCourse(): List<Course>
 
@@ -30,8 +26,8 @@ interface CourseRepository {
 }
 
 class OfflineCourseRepository(private val courseDao: CourseDao) : CourseRepository {
-    override fun getAllICourseSimple(currentWeekDate: Int): Flow<List<CourseSimple>> =
-        courseDao.getAllCourseSimple(currentWeekDate = currentWeekDate)
+    override fun getAllICourseSimple(currentWeekDate: Int, tableId: Int): Flow<List<CourseSimple>> =
+        courseDao.getAllCourseSimple(currentWeekDate = currentWeekDate, tableId = tableId)
 
     override fun getCourseStream(id: Int): Flow<Course?> = courseDao.getCourseById(id)
 
@@ -46,8 +42,9 @@ class OfflineCourseRepository(private val courseDao: CourseDao) : CourseReposito
     override fun getTodayCourseSimple(
         currentWeekDate: Int,
         today: String,
+        tableId: Int,
     ): Flow<List<CourseSimple>> =
-        courseDao.getTodayCourseSimple(currentWeekDate, today)
+        courseDao.getTodayCourseSimple(currentWeekDate, today, tableId)
 
     override suspend fun getAllCourse(): List<Course> =
         courseDao.getAllCourse()
