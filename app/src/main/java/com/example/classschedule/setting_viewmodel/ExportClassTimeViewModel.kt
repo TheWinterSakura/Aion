@@ -12,7 +12,6 @@ class ExportClassTimeViewModel(
     private val repository: ScheduleRepository
 ): ViewModel() {
 
-    // 导出时使用默认时间表（tableId=1），如需多表支持可后续扩展
     val courseTimeList = repository.getAllScheduleFlow(tableId = 1)
 
     inline fun <reified T> exportJsonToUri(
