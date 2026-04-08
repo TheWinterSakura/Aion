@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.ClassSchedule" parent="android:Theme.Material.Light.NoActionBar" />
+    <!--
+        Compose 项目中 XML 主题仅作为 Activity 窗口容器，
+        实际 UI 颜色完全由 ClassScheduleTheme (Material3) 控制。
+    -->
+    <style name="Theme.ClassSchedule" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- 防止启动时白屏，与 Theme.kt 中的 surface 色保持一致 -->
+        <item name="android:windowBackground">#FBF8FF</item>
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
 </resources>

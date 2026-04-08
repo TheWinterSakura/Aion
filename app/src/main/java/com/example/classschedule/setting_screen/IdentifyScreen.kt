@@ -263,7 +263,7 @@ fun ScheduleImportScreen(
                                         }
                                     ),
                                 fontSize = 12.sp,
-                                color = Color.Blue
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
                     }

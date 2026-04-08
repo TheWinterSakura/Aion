@@ -28,6 +28,7 @@ import androidx.compose.material.icons.outlined.DocumentScanner
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.IosShare
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material3.Card
@@ -70,6 +71,7 @@ fun SettingHome(
     navigateToExportClassSchedule: () -> Unit,
     navigateToExportClassScheduleTimeScreen: () -> Unit,
     navigateToJsonScreen: () -> Unit,
+    navigateToThemeColor: () -> Unit,
     viewModel: SettingHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
@@ -169,8 +171,13 @@ fun SettingHome(
                 SettingItem(
                     icon = Icons.Outlined.Dashboard,
                     title = "界面布局管理",
-                    isUnderline = false,
                     onClick = navigateToLayoutManager
+                )
+                SettingItem(
+                    icon = Icons.Outlined.Palette,
+                    title = "主题色",
+                    isUnderline = false,
+                    onClick = navigateToThemeColor
                 )
             }
 

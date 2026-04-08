@@ -18,6 +18,7 @@ import com.example.classschedule.setting_viewmodel.LayOutManagerViewModel
 import com.example.classschedule.setting_viewmodel.SchoolDateViewModel
 import com.example.classschedule.setting_viewmodel.SettingHomeViewModel
 import com.example.classschedule.setting_viewmodel.SpiderViewModel
+import com.example.classschedule.setting_viewmodel.ThemeColorViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -126,6 +127,13 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             AddCourseByJsonViewModel(
                 repository = application.container.courseRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
+            ThemeColorViewModel(
+                repository = application.userPreferencesRepository
             )
         }
     }

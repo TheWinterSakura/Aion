@@ -12,7 +12,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.IntOffset
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -34,6 +37,8 @@ import com.example.classschedule.setting_screen.LayoutManager
 import com.example.classschedule.setting_screen.ScheduleImportScreen
 import com.example.classschedule.setting_screen.SchoolDate
 import com.example.classschedule.setting_screen.SettingHome
+import com.example.classschedule.setting_screen.ThemeColorScreen
+import com.example.classschedule.setting_viewmodel.ThemeColorViewModel
 import com.example.classschedule.ui.PredictiveBackGestureHandler
 import com.example.classschedule.ui.theme.ClassScheduleTheme
 
@@ -42,7 +47,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ClassScheduleTheme {
+            val themeViewModel: ThemeColorViewModel = viewModel(factory = AppViewModelProvider.Factory)
+            val themeColor by themeViewModel.themeColor.collectAsState()
+            ClassScheduleTheme(themeColorName = themeColor) {
                 MainNavScreen(
                     finishAffinity = { finishAffinity() }
                 )
@@ -229,39 +236,20 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
         composable<SettingHomeScreen> {
             PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
                 SettingHome(
-                    navigateToSchoolDate = {
-                        navController.navigate(SchoolDateScreen)
-                    },
-                    navigateToClassImportByLoad = {
-                        navController.navigate(EasImportScreen)
-                    },
-                    navigateToDataManager = {
-                        navController.navigate(DataManagerScreen)
-                    },
-                    navigateToClassImportByPDF = {
-                        navController.navigate(IdentifyScreen)
-                    },
-                    navigateToLayoutManager = {
-                        navController.navigate(LayoutManagerScreen)
-                    },
-                    navigateToAppDetail = {
-                        navController.navigate(AppDetailScreen)
-                    },
-                    navigateUp = {
-                        navController.navigateUp()
-                    },
+                    navigateToSchoolDate = { navController.navigate(SchoolDateScreen) },
+                    navigateToClassImportByLoad = { navController.navigate(EasImportScreen) },
+                    navigateToDataManager = { navController.navigate(DataManagerScreen) },
+                    navigateToClassImportByPDF = { navController.navigate(IdentifyScreen) },
+                    navigateToLayoutManager = { navController.navigate(LayoutManagerScreen) },
+                    navigateToAppDetail = { navController.navigate(AppDetailScreen) },
+                    navigateUp = { navController.navigateUp() },
                     navigateToCourseTimeScreen = { totalCourseNumber ->
                         navController.navigate(CourseTimeScreen(totalCourseNumber))
                     },
-                    navigateToExportClassSchedule = {
-                        navController.navigate(ExportClassScheduleScreen)
-                    },
-                    navigateToExportClassScheduleTimeScreen = {
-                        navController.navigate(ExportClassTimeScreen)
-                    },
-                    navigateToJsonScreen = {
-                        navController.navigate(AddCourseByJsonScreen)
-                    }
+                    navigateToExportClassSchedule = { navController.navigate(ExportClassScheduleScreen) },
+                    navigateToExportClassScheduleTimeScreen = { navController.navigate(ExportClassTimeScreen) },
+                    navigateToJsonScreen = { navController.navigate(AddCourseByJsonScreen) },
+                    navigateToThemeColor = { navController.navigate(ThemeColorScreen) }
                 )
             }
         }
@@ -362,18 +350,20 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
         composable<AddCourseByJsonScreen> {
             PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
                 AddCourseByJson(
-                    navigateUp = {
-                        navController.navigateUp()
-                    },
+                    navigateUp = { navController.navigateUp() },
                     navigateToHome = {
-                        navController.navigate(HomeScreen){
-                            popUpTo(navController.graph.id) {
-                                inclusive = true
-                            }
+                        navController.navigate(HomeScreen) {
+                            popUpTo(navController.graph.id) { inclusive = true }
                             launchSingleTop = true
                         }
                     }
                 )
+            }
+        }
+
+        composable<ThemeColorScreen> {
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                ThemeColorScreen(navigateUp = { navController.navigateUp() })
             }
         }
     }

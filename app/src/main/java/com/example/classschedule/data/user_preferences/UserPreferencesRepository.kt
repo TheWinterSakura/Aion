@@ -25,6 +25,7 @@ class UserPreferencesRepository(
 
     val API_KEY = stringPreferencesKey("api_key")
     val COURSE_NUMBER_TOTAL = intPreferencesKey("course_number_total")
+    val THEME_COLOR = stringPreferencesKey("theme_color")
 
 
     val commencementDate: Flow<String> = dataStore.data
@@ -100,6 +101,18 @@ class UserPreferencesRepository(
         }.map { preferences ->
             preferences[COURSE_NUMBER_TOTAL] ?: 20
         }
+
+    val themeColor: Flow<String> = dataStore.data
+        .catch {
+            if (it is IOException) {
+                Log.e(TAG, "Error reading preferences.", it)
+                emit(emptyPreferences())
+            } else {
+                throw it
+            }
+        }.map { preferences ->
+            preferences[THEME_COLOR] ?: "Indigo"
+        }
     suspend fun saveStartDatePreference(commencementDate: String) {
         dataStore.edit { preferences ->
             preferences[this.COMMENCEMENT_DATE] = commencementDate
@@ -133,6 +146,12 @@ class UserPreferencesRepository(
     suspend fun saveCourseNumberTotal(courseTotal: Int){
         dataStore.edit { preferences ->
             preferences[this.COURSE_NUMBER_TOTAL] = courseTotal
+        }
+    }
+
+    suspend fun saveThemeColor(themeColor: String) {
+        dataStore.edit { preferences ->
+            preferences[this.THEME_COLOR] = themeColor
         }
     }
 

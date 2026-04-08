@@ -93,6 +93,7 @@ import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.home_viewmodel.HomeViewModel
 import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.showToast
+import com.example.classschedule.ui.theme.LocalCourseColors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -480,10 +481,7 @@ fun WeeklyGridLayout(
     val sectionHeight = 65.dp
     var offsetX by remember { mutableFloatStateOf(0f) }
 
-    val cardColors = listOf(
-        Color(0xFFE3F2FD), Color(0xFFF3E5F5), Color(0xFFE8F5E9),
-        Color(0xFFFFF3E0), Color(0xFFFFEBEE), Color(0xFFE0F7FA)
-    )
+    val courseColors = LocalCourseColors.current
 
     Column(
         modifier = Modifier
@@ -604,7 +602,7 @@ fun WeeklyGridLayout(
                                 val span = (endSection - startSection + 1).coerceAtLeast(1)
 
                                 val colorIndex =
-                                    kotlin.math.abs(course.courseName.hashCode()) % cardColors.size
+                                    kotlin.math.abs(course.courseName.hashCode()) % courseColors.colors.size
 
                                 Box(
                                     modifier = Modifier
@@ -613,7 +611,7 @@ fun WeeklyGridLayout(
                                         .height(sectionHeight * span)
                                         .padding(1.5.dp)
                                         .clip(RoundedCornerShape(8.dp))
-                                        .background(cardColors[colorIndex])
+                                        .background(courseColors.colors[colorIndex])
                                         .clickable {
                                             navigateToCourseDetails(
                                                 course.id,
@@ -632,7 +630,7 @@ fun WeeklyGridLayout(
                                             text = course.courseName,
                                             style = MaterialTheme.typography.labelSmall,
                                             fontWeight = FontWeight.Bold,
-                                            color = Color.Black.copy(alpha = 0.8f),
+                                            color = courseColors.textColor.copy(alpha = 0.85f),
                                             maxLines = if (span == 1) 2 else 4,
                                             overflow = TextOverflow.Ellipsis,
                                             textAlign = TextAlign.Center
@@ -642,7 +640,7 @@ fun WeeklyGridLayout(
                                             text = course.courseLocation,
                                             style = MaterialTheme.typography.labelSmall,
                                             fontSize = 9.sp,
-                                            color = Color.Black.copy(alpha = 0.6f),
+                                            color = courseColors.textColor.copy(alpha = 0.6f),
                                             maxLines = if (span == 1) 1 else 3,
                                             overflow = TextOverflow.Ellipsis,
                                             textAlign = TextAlign.Center

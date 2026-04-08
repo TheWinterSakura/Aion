@@ -57,3 +57,6 @@ object ExportClassTimeScreen
 @Serializable
 object AddCourseByJsonScreen
 
+@Serializable
+object ThemeColorScreen
+
