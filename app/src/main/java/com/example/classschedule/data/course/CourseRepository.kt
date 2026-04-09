@@ -23,6 +23,14 @@ interface CourseRepository {
     suspend fun insertCourseList(courseList: List<Course>)
 
     suspend fun updateCourseColor(id: Int, color: String?)
+
+    fun getDistinctCourseNames(tableId: Int = 1): Flow<List<String>>
+
+    fun getDistinctTeachers(tableId: Int = 1): Flow<List<String>>
+
+    fun getCoursesByName(name: String, tableId: Int = 1): Flow<List<Course>>
+
+    fun getCoursesByTeacher(teacher: String, tableId: Int = 1): Flow<List<Course>>
 }
 
 class OfflineCourseRepository(private val courseDao: CourseDao) : CourseRepository {
@@ -54,4 +62,16 @@ class OfflineCourseRepository(private val courseDao: CourseDao) : CourseReposito
 
     override suspend fun updateCourseColor(id: Int, color: String?) =
         courseDao.updateColor(id, color)
+
+    override fun getDistinctCourseNames(tableId: Int): Flow<List<String>> =
+        courseDao.getDistinctCourseNames(tableId)
+
+    override fun getDistinctTeachers(tableId: Int): Flow<List<String>> =
+        courseDao.getDistinctTeachers(tableId)
+
+    override fun getCoursesByName(name: String, tableId: Int): Flow<List<Course>> =
+        courseDao.getCoursesByName(name, tableId)
+
+    override fun getCoursesByTeacher(teacher: String, tableId: Int): Flow<List<Course>> =
+        courseDao.getCoursesByTeacher(teacher, tableId)
 }

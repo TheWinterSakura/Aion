@@ -14,6 +14,7 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
@@ -96,6 +97,8 @@ import com.example.classschedule.home_viewmodel.HomeViewModel
 import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.showToast
 import com.example.classschedule.ui.ColorPickerBottomSheet
+import com.example.classschedule.ui.GridLayoutGuideSnackbar
+import com.example.classschedule.ui.HomeEmptyGuide
 import com.example.classschedule.ui.theme.LocalCourseColors
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -184,6 +187,22 @@ fun HomeScreen(
     var colorPickerTargetId by remember { mutableStateOf(0) }
     var colorPickerInitialColor by remember { mutableStateOf<String?>(null) }
 
+    // 新手引导状态
+    val guideHomeShown by viewModel.guideHomeShown.collectAsState()
+    val guideGridShown by viewModel.guideGridShown.collectAsState()
+    // 首页引导：课程为空且引导未展示过时显示
+    val showHomeGuide = remember(courseList, guideHomeShown) {
+        courseList.isEmpty() && !guideHomeShown
+    }
+    // 网格引导：切换到网格布局时且未展示过
+    var showGridGuide by remember { mutableStateOf(false) }
+    LaunchedEffect(isGridLayout, guideGridShown) {
+        if (isGridLayout && !guideGridShown) {
+            delay(600) // 等布局切换动画完成
+            showGridGuide = true
+        }
+    }
+
     if (showColorPicker) {
         ColorPickerBottomSheet(
             initialColor = colorPickerInitialColor,
@@ -210,6 +229,7 @@ fun HomeScreen(
     }
 
     if (isTimerFinished) {
+        Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             topBar = {
                 Column {
@@ -385,6 +405,26 @@ fun HomeScreen(
                 }
             }
         }
+
+        // 首页空状态引导
+        HomeEmptyGuide(
+            visible = showHomeGuide,
+            onGoToSetting = navigateToSetting,
+            onDismiss = { viewModel.markGuideHomeShown() }
+        )
+
+        // 网格布局长按提示（底部）
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+            GridLayoutGuideSnackbar(
+                visible = showGridGuide,
+                onDismiss = {
+                    showGridGuide = false
+                    viewModel.markGuideGridShown()
+                }
+            )
+        }
+
+        } // end outer Box
     } else {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
@@ -437,7 +477,6 @@ fun ScheduleCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
-    // 颜色条：自定义色 or 主题 primary
     val accentColor = remember(courseColor) {
         if (courseColor != null) {
             try { Color(android.graphics.Color.parseColor(courseColor)) }
@@ -505,6 +544,7 @@ fun ScheduleCard(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WeeklyGridLayout(
     courseList: List<CourseSimple>,
@@ -622,24 +662,68 @@ fun WeeklyGridLayout(
                 Row(modifier = Modifier.fillMaxSize()) {
                     weekDays.forEach { currentDay ->
                         val dayCourses = courseList.filter { it.weekDay == currentDay }
-                        Box(
+                        BoxWithConstraints(
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxHeight()
                         ) {
-                            dayCourses.forEach { course ->
-                                val timeParts = remember(course.courseTime) {
-                                    try {
-                                        course.courseTime.substringAfter('(', "")
-                                            .substringBefore('节', "").split("-")
-                                    } catch (e: Exception) {
-                                        emptyList()
-                                    }
+                            val columnWidth = maxWidth
+
+                            data class CourseSlot(
+                                val course: CourseSimple,
+                                val start: Int,
+                                val end: Int,
+                                val span: Int
+                            )
+
+                            val slots = dayCourses.map { course ->
+                                val parts = try {
+                                    course.courseTime.substringAfter('(', "")
+                                        .substringBefore('节', "").split("-")
+                                } catch (e: Exception) { emptyList() }
+                                val s = parts.getOrNull(0)?.toIntOrNull() ?: 1
+                                val e = parts.getOrNull(1)?.toIntOrNull() ?: s
+                                CourseSlot(course, s, e, (e - s + 1).coerceAtLeast(1))
+                            }
+
+                            val trackIndex = IntArray(slots.size) { 0 }
+                            val trackEndAt = mutableListOf<Int>()
+                            val sortedIndices = slots.indices.sortedBy { slots[it].start }
+                            sortedIndices.forEach { i ->
+                                val slot = slots[i]
+                                val track = trackEndAt.indexOfFirst { it < slot.start }
+                                if (track == -1) {
+                                    trackIndex[i] = trackEndAt.size
+                                    trackEndAt.add(slot.end)
+                                } else {
+                                    trackIndex[i] = track
+                                    trackEndAt[track] = slot.end
                                 }
-                                val startSection = timeParts.getOrNull(0)?.toIntOrNull() ?: 1
-                                val endSection =
-                                    timeParts.getOrNull(1)?.toIntOrNull() ?: startSection
-                                val span = (endSection - startSection + 1).coerceAtLeast(1)
+                            }
+
+                            val parent = IntArray(slots.size) { it }
+                            fun find(x: Int): Int {
+                                var r = x
+                                while (parent[r] != r) r = parent[r]
+                                var c = x; while (c != r) { val n = parent[c]; parent[c] = r; c = n }
+                                return r
+                            }
+                            for (a in slots.indices) for (b in a + 1 until slots.size) {
+                                if (slots[a].start <= slots[b].end && slots[b].start <= slots[a].end)
+                                    parent[find(a)] = find(b)
+                            }
+                            val groupTracks = mutableMapOf<Int, Int>()
+                            slots.indices.forEach { i ->
+                                val root = find(i)
+                                groupTracks[root] = maxOf(groupTracks.getOrDefault(root, 0), trackIndex[i] + 1)
+                            }
+                            val slotColTotal = IntArray(slots.size) { i -> groupTracks[find(i)] ?: 1 }
+
+                            slots.forEachIndexed { i, slot ->
+                                val course = slot.course
+                                val colIdx = trackIndex[i]
+                                val colTotal = slotColTotal[i]
+                                val slotWidth = columnWidth / colTotal
 
                                 val colorIndex =
                                     kotlin.math.abs(course.courseName.hashCode()) % courseColors.colors.size
@@ -652,17 +736,18 @@ fun WeeklyGridLayout(
 
                                 Box(
                                     modifier = Modifier
-                                        .fillMaxWidth()
-                                        .offset(y = sectionHeight * (startSection - 1))
-                                        .height(sectionHeight * span)
+                                        .width(slotWidth)
+                                        .offset(
+                                            x = slotWidth * colIdx,
+                                            y = sectionHeight * (slot.start - 1)
+                                        )
+                                        .height(sectionHeight * slot.span)
                                         .padding(1.5.dp)
                                         .clip(RoundedCornerShape(8.dp))
                                         .background(cardBgColor)
                                         .combinedClickable(
                                             onClick = { navigateToCourseDetails(course.id, currentDay) },
-                                            onLongClick = {
-                                                onLongClickCourse(course.id, course.color)
-                                            }
+                                            onLongClick = { onLongClickCourse(course.id, course.color) }
                                         )
                                         .padding(4.dp),
                                     contentAlignment = Alignment.Center
@@ -677,7 +762,7 @@ fun WeeklyGridLayout(
                                             style = MaterialTheme.typography.labelSmall,
                                             fontWeight = FontWeight.Bold,
                                             color = courseColors.textColor.copy(alpha = 0.85f),
-                                            maxLines = if (span == 1) 2 else 4,
+                                            maxLines = if (slot.span == 1) 2 else 4,
                                             overflow = TextOverflow.Ellipsis,
                                             textAlign = TextAlign.Center
                                         )
@@ -687,7 +772,7 @@ fun WeeklyGridLayout(
                                             style = MaterialTheme.typography.labelSmall,
                                             fontSize = 9.sp,
                                             color = courseColors.textColor.copy(alpha = 0.6f),
-                                            maxLines = if (span == 1) 1 else 3,
+                                            maxLines = if (slot.span == 1) 1 else 3,
                                             overflow = TextOverflow.Ellipsis,
                                             textAlign = TextAlign.Center
                                         )

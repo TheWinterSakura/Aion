@@ -116,6 +116,7 @@ fun CourseTableManagerScreen(
                     CourseTableCard(
                         table = table,
                         isActive = table.id == activeId,
+                        canDelete = tables.size > 1,
                         onSelect = {
                             viewModel.setActiveTable(table.id)
                             navigateToHome()
@@ -177,6 +178,7 @@ fun CourseTableManagerScreen(
 private fun CourseTableCard(
     table: CourseTable,
     isActive: Boolean,
+    canDelete: Boolean,
     onSelect: () -> Unit,
     onRename: () -> Unit,
     onDelete: () -> Unit
@@ -224,10 +226,11 @@ private fun CourseTableCard(
                     modifier = Modifier.size(18.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            IconButton(onClick = onDelete, modifier = Modifier.size(36.dp)) {
+            IconButton(onClick = onDelete, enabled = canDelete, modifier = Modifier.size(36.dp)) {
                 Icon(Icons.Outlined.Delete, "删除",
                     modifier = Modifier.size(18.dp),
-                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f))
+                    tint = if (canDelete) MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
+                           else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f))
             }
         }
     }

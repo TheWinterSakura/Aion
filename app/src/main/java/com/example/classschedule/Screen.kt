@@ -69,3 +69,11 @@ object TimeTableManagerScreen
 @Serializable
 data class CourseTimeEditScreen(val timeTableId: Int, val timeTableName: String, val totalCourseNumber: Int)
 
+// 快捷修改：选择类型（byName / byTeacher）
+@Serializable
+data class QuickEditListScreen(val mode: String) // mode = "name" | "teacher"
+
+// 快捷修改：展示同名/同教师课程列表
+@Serializable
+data class QuickEditCoursesScreen(val key: String, val mode: String)
+

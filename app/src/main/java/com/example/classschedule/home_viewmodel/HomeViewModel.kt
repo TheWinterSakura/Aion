@@ -21,7 +21,7 @@ import java.time.temporal.ChronoUnit
 
 class HomeViewModel(
     private val repository: CourseRepository,
-    repositoryPreferences: UserPreferencesRepository,
+    private val repositoryPreferences: UserPreferencesRepository,
     private val courseRepository: ScheduleRepository
 ) : ViewModel() {
 
@@ -129,4 +129,19 @@ class HomeViewModel(
             repository.updateCourseColor(id, color)
         }
     }
+
+    val guideHomeShown = repositoryPreferences.guideHomeShown.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = true  // 默认 true 避免闪烁，等真实值到来
+    )
+
+    val guideGridShown = repositoryPreferences.guideGridShown.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = true
+    )
+
+    fun markGuideHomeShown() { viewModelScope.launch { repositoryPreferences.markGuideHomeShown() } }
+    fun markGuideGridShown() { viewModelScope.launch { repositoryPreferences.markGuideGridShown() } }
 }

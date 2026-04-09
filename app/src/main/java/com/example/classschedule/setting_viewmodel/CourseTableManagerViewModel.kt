@@ -40,7 +40,14 @@ class CourseTableManagerViewModel(
 
     fun deleteTable(table: CourseTable) {
         viewModelScope.launch {
+            val current = tables.value
+            if (current.size <= 1) return@launch  // 最后一个，禁止删除
             courseTableRepository.delete(table)
+            // 如果删的是当前激活表，自动切换到剩余的第一个
+            if (table.id == activeTableId.value) {
+                val fallback = current.first { it.id != table.id }
+                preferencesRepository.saveActiveCourseTableId(fallback.id)
+            }
         }
     }
 

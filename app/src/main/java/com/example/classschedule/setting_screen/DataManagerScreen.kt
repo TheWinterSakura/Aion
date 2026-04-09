@@ -40,8 +40,8 @@ import com.example.classschedule.tools.showToast
 @Composable
 fun DataManager(
     viewModel: DataManagerViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navigateUp:()-> Unit,
-    onNavigateToHomeScreen:()-> Unit
+    navigateUp: () -> Unit,
+    onNavigateToHomeScreen: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -53,7 +53,7 @@ fun DataManager(
                         onClick = {
                             navigateUp()
                         }
-                    ){
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
                             contentDescription = "back",
@@ -65,8 +65,10 @@ fun DataManager(
     ) { innerPadding ->
         DataManagementSection(
             onDeleteAll = { viewModel.deleteAll() },
-            modifier = Modifier.padding(horizontal = 12.dp).padding(innerPadding),
-            onNavigateToHomeScreen = {onNavigateToHomeScreen()}
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .padding(innerPadding),
+            onNavigateToHomeScreen = { onNavigateToHomeScreen() }
         )
     }
 }
@@ -75,7 +77,7 @@ fun DataManager(
 private fun DataManagementSection(
     onDeleteAll: () -> Unit,
     modifier: Modifier,
-    onNavigateToHomeScreen:()-> Unit
+    onNavigateToHomeScreen: () -> Unit
 ) {
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }
 
@@ -83,7 +85,7 @@ private fun DataManagementSection(
         AlertDialog(
             onDismissRequest = { showDeleteConfirmDialog = false },
             title = { Text("清空课程") },
-            text = { Text("确定要删除所有课程数据吗？此操作不可恢复。") },
+            text = { Text("确定要删除所有课程数据吗？此操作不可恢复。删除课程会删除所有的课程，包括不同课表的课程，想要删除某个课表内的所有课程，请前往课程表管理中进行删除") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -123,7 +125,9 @@ private fun DataManagementSection(
             text = "此操作不可逆，请谨慎操作",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.padding(top = 8.dp).align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .align(Alignment.CenterHorizontally)
         )
     }
 }

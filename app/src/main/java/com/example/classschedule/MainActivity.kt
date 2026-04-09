@@ -40,6 +40,8 @@ import com.example.classschedule.setting_screen.ScheduleImportScreen
 import com.example.classschedule.setting_screen.SchoolDate
 import com.example.classschedule.setting_screen.SettingHome
 import com.example.classschedule.setting_screen.CourseTableManagerScreen
+import com.example.classschedule.setting_screen.QuickEditCoursesScreen
+import com.example.classschedule.setting_screen.QuickEditListScreen
 import com.example.classschedule.setting_screen.ThemeColorScreen
 import com.example.classschedule.setting_screen.TimeTableManagerScreen
 import com.example.classschedule.setting_viewmodel.ThemeColorViewModel
@@ -258,7 +260,9 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                     navigateToJsonScreen = { navController.navigate(AddCourseByJsonScreen) },
                     navigateToThemeColor = { navController.navigate(ThemeColorScreen) },
                     navigateToCourseTableManager = { navController.navigate(CourseTableManagerScreen) },
-                    navigateToTimeTableManager = { navController.navigate(TimeTableManagerScreen) }
+                    navigateToTimeTableManager = { navController.navigate(TimeTableManagerScreen) },
+                    navigateToQuickEditByName = { navController.navigate(QuickEditListScreen("name")) },
+                    navigateToQuickEditByTeacher = { navController.navigate(QuickEditListScreen("teacher")) }
                 )
             }
         }
@@ -412,6 +416,31 @@ fun MainNavScreen(finishAffinity: () -> Unit) {
                     navigateUp = { navController.navigateUp() },
                     totalCourseNumber = args.totalCourseNumber,
                     timeTableId = args.timeTableId
+                )
+            }
+        }
+
+        composable<QuickEditListScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<QuickEditListScreen>()
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                QuickEditListScreen(
+                    mode = args.mode,
+                    navigateUp = { navController.navigateUp() },
+                    navigateToCourses = { key, mode ->
+                        navController.navigate(QuickEditCoursesScreen(key, mode))
+                    }
+                )
+            }
+        }
+
+        composable<QuickEditCoursesScreen> { backStackEntry ->
+            val args = backStackEntry.toRoute<QuickEditCoursesScreen>()
+            PredictiveBackGestureHandler(onBack = { navController.navigateUp() }) {
+                QuickEditCoursesScreen(
+                    key = args.key,
+                    mode = args.mode,
+                    navigateUp = { navController.navigateUp() },
+                    navigateToEdit = { id -> navController.navigate(EditCourseScreen(id)) }
                 )
             }
         }

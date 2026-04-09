@@ -28,8 +28,10 @@ import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.DocumentScanner
 import androidx.compose.material.icons.outlined.FolderOpen
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.IosShare
 import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material3.Card
@@ -75,6 +77,8 @@ fun SettingHome(
     navigateToThemeColor: () -> Unit,
     navigateToCourseTableManager: () -> Unit,
     navigateToTimeTableManager: () -> Unit,
+    navigateToQuickEditByName: () -> Unit,
+    navigateToQuickEditByTeacher: () -> Unit,
     viewModel: SettingHomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val context = LocalContext.current
@@ -123,15 +127,29 @@ fun SettingHome(
                     onClick = navigateToSchoolDate
                 )
                 SettingItem(
-                    icon = Icons.Outlined.Schedule,
-                    title = "时间表管理",
-                    onClick = navigateToTimeTableManager
-                )
-                SettingItem(
                     icon = Icons.Outlined.CalendarMonth,
                     title = "课程表管理",
-                    isUnderline = false,
                     onClick = navigateToCourseTableManager
+                )
+                SettingItem(
+                    icon = Icons.Outlined.Schedule,
+                    title = "时间表管理",
+                    isUnderline = false,
+                    onClick = navigateToTimeTableManager
+                )
+            }
+
+            SettingGroup(title = "快捷修改课程") {
+                SettingItem(
+                    icon = Icons.Outlined.Edit,
+                    title = "按课程名修改",
+                    onClick = navigateToQuickEditByName
+                )
+                SettingItem(
+                    icon = Icons.Outlined.Person,
+                    title = "按教师名修改",
+                    isUnderline = false,
+                    onClick = navigateToQuickEditByTeacher
                 )
             }
 

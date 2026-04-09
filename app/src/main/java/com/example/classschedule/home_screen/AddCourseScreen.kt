@@ -1,6 +1,7 @@
 package com.example.classschedule.home_screen
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +38,7 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -83,6 +85,8 @@ fun AddCourse(
     var endPeriod by remember { mutableIntStateOf(2) }
 
     val maxPeriodsPerDay by viewModel.maxPeriodsPerDay.collectAsState()
+    val distinctCourseNames by viewModel.distinctCourseNames.collectAsState()
+    val distinctTeachers by viewModel.distinctTeachers.collectAsState()
 
     var courseCampus by remember { mutableStateOf("") }
     var courseLocation by remember { mutableStateOf("") }
@@ -198,12 +202,28 @@ fun AddCourse(
                         leadingIcon = Icons.Rounded.Edit,
                         onValueChange = { courseName = it }
                     )
+
+                    if (distinctCourseNames.isNotEmpty()) {
+                        SuggestionChipRow(
+                            items = distinctCourseNames,
+                            selectedItem = courseName,
+                            onSelect = { courseName = it }
+                        )
+                    }
                     AddCourseItem(
                         label = "课程教师 (选填)",
                         value = courseTeacher,
                         leadingIcon = Icons.Rounded.Person,
                         onValueChange = { courseTeacher = it }
                     )
+
+                    if (distinctTeachers.isNotEmpty()) {
+                        SuggestionChipRow(
+                            items = distinctTeachers,
+                            selectedItem = courseTeacher,
+                            onSelect = { courseTeacher = it }
+                        )
+                    }
                 }
             }
 
@@ -278,7 +298,6 @@ fun AddCourse(
                         }
                     }
 
-                    // 课程节数选择 (点击弹窗)
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -480,4 +499,32 @@ fun AddCourseItem(
             focusedContainerColor = Color.Transparent
         )
     )
+}
+
+@Composable
+fun SuggestionChipRow(
+    items: List<String>,
+    selectedItem: String,
+    onSelect: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items.forEach { item ->
+            FilterChip(
+                selected = item == selectedItem,
+                onClick = { onSelect(item) },
+                label = {
+                    Text(
+                        text = item,
+                        style = MaterialTheme.typography.labelMedium,
+                        maxLines = 1
+                    )
+                }
+            )
+        }
+    }
 }

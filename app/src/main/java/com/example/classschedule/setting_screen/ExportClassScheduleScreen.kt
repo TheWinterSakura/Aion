@@ -44,9 +44,10 @@ fun ExportClassSchedule(
 ) {
     val context = LocalContext.current
     val courseList by viewModel.courseList.collectAsState()
+    val activeTableName by viewModel.activeTableName.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.getAllCourse()
+        viewModel.loadData()
     }
 
     val exportLauncher = rememberLauncherForActivityResult(
@@ -120,7 +121,7 @@ fun ExportClassSchedule(
 
             Button(
                 onClick = {
-                    exportLauncher.launch("我的课程表.json")
+                    exportLauncher.launch("${activeTableName}.json")
                 },
 
                 enabled = courseList != null,

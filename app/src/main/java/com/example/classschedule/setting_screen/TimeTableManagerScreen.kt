@@ -114,6 +114,7 @@ fun TimeTableManagerScreen(
                     TimeTableCard(
                         table = table,
                         isActive = table.id == activeId,
+                        canDelete = tables.size > 1,
                         onEdit = { navigateToEdit(table.id, table.name, totalCourseNumber) },
                         onSetActive = { viewModel.setActiveTable(table.id) },
                         onRename = { renameTarget = table },
@@ -170,6 +171,7 @@ fun TimeTableManagerScreen(
 private fun TimeTableCard(
     table: TimeTable,
     isActive: Boolean,
+    canDelete: Boolean,
     onEdit: () -> Unit,
     onSetActive: () -> Unit,
     onRename: () -> Unit,
@@ -220,10 +222,11 @@ private fun TimeTableCard(
                     modifier = Modifier.size(18.dp),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            IconButton(onClick = onDelete, modifier = Modifier.size(36.dp)) {
+            IconButton(onClick = onDelete, enabled = canDelete, modifier = Modifier.size(36.dp)) {
                 Icon(Icons.Outlined.Delete, "删除",
                     modifier = Modifier.size(18.dp),
-                    tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f))
+                    tint = if (canDelete) MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
+                           else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f))
             }
             Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),

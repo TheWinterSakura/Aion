@@ -28,6 +28,8 @@ class UserPreferencesRepository(
     val THEME_COLOR = stringPreferencesKey("theme_color")
     val ACTIVE_COURSE_TABLE_ID = intPreferencesKey("active_course_table_id")
     val ACTIVE_TIME_TABLE_ID = intPreferencesKey("active_time_table_id")
+    val GUIDE_HOME_SHOWN = booleanPreferencesKey("guide_home_shown")
+    val GUIDE_GRID_SHOWN = booleanPreferencesKey("guide_grid_shown")
 
 
     val commencementDate: Flow<String> = dataStore.data
@@ -113,7 +115,7 @@ class UserPreferencesRepository(
                 throw it
             }
         }.map { preferences ->
-            preferences[THEME_COLOR] ?: "Indigo"
+            preferences[THEME_COLOR] ?: "Dynamic"
         }
     suspend fun saveStartDatePreference(commencementDate: String) {
         dataStore.edit { preferences ->
@@ -176,6 +178,17 @@ class UserPreferencesRepository(
     suspend fun saveActiveTimeTableId(id: Int) {
         dataStore.edit { it[ACTIVE_TIME_TABLE_ID] = id }
     }
+
+    val guideHomeShown: Flow<Boolean> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[GUIDE_HOME_SHOWN] ?: false }
+
+    val guideGridShown: Flow<Boolean> = dataStore.data
+        .catch { if (it is IOException) emit(emptyPreferences()) else throw it }
+        .map { it[GUIDE_GRID_SHOWN] ?: false }
+
+    suspend fun markGuideHomeShown() { dataStore.edit { it[GUIDE_HOME_SHOWN] = true } }
+    suspend fun markGuideGridShown() { dataStore.edit { it[GUIDE_GRID_SHOWN] = true } }
 
     private companion object {
         val startDate = stringPreferencesKey("commencement_date")

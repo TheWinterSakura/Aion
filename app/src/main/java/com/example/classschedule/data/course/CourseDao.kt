@@ -40,4 +40,16 @@ interface CourseDao {
 
     @Query("UPDATE course SET color = :color WHERE id = :id")
     suspend fun updateColor(id: Int, color: String?)
+
+    @Query("SELECT DISTINCT courseName FROM course WHERE tableId = :tableId ORDER BY courseName ASC")
+    fun getDistinctCourseNames(tableId: Int = 1): Flow<List<String>>
+
+    @Query("SELECT DISTINCT courseTeacher FROM course WHERE courseTeacher != '' AND tableId = :tableId ORDER BY courseTeacher ASC")
+    fun getDistinctTeachers(tableId: Int = 1): Flow<List<String>>
+
+    @Query("SELECT * FROM course WHERE courseName = :name AND tableId = :tableId ORDER BY weekDay ASC")
+    fun getCoursesByName(name: String, tableId: Int = 1): Flow<List<Course>>
+
+    @Query("SELECT * FROM course WHERE courseTeacher = :teacher AND tableId = :tableId ORDER BY weekDay ASC")
+    fun getCoursesByTeacher(teacher: String, tableId: Int = 1): Flow<List<Course>>
 }

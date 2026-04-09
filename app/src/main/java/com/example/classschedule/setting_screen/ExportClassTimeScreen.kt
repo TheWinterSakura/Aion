@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,6 +44,12 @@ fun ExportClassTime(
 ) {
     val context = LocalContext.current
     val courseTimeList by viewModel.courseTimeList.collectAsState()
+    val activeTableName by viewModel.activeTableName.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadTableName()
+    }
+
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
     ) { uri ->
@@ -115,7 +122,7 @@ fun ExportClassTime(
 
             Button(
                 onClick = {
-                    exportLauncher.launch("我的课程时间表.json")
+                    exportLauncher.launch("${activeTableName}.json")
                 },
 
                 enabled = courseTimeList != null,

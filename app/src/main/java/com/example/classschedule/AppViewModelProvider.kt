@@ -19,6 +19,7 @@ import com.example.classschedule.setting_viewmodel.SchoolDateViewModel
 import com.example.classschedule.setting_viewmodel.SettingHomeViewModel
 import com.example.classschedule.setting_viewmodel.SpiderViewModel
 import com.example.classschedule.setting_viewmodel.CourseTableManagerViewModel
+import com.example.classschedule.setting_viewmodel.QuickEditViewModel
 import com.example.classschedule.setting_viewmodel.TimeTableManagerViewModel
 import com.example.classschedule.setting_viewmodel.ThemeColorViewModel
 
@@ -114,14 +115,18 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             ExportClassScheduleViewModel(
-                repository = application.container.courseRepository
+                repository = application.container.courseRepository,
+                courseTableRepository = application.container.courseTableRepository,
+                preferencesRepository = application.userPreferencesRepository
             )
         }
 
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             ExportClassTimeViewModel(
-                repository = application.container.scheduleRepository
+                repository = application.container.scheduleRepository,
+                timeTableRepository = application.container.timeTableRepository,
+                preferencesRepository = application.userPreferencesRepository
             )
         }
 
@@ -149,6 +154,14 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             TimeTableManagerViewModel(
                 timeTableRepository = application.container.timeTableRepository,
+                preferencesRepository = application.userPreferencesRepository
+            )
+        }
+
+        initializer {
+            val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
+            QuickEditViewModel(
+                repository = application.container.courseRepository,
                 preferencesRepository = application.userPreferencesRepository
             )
         }
