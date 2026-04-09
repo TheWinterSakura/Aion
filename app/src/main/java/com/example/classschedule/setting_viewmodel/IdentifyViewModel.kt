@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -282,8 +283,9 @@ class IdentifyViewModel(
     fun addCourse() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
+                val tableId = userRepository.activeCourseTableId.first()
                 courseList.forEach { course ->
-                    repository.insertCourse(course)
+                    repository.insertCourse(course.copy(tableId = tableId))
                 }
                 withContext(Dispatchers.Main) {
                     "添加成功".showToast()

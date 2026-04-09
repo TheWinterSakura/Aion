@@ -4,13 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.analytical_method.ParserFactory
 import com.example.classschedule.data.course.CourseRepository
+import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SpiderViewModel(
     private val repository: CourseRepository,
+    private val preferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
 
     private val _spiderStatus = MutableStateFlow("请登录，看到课表后点击右下角导入")
@@ -24,6 +27,7 @@ class SpiderViewModel(
         _spiderStatus.value = "✅ 获取成功，正在解析中..."
         viewModelScope.launch {
             try {
+                val tableId = preferencesRepository.activeCourseTableId.first()
                 val parser = ParserFactory.getParser(schoolName = schoolName)
                 val courseList = parser.parseHtml(
                     rawHtml = rawHtml,
@@ -31,7 +35,7 @@ class SpiderViewModel(
                         _spiderStatus.value = "❌ 解析失败：没找到课表！请确保课表已完全显示出来！"
                     })
                 courseList.forEach { course ->
-                    repository.insertCourse(course)
+                    repository.insertCourse(course.copy(tableId = tableId))
                 }
                 _spiderStatus.value = "🎉 导入成功！共获取 ${courseList.size} 节课程！"
 

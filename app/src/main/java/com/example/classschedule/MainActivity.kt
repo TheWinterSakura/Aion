@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
@@ -12,10 +13,16 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -53,12 +60,34 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val app = LocalContext.current.applicationContext as ClassScheduleApplication
+            val isReady by app.isReady.collectAsState()
             val themeViewModel: ThemeColorViewModel = viewModel(factory = AppViewModelProvider.Factory)
             val themeColor by themeViewModel.themeColor.collectAsState()
             ClassScheduleTheme(themeColorName = themeColor) {
-                MainNavScreen(
-                    finishAffinity = { finishAffinity() }
-                )
+                Box(modifier = Modifier.fillMaxSize()) {
+
+                    AnimatedVisibility(
+                        visible = isReady,
+                        enter = fadeIn(tween(300)),
+                        exit = fadeOut()
+                    ) {
+                        MainNavScreen(finishAffinity = { finishAffinity() })
+                    }
+
+                    AnimatedVisibility(
+                        visible = !isReady,
+                        enter = fadeIn(),
+                        exit = fadeOut(tween(200))
+                    ) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                }
             }
         }
     }

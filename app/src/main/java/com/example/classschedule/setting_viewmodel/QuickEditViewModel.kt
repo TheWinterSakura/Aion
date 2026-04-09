@@ -45,7 +45,6 @@ class QuickEditViewModel(
 
     private val _selectedKey = MutableStateFlow("")
 
-    // 按课程名查询，限定当前课程表
     @OptIn(ExperimentalCoroutinesApi::class)
     val coursesByName = _selectedKey.flatMapLatest { key ->
         if (key.isBlank()) flowOf(emptyList())
@@ -56,7 +55,6 @@ class QuickEditViewModel(
         initialValue = emptyList()
     )
 
-    // 按教师名查询，限定当前课程表
     @OptIn(ExperimentalCoroutinesApi::class)
     val coursesByTeacher = _selectedKey.flatMapLatest { key ->
         if (key.isBlank()) flowOf(emptyList())

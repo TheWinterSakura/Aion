@@ -46,10 +46,6 @@ fun ExportClassSchedule(
     val courseList by viewModel.courseList.collectAsState()
     val activeTableName by viewModel.activeTableName.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.loadData()
-    }
-
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
     ) { uri ->

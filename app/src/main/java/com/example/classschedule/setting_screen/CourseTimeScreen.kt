@@ -145,8 +145,8 @@ fun EditScheduleScreen(
     LaunchedEffect(newScheduleList) {
         if (newScheduleList.isNotEmpty()) {
             scheduleList.clear()
-            newScheduleList.map { it.copy(id = 0) }
-            scheduleList.addAll(newScheduleList)
+            // 清零 id，让 insertCourseTime 作为新记录插入
+            scheduleList.addAll(newScheduleList.map { it.copy(id = 0) })
         }
     }
 
@@ -183,15 +183,16 @@ fun EditScheduleScreen(
                 actions = {
                     TextButton(onClick = {
                         if (initialData.isNotEmpty()) {
-                            if (newScheduleList.isNotEmpty()){
-                                viewModel.deleteAll()
+                            if (newScheduleList.isNotEmpty()) {
+                                // 删除当前时间表的所有条目，再插入导入的新条目
+                                viewModel.deleteAllByCurrentTable()
                                 scheduleList.forEach { schedule ->
                                     viewModel.insertCourseTime(schedule)
                                 }
                                 viewModel.updateAllTimeCount(allCount = newScheduleList.size)
                                 isSaving = true
                                 "修改成功".showToast()
-                            }else {
+                            } else {
                                 viewModel.updateAll(scheduleList = scheduleList)
                                 isSaving = true
                                 "修改成功".showToast()

@@ -18,6 +18,9 @@ import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -39,6 +42,9 @@ class ClassScheduleApplication : Application() {
 
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
+    private val _isReady = MutableStateFlow(false)
+    val isReady: StateFlow<Boolean> = _isReady.asStateFlow()
+
     override fun onCreate() {
         super.onCreate()
         context = this
@@ -47,8 +53,10 @@ class ClassScheduleApplication : Application() {
         workManagerClassScheduleRepository = AlertManagerClassScheduleRepository(this)
         PDFBoxResourceLoader.init(applicationContext)
         ProcessLifecycleOwner.get().lifecycle.addObserver(AppExitRefreshObserver(this))
-
-        appScope.launch { initDefaultTables() }
+        appScope.launch {
+            initDefaultTables()
+            _isReady.value = true
+        }
     }
 
     /**

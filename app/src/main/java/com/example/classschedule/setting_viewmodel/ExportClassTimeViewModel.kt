@@ -37,7 +37,6 @@ class ExportClassTimeViewModel(
         initialValue = emptyList()
     )
 
-    // 当前激活时间表的名字，用于文件名
     val activeTableName = MutableStateFlow("时间表")
 
     fun loadTableName() {

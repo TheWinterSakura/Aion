@@ -2,15 +2,19 @@ package com.example.classschedule.setting_viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.classschedule.data.schedule.Schedule
+import com.example.classschedule.data.schedule.ScheduleRepository
 import com.example.classschedule.data.schedule.TimeTable
 import com.example.classschedule.data.schedule.TimeTableRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class TimeTableManagerViewModel(
     private val timeTableRepository: TimeTableRepository,
+    private val scheduleRepository: ScheduleRepository,
     private val preferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
@@ -28,7 +32,19 @@ class TimeTableManagerViewModel(
 
     fun addTable(name: String) {
         viewModelScope.launch {
-            timeTableRepository.insert(TimeTable(name = name))
+            val newId = timeTableRepository.insert(TimeTable(name = name))
+            // 读取用户设置的一天课程节数，填充空时间条目
+            val total = preferencesRepository.courseNumberTotal.first()
+            repeat(total) { i ->
+                scheduleRepository.insertCourseTime(
+                    Schedule(
+                        courseNumber = i + 1,
+                        startTime = "00:00",
+                        endTime = "00:00",
+                        tableId = newId.toInt()
+                    )
+                )
+            }
         }
     }
 
@@ -41,9 +57,10 @@ class TimeTableManagerViewModel(
     fun deleteTable(table: TimeTable) {
         viewModelScope.launch {
             val current = tables.value
-            if (current.size <= 1) return@launch  // 最后一个，禁止删除
+            if (current.size <= 1) return@launch
+            // 先删该时间表下的所有时间条目，再删表记录本身
+            scheduleRepository.deleteAllByTableId(table.id)
             timeTableRepository.delete(table)
-            // 如果删的是当前激活表，自动切换到剩余的第一个
             if (table.id == activeTableId.value) {
                 val fallback = current.first { it.id != table.id }
                 preferencesRepository.saveActiveTimeTableId(fallback.id)

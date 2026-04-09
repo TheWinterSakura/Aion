@@ -63,9 +63,9 @@ class CourseTimeViewModel(
         }
     }
 
-    fun deleteAll() {
+    fun deleteAllByCurrentTable() {
         viewModelScope.launch {
-            scheduleRepository.deleteAll()
+            scheduleRepository.deleteAllByTableId(_tableId.value)
         }
     }
 

@@ -35,6 +35,12 @@ interface CourseDao {
     @Query("SELECT * FROM course")
     suspend fun getAllCourse(): List<Course>
 
+    @Query("SELECT * FROM course WHERE tableId = :tableId")
+    suspend fun getCoursesByTableId(tableId: Int): List<Course>
+
+    @Query("DELETE FROM course WHERE tableId = :tableId")
+    suspend fun deleteCoursesByTableId(tableId: Int)
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCourseList(courseList: List<Course>)
 

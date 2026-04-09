@@ -19,10 +19,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountBalance
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material.icons.outlined.FileDownload
-import androidx.compose.material.icons.outlined.TouchApp
+import androidx.compose.material.icons.outlined.DocumentScanner
+import androidx.compose.material.icons.outlined.Gesture
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.WavingHand
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -37,9 +40,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
-/**
- * 首页空状态引导卡片：提示用户先设置学期时间，再导入课程
- */
 @Composable
 fun HomeEmptyGuide(
     visible: Boolean,
@@ -62,9 +62,7 @@ fun HomeEmptyGuide(
                     .fillMaxWidth()
                     .padding(32.dp),
                 shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                ),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
@@ -72,13 +70,26 @@ fun HomeEmptyGuide(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Icon(
+                            Icons.Outlined.WavingHand,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(28.dp)
+                        )
+                        Text(
+                            "欢迎使用课程表",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
                     Text(
-                        "👋 欢迎使用课程表",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        "开始前需要完成两步基础设置",
+                        "按照以下步骤快速开始",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -88,20 +99,22 @@ fun HomeEmptyGuide(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         GuideStep(
-                            step = "1",
                             icon = Icons.Outlined.DateRange,
                             title = "设置学期时间",
                             desc = "设置 → 学期时间设置，填写开学日期和总周数"
                         )
                         GuideStep(
-                            step = "2",
-                            icon = Icons.Outlined.FileDownload,
-                            title = "导入或手动添加课程",
-                            desc = "通过教务系统导入，或点击右下角 + 手动添加"
+                            icon = Icons.Outlined.DocumentScanner,
+                            title = "导入课程",
+                            desc = "设置 → 多种导入方式可自行选择"
                         )
                         GuideStep(
-                            step = "3",
-                            icon = Icons.Outlined.TouchApp,
+                            icon = Icons.Outlined.Add,
+                            title = "手动添加课程",
+                            desc = "点击首页右下角 + 按钮，逐条填写课程信息"
+                        )
+                        GuideStep(
+                            icon = Icons.Outlined.Gesture,
                             title = "长按课程可自定义颜色",
                             desc = "在课程格子或卡片上长按，即可修改该课程的颜色"
                         )
@@ -135,7 +148,6 @@ fun HomeEmptyGuide(
 
 @Composable
 private fun GuideStep(
-    step: String,
     icon: ImageVector,
     title: String,
     desc: String
@@ -164,17 +176,21 @@ private fun GuideStep(
         }
         Spacer(Modifier.width(12.dp))
         Column {
-            Text(title, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+            Text(
+                title,
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.SemiBold
+            )
             Spacer(Modifier.height(2.dp))
-            Text(desc, style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                desc,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
 
-/**
- * 网格布局首次进入时的底部提示条：告知长按可改色
- */
 @Composable
 fun GridLayoutGuideSnackbar(
     visible: Boolean,
@@ -200,7 +216,7 @@ fun GridLayoutGuideSnackbar(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Icon(
-                    Icons.Outlined.TouchApp, null,
+                    Icons.Outlined.Palette, null,
                     tint = MaterialTheme.colorScheme.inverseOnSurface,
                     modifier = Modifier.size(20.dp)
                 )

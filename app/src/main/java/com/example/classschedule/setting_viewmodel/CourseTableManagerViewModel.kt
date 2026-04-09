@@ -2,6 +2,7 @@ package com.example.classschedule.setting_viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.classschedule.data.course.CourseRepository
 import com.example.classschedule.data.course.CourseTable
 import com.example.classschedule.data.course.CourseTableRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
@@ -11,6 +12,7 @@ import kotlinx.coroutines.launch
 
 class CourseTableManagerViewModel(
     private val courseTableRepository: CourseTableRepository,
+    private val courseRepository: CourseRepository,
     private val preferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
@@ -41,9 +43,10 @@ class CourseTableManagerViewModel(
     fun deleteTable(table: CourseTable) {
         viewModelScope.launch {
             val current = tables.value
-            if (current.size <= 1) return@launch  // 最后一个，禁止删除
+            if (current.size <= 1) return@launch
+            // 先删该课程表下的所有课程，再删表记录本身
+            courseRepository.deleteCoursesByTableId(table.id)
             courseTableRepository.delete(table)
-            // 如果删的是当前激活表，自动切换到剩余的第一个
             if (table.id == activeTableId.value) {
                 val fallback = current.first { it.id != table.id }
                 preferencesRepository.saveActiveCourseTableId(fallback.id)

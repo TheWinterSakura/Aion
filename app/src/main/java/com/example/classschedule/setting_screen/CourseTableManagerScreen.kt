@@ -129,7 +129,6 @@ fun CourseTableManagerScreen(
         }
     }
 
-    // 新建对话框
     if (showAddDialog) {
         TableNameDialog(
             title = "新建课程表",
@@ -142,7 +141,6 @@ fun CourseTableManagerScreen(
         )
     }
 
-    // 重命名对话框
     renameTarget?.let { target ->
         TableNameDialog(
             title = "重命名",

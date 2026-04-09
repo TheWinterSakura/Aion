@@ -20,6 +20,8 @@ interface ScheduleRepository {
     suspend fun deleteByCourseNumber(courseNumber: Int, tableId: Int = 1)
 
     suspend fun deleteAll()
+
+    suspend fun deleteAllByTableId(tableId: Int)
 }
 
 class OfflineScheduleRepository(
@@ -47,4 +49,7 @@ class OfflineScheduleRepository(
         scheduleDao.deleteByCourseNumber(courseNumber, tableId)
 
     override suspend fun deleteAll() = scheduleDao.deleteAll()
+
+    override suspend fun deleteAllByTableId(tableId: Int) =
+        scheduleDao.deleteAllByTableId(tableId)
 }

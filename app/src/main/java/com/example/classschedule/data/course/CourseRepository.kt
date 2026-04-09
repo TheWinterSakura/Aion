@@ -20,6 +20,10 @@ interface CourseRepository {
 
     suspend fun getAllCourse(): List<Course>
 
+    suspend fun getCoursesByTableId(tableId: Int): List<Course>
+
+    suspend fun deleteCoursesByTableId(tableId: Int)
+
     suspend fun insertCourseList(courseList: List<Course>)
 
     suspend fun updateCourseColor(id: Int, color: String?)
@@ -56,6 +60,12 @@ class OfflineCourseRepository(private val courseDao: CourseDao) : CourseReposito
 
     override suspend fun getAllCourse(): List<Course> =
         courseDao.getAllCourse()
+
+    override suspend fun getCoursesByTableId(tableId: Int): List<Course> =
+        courseDao.getCoursesByTableId(tableId)
+
+    override suspend fun deleteCoursesByTableId(tableId: Int) =
+        courseDao.deleteCoursesByTableId(tableId)
 
     override suspend fun insertCourseList(courseList: List<Course>) =
         courseDao.insertCourseList(courseList = courseList)

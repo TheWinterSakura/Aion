@@ -59,6 +59,7 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             SpiderViewModel(
                 repository = application.container.courseRepository,
+                preferencesRepository = application.userPreferencesRepository,
             )
         }
         initializer {
@@ -133,7 +134,8 @@ object AppViewModelProvider {
         initializer {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             AddCourseByJsonViewModel(
-                repository = application.container.courseRepository
+                repository = application.container.courseRepository,
+                preferencesRepository = application.userPreferencesRepository
             )
         }
 
@@ -146,6 +148,7 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             CourseTableManagerViewModel(
                 courseTableRepository = application.container.courseTableRepository,
+                courseRepository = application.container.courseRepository,
                 preferencesRepository = application.userPreferencesRepository
             )
         }
@@ -154,6 +157,7 @@ object AppViewModelProvider {
             val application = (this[APPLICATION_KEY] as ClassScheduleApplication)
             TimeTableManagerViewModel(
                 timeTableRepository = application.container.timeTableRepository,
+                scheduleRepository = application.container.scheduleRepository,
                 preferencesRepository = application.userPreferencesRepository
             )
         }

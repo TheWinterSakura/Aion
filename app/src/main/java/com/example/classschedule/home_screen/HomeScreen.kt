@@ -162,17 +162,6 @@ fun HomeScreen(
                     weeksPassed = (currentWeek - 1).toLong()
                 )
             }
-            if (courseTimeList.isEmpty()) {
-                repeat(totalCourseNumber) { i ->
-                    viewModel.insertCourseTime(
-                        Schedule(
-                            courseNumber = i + 1,
-                            startTime = "00:00",
-                            endTime = "00:00"
-                        )
-                    )
-                }
-            }
             viewModel.changeIsFinished()
         }
     }
@@ -187,18 +176,18 @@ fun HomeScreen(
     var colorPickerTargetId by remember { mutableStateOf(0) }
     var colorPickerInitialColor by remember { mutableStateOf<String?>(null) }
 
-    // 新手引导状态
+
     val guideHomeShown by viewModel.guideHomeShown.collectAsState()
     val guideGridShown by viewModel.guideGridShown.collectAsState()
-    // 首页引导：课程为空且引导未展示过时显示
+
     val showHomeGuide = remember(courseList, guideHomeShown) {
         courseList.isEmpty() && !guideHomeShown
     }
-    // 网格引导：切换到网格布局时且未展示过
+
     var showGridGuide by remember { mutableStateOf(false) }
     LaunchedEffect(isGridLayout, guideGridShown) {
         if (isGridLayout && !guideGridShown) {
-            delay(600) // 等布局切换动画完成
+            delay(600)
             showGridGuide = true
         }
     }
@@ -406,14 +395,14 @@ fun HomeScreen(
             }
         }
 
-        // 首页空状态引导
+
         HomeEmptyGuide(
             visible = showHomeGuide,
             onGoToSetting = navigateToSetting,
             onDismiss = { viewModel.markGuideHomeShown() }
         )
 
-        // 网格布局长按提示（底部）
+
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
             GridLayoutGuideSnackbar(
                 visible = showGridGuide,
@@ -424,7 +413,7 @@ fun HomeScreen(
             )
         }
 
-        } // end outer Box
+        }
     } else {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()

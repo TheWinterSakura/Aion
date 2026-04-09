@@ -172,7 +172,7 @@ class UserPreferencesRepository(
         }.map { it[ACTIVE_TIME_TABLE_ID] ?: 1 }
 
     suspend fun saveActiveCourseTableId(id: Int) {
-        dataStore.edit { it[ACTIVE_COURSE_TABLE_ID] = id }
+        dataStore.edit { it[this.ACTIVE_COURSE_TABLE_ID] = id }
     }
 
     suspend fun saveActiveTimeTableId(id: Int) {
