@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-   Backup rules for ClassSchedule app
-   Excludes sensitive data like API keys from backup
+<?xml version="1.0" encoding="utf-8"?><!--
+   Sample backup rules file; uncomment and customize as necessary.
+   See https://developer.android.com/guide/topics/data/autobackup
+   for details.
+   Note: This file is ignored for devices older than API 31
+   See https://developer.android.com/about/versions/12/backup-restore
 -->
 <full-backup-content>
-    <!-- 排除 DataStore 中的敏感数据 -->
-    <exclude domain="sharedpref" path="datastore/settings.preferences_pb"/>
-    
-    <!-- 可以包含课程数据库 -->
-    <include domain="database" path="course_database"/>
-    <include domain="database" path="schedule_database"/>
+    <!--
+   <include domain="sharedpref" path="."/>
+   <exclude domain="sharedpref" path="device.xml"/>
+-->
 </full-backup-content>
