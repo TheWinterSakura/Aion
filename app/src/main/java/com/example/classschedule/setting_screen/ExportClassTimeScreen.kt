@@ -46,10 +46,6 @@ fun ExportClassTime(
     val courseTimeList by viewModel.courseTimeList.collectAsState()
     val activeTableName by viewModel.activeTableName.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.loadTableName()
-    }
-
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
     ) { uri ->

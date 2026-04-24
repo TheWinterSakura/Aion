@@ -12,6 +12,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -27,7 +28,6 @@ class ExportClassTimeViewModel(
         initialValue = 1
     )
 
-    // 跟随当前激活的时间表 ID
     @OptIn(ExperimentalCoroutinesApi::class)
     val courseTimeList = activeTableId.flatMapLatest { tableId ->
         repository.getAllScheduleFlow(tableId)
@@ -37,14 +37,17 @@ class ExportClassTimeViewModel(
         initialValue = emptyList()
     )
 
-    val activeTableName = MutableStateFlow("时间表")
-
-    fun loadTableName() {
-        viewModelScope.launch {
-            val table = timeTableRepository.getById(activeTableId.value)
-            activeTableName.value = table?.name ?: "时间表"
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val activeTableName = activeTableId.flatMapLatest { tableId ->
+        flow {
+            val table = timeTableRepository.getById(tableId)
+            emit(table?.name ?: "时间表")
         }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = "时间表"
+    )
 
     inline fun <reified T> exportJsonToUri(context: Context, uri: Uri, data: T) {
         viewModelScope.launch {
