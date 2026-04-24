@@ -1,4 +1,4 @@
-@file:Suppress("COMPOSE_APPLIER_CALL_MISMATCH")
+@file:Suppress("COMPOSE_APPLIER_CALL_MISMATCH", "DEPRECATION")
 
 package com.example.classschedule.setting_screen
 
@@ -77,6 +77,12 @@ fun ImportScheduleScreen(
                     WebView(context).apply {
                         settings.javaScriptEnabled = true
                         settings.domStorageEnabled = true
+                        settings.allowFileAccess = false
+                        settings.allowContentAccess = false
+                        settings.allowFileAccessFromFileURLs = false
+                        settings.allowUniversalAccessFromFileURLs = false
+                        settings.mixedContentMode = android.webkit.WebSettings.MIXED_CONTENT_NEVER_ALLOW
+
                         isHorizontalScrollBarEnabled = true
                         isVerticalScrollBarEnabled = true
                         settings.useWideViewPort = true
@@ -84,9 +90,25 @@ fun ImportScheduleScreen(
                         settings.setSupportZoom(true)
                         settings.builtInZoomControls = true
                         settings.displayZoomControls = false
-                        webViewClient = WebViewClient()
+
+                        webViewClient = object : WebViewClient() {
+                            override fun shouldOverrideUrlLoading(
+                                view: WebView?,
+                                request: android.webkit.WebResourceRequest?
+                            ): Boolean {
+                                val url = request?.url?.toString() ?: return true
+                                return if (url.startsWith("https://") || url.startsWith("http://")) {
+                                    false
+                                } else {
+                                    true
+                                }
+                            }
+                        }
+                        
                         webViewInstance = this
-                        loadUrl(universityUrl)
+                        if (universityUrl.startsWith("http://") || universityUrl.startsWith("https://")) {
+                            loadUrl(universityUrl)
+                        }
                     }
                 }
             )

@@ -38,6 +38,9 @@ import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import androidx.datastore.preferences.preferencesDataStore
+
+private val Context.dataStore by preferencesDataStore(name = "settings")
 
 private val WidgetBgColor = ColorProvider(day = Color(0xFFF9FAFB), night = Color(0xFF1E1E1E))
 private val ItemBgColor = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF2C2C2C))
@@ -50,9 +53,30 @@ class CourseWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val repository = AppDataContainer(context).courseRepository
+        val appContainer = AppDataContainer(context)
+        val repository = appContainer.courseRepository
+        val preferencesRepository = com.example.classschedule.data.user_preferences.UserPreferencesRepository(
+            context.dataStore
+        )
+
+        val startDate = preferencesRepository.commencementDate.first()
+        val currentWeek = if (startDate.isNotBlank()) {
+            val startLocalDate = LocalDate.parse(startDate)
+            val currentDate = LocalDate.now()
+            val daysBetween = java.time.temporal.ChronoUnit.DAYS.between(startLocalDate, currentDate)
+            ((daysBetween / 7) + 1).toInt().coerceAtLeast(1)
+        } else {
+            1
+        }
+
+        val activeCourseTableId = preferencesRepository.activeCourseTableId.first()
+        
         val dayOfWeekStr = LocalDate.now().format(DateTimeFormatter.ofPattern("EEEE", Locale.ENGLISH))
-        val todayCourses = repository.getTodayCourseSimple(currentWeekDate = 4, today = dayOfWeekStr).first()
+        val todayCourses = repository.getTodayCourseSimple(
+            currentWeekDate = currentWeek, 
+            today = dayOfWeekStr,
+            tableId = activeCourseTableId
+        ).first()
 
         provideContent {
             val size = LocalSize.current
