@@ -59,10 +59,6 @@ class ClassScheduleApplication : Application() {
         }
     }
 
-    /**
-     * 首次启动时创建默认课程表和时间表，并设为激活状态。
-     * 通过检查表列表是否为空来判断是否首次启动，幂等安全。
-     */
     private suspend fun initDefaultTables() {
         // 默认课程表
         val existingCourseTables = container.courseTableRepository.getAll().first()

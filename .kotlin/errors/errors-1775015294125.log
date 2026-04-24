@@ -1,0 +1,920 @@
+kotlin version: 2.0.21
+error message: org.jetbrains.kotlin.backend.common.BackendException: Backend Internal error: Exception during IR lowering
+File being compiled: E:/android_workspace/ClassSchedule/app/src/main/java/com/example/classschedule/widget/ClassScheduleWidget.kt
+The root cause java.lang.RuntimeException was thrown at: org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException(CodegenUtil.kt:253)
+	at org.jetbrains.kotlin.backend.common.CodegenUtil.reportBackendException$default(CodegenUtil.kt:236)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:65)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:52)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invoke(performByIrFile.kt:38)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:27)
+	at org.jetbrains.kotlin.backend.common.phaser.CompositePhase.invoke(PhaseBuilders.kt:14)
+	at org.jetbrains.kotlin.backend.common.phaser.NamedCompilerPhase.phaseBody(CompilerPhase.kt:166)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.CompilerPhaseKt.invokeToplevel(CompilerPhase.kt:62)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.invokeCodegen(JvmIrCodegenFactory.kt:371)
+	at org.jetbrains.kotlin.codegen.CodegenFactory.generateModule(CodegenFactory.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.JvmIrCodegenFactory.generateModuleInFrontendIRMode(JvmIrCodegenFactory.kt:433)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.generateCodeFromIr(jvmCompilerPipeline.kt:246)
+	at org.jetbrains.kotlin.cli.jvm.compiler.pipeline.JvmCompilerPipelineKt.compileModulesUsingFrontendIrAndLightTree(jvmCompilerPipeline.kt:142)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:148)
+	at org.jetbrains.kotlin.cli.jvm.K2JVMCompiler.doExecute(K2JVMCompiler.kt:43)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:103)
+	at org.jetbrains.kotlin.cli.common.CLICompiler.execImpl(CLICompiler.kt:49)
+	at org.jetbrains.kotlin.cli.common.CLITool.exec(CLITool.kt:101)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:464)
+	at org.jetbrains.kotlin.incremental.IncrementalJvmCompilerRunner.runCompiler(IncrementalJvmCompilerRunner.kt:73)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.doCompile(IncrementalCompilerRunner.kt:506)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileImpl(IncrementalCompilerRunner.kt:423)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compileNonIncrementally(IncrementalCompilerRunner.kt:301)
+	at org.jetbrains.kotlin.incremental.IncrementalCompilerRunner.compile(IncrementalCompilerRunner.kt:129)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.execIncrementalCompiler(CompileServiceImpl.kt:675)
+	at org.jetbrains.kotlin.daemon.CompileServiceImplBase.access$execIncrementalCompiler(CompileServiceImpl.kt:92)
+	at org.jetbrains.kotlin.daemon.CompileServiceImpl.compile(CompileServiceImpl.kt:1660)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source)
+	at java.base/java.lang.reflect.Method.invoke(Unknown Source)
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport$1.run(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(Unknown Source)
+	at java.base/java.security.AccessController.doPrivileged(Unknown Source)
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.lang.RuntimeException: Exception while generating code for:
+FUN name:CourseWidgetItem visibility:private modality:FINAL <> (course:com.example.classschedule.data.course.CourseSimple, $composer:androidx.compose.runtime.Composer?, $changed:kotlin.Int) returnType:kotlin.Unit
+  annotations:
+    Composable
+    ComposableTarget(applier = "androidx.glance.GlanceComposable")
+  VALUE_PARAMETER name:course index:0 type:com.example.classschedule.data.course.CourseSimple
+  VALUE_PARAMETER name:$composer index:1 type:androidx.compose.runtime.Composer? [assignable]
+  VALUE_PARAMETER name:$changed index:2 type:kotlin.Int
+  BLOCK_BODY
+    BLOCK type=kotlin.Unit origin=null
+      SET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=kotlin.Unit origin=null
+        CALL 'public abstract fun startRestartGroup (key: kotlin.Int): androidx.compose.runtime.Composer declared in androidx.compose.runtime.Composer' type=androidx.compose.runtime.Composer origin=null
+          $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.Composer? origin=null
+          key: CONST Int type=kotlin.Int value=-733141838
+      CALL 'public final fun sourceInformation (composer: androidx.compose.runtime.Composer, sourceInformation: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+        composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.Composer? origin=null
+        sourceInformation: CONST String type=kotlin.String value="C(CourseWidgetItem)120@4759L6,124@4877L1093,115@4603L1367:ClassScheduleWidget.kt#7sd964"
+    VAR name:$dirty type:kotlin.Int [val]
+      GET_VAR '$changed: kotlin.Int declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=kotlin.Int origin=null
+    WHEN type=kotlin.Unit origin=IF
+      BRANCH
+        if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=null
+          arg0: CALL 'public final fun and (other: kotlin.Int): kotlin.Int [infix] declared in kotlin.Int' type=kotlin.Int origin=null
+            $this: GET_VAR '$changed: kotlin.Int declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=kotlin.Int origin=null
+            other: CONST Int type=kotlin.Int value=6
+          arg1: CONST Int type=kotlin.Int value=0
+        then: SET_VAR 'val $dirty: kotlin.Int [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=kotlin.Unit origin=null
+          CALL 'public final fun or (other: kotlin.Int): kotlin.Int [infix] declared in kotlin.Int' type=kotlin.Int origin=null
+            $this: GET_VAR 'val $dirty: kotlin.Int [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=kotlin.Int origin=null
+            other: WHEN type=kotlin.Int origin=IF
+              BRANCH
+                if: CALL 'public abstract fun changed (value: kotlin.Any?): kotlin.Boolean declared in androidx.compose.runtime.Composer' type=kotlin.Boolean origin=null
+                  $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.Composer? origin=null
+                  value: GET_VAR 'course: com.example.classschedule.data.course.CourseSimple declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=com.example.classschedule.data.course.CourseSimple origin=null
+                then: CONST Int type=kotlin.Int value=4
+              BRANCH
+                if: CONST Boolean type=kotlin.Boolean value=true
+                then: CONST Int type=kotlin.Int value=2
+    WHEN type=kotlin.Unit origin=IF
+      BRANCH
+        if: CALL 'public final fun OROR (arg0: kotlin.Boolean, arg1: kotlin.Boolean): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=null
+          arg0: CALL 'public final fun not (): kotlin.Boolean [operator] declared in kotlin.Boolean' type=kotlin.Boolean origin=null
+            $this: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=null
+              arg0: CALL 'public final fun and (other: kotlin.Int): kotlin.Int [infix] declared in kotlin.Int' type=kotlin.Int origin=null
+                $this: GET_VAR 'val $dirty: kotlin.Int [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=kotlin.Int origin=null
+                other: CONST Int type=kotlin.Int value=3
+              arg1: CONST Int type=kotlin.Int value=2
+          arg1: CALL 'public final fun not (): kotlin.Boolean [operator] declared in kotlin.Boolean' type=kotlin.Boolean origin=null
+            $this: CALL 'public abstract fun <get-skipping> (): kotlin.Boolean declared in androidx.compose.runtime.Composer' type=kotlin.Boolean origin=null
+              $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.Composer? origin=null
+        then: BLOCK type=kotlin.Unit origin=null
+          WHEN type=kotlin.Unit origin=IF
+            BRANCH
+              if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+              then: CALL 'public final fun traceEventStart (key: kotlin.Int, dirty1: kotlin.Int, dirty2: kotlin.Int, info: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+                key: CONST Int type=kotlin.Int value=-733141838
+                dirty1: GET_VAR 'val $dirty: kotlin.Int [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=kotlin.Int origin=null
+                dirty2: CONST Int type=kotlin.Int value=-1
+                info: CONST String type=kotlin.String value="com.example.classschedule.widget.CourseWidgetItem (ClassScheduleWidget.kt:114)"
+          CALL 'public final fun Row-lMAjyxE (modifier: androidx.glance.GlanceModifier?, horizontalAlignment: androidx.glance.layout.Alignment.Horizontal, verticalAlignment: androidx.glance.layout.Alignment.Vertical, content: @[ExtensionFunctionType] kotlin.Function3<androidx.glance.layout.RowScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.RowKt' type=kotlin.Unit origin=null
+            modifier: CALL 'public final fun padding-3ABfNKs (all: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.PaddingKt' type=androidx.glance.GlanceModifier origin=null
+              $receiver: CALL 'public final fun background (colorProvider: androidx.glance.unit.ColorProvider): androidx.glance.GlanceModifier declared in androidx.glance.BackgroundKt' type=androidx.glance.GlanceModifier origin=null
+                $receiver: CALL 'public final fun padding-qDBjuR0$default (start: androidx.compose.ui.unit.Dp, top: androidx.compose.ui.unit.Dp, end: androidx.compose.ui.unit.Dp, bottom: androidx.compose.ui.unit.Dp, $mask0: kotlin.Int, $handler: kotlin.Any?): androidx.glance.GlanceModifier declared in androidx.glance.layout.PaddingKt' type=androidx.glance.GlanceModifier origin=DEFAULT_DISPATCH_CALL
+                  $receiver: CALL 'public final fun fillMaxWidth (): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+                    $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+                  start: COMPOSITE type=androidx.compose.ui.unit.Dp origin=DEFAULT_VALUE
+                    CALL 'public final fun <unsafe-coerce> <T, R> (v: T of kotlin.jvm.internal.<unsafe-coerce>): R of kotlin.jvm.internal.<unsafe-coerce> declared in kotlin.jvm.internal' type=androidx.compose.ui.unit.Dp origin=null
+                      <T>: kotlin.Float
+                      <R>: androidx.compose.ui.unit.Dp
+                      v: CONST Float type=kotlin.Float value=0.0
+                  top: COMPOSITE type=androidx.compose.ui.unit.Dp origin=DEFAULT_VALUE
+                    CALL 'public final fun <unsafe-coerce> <T, R> (v: T of kotlin.jvm.internal.<unsafe-coerce>): R of kotlin.jvm.internal.<unsafe-coerce> declared in kotlin.jvm.internal' type=androidx.compose.ui.unit.Dp origin=null
+                      <T>: kotlin.Float
+                      <R>: androidx.compose.ui.unit.Dp
+                      v: CONST Float type=kotlin.Float value=0.0
+                  end: COMPOSITE type=androidx.compose.ui.unit.Dp origin=DEFAULT_VALUE
+                    CALL 'public final fun <unsafe-coerce> <T, R> (v: T of kotlin.jvm.internal.<unsafe-coerce>): R of kotlin.jvm.internal.<unsafe-coerce> declared in kotlin.jvm.internal' type=androidx.compose.ui.unit.Dp origin=null
+                      <T>: kotlin.Float
+                      <R>: androidx.compose.ui.unit.Dp
+                      v: CONST Float type=kotlin.Float value=0.0
+                  bottom: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                    $receiver: CONST Int type=kotlin.Int value=8
+                  $mask0: CONST Int type=kotlin.Int value=7
+                  $handler: CONST Null type=kotlin.Any? value=null
+                colorProvider: CALL 'public final fun <get-surface> (): androidx.glance.unit.ColorProvider declared in androidx.glance.color.ColorProviders' type=androidx.glance.unit.ColorProvider origin=GET_PROPERTY
+                  $this: CALL 'public final fun <get-colors> ($composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.glance.color.ColorProviders declared in androidx.glance.GlanceTheme' type=androidx.glance.color.ColorProviders origin=GET_PROPERTY
+                    $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:androidx.glance.GlanceTheme visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=androidx.glance.GlanceTheme origin=null
+                    $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.Composer? origin=null
+                    $changed: GET_FIELD 'FIELD name:$stable type:kotlin.Int visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=kotlin.Int origin=null
+              all: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                $receiver: CONST Int type=kotlin.Int value=8
+            horizontalAlignment: COMPOSITE type=androidx.glance.layout.Alignment.Horizontal origin=DEFAULT_VALUE
+              CALL 'public final fun <unsafe-coerce> <T, R> (v: T of kotlin.jvm.internal.<unsafe-coerce>): R of kotlin.jvm.internal.<unsafe-coerce> declared in kotlin.jvm.internal' type=androidx.glance.layout.Alignment.Horizontal origin=null
+                <T>: kotlin.Int
+                <R>: androidx.glance.layout.Alignment.Horizontal
+                v: CONST Int type=kotlin.Int value=0
+            verticalAlignment: CALL 'public final fun getCenterVertically-mnfRV0w (): androidx.glance.layout.Alignment.Vertical declared in androidx.glance.layout.Alignment.Companion' type=androidx.glance.layout.Alignment.Vertical origin=GET_PROPERTY
+              $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.layout.Alignment.Companion visibility:public [final,static] declared in androidx.glance.layout.Alignment' type=androidx.glance.layout.Alignment.Companion origin=null
+            content: CALL 'public final fun rememberComposableLambda (key: kotlin.Int, tracked: kotlin.Boolean, block: kotlin.Any, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.compose.runtime.internal.ComposableLambda declared in androidx.compose.runtime.internal.ComposableLambdaKt' type=androidx.compose.runtime.internal.ComposableLambda origin=null
+              key: CONST Int type=kotlin.Int value=1664003606
+              tracked: CONST Boolean type=kotlin.Boolean value=true
+              block: BLOCK type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> origin=null
+                CLASS LAMBDA_IMPL CLASS name:<no name provided> modality:FINAL visibility:public/*package*/ superTypes:[kotlin.Any; kotlin.Function3<androidx.glance.layout.RowScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>]
+                  $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>
+                  CONSTRUCTOR GENERATED_MEMBER_IN_CALLABLE_REFERENCE visibility:public/*package*/ <> ($course:com.example.classschedule.data.course.CourseSimple) returnType:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> [primary]
+                    VALUE_PARAMETER BOUND_VALUE_PARAMETER name:$course index:0 type:com.example.classschedule.data.course.CourseSimple
+                    BLOCK_BODY
+                      SET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>' type=kotlin.Unit origin=INITIALIZER_OF_FIELD_FOR_CAPTURED_VALUE
+                        receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> origin=null
+                        value: GET_VAR '$course: com.example.classschedule.data.course.CourseSimple declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.<init>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                      DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in kotlin.Any'
+                      BLOCK type=kotlin.Unit origin=null
+                  FUN name:invoke visibility:public modality:FINAL <> ($this:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>, $this$Row:androidx.glance.layout.RowScope, $composer:androidx.compose.runtime.Composer?, $changed:kotlin.Int) returnType:kotlin.Unit
+                    annotations:
+                      Composable
+                      ComposableTarget(applier = "androidx.glance.GlanceComposable")
+                    overridden:
+                      public abstract fun invoke (p1: P1 of kotlin.Function3, p2: P2 of kotlin.Function3, p3: P3 of kotlin.Function3): R of kotlin.Function3 [operator] declared in kotlin.Function3
+                    $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>
+                    VALUE_PARAMETER name:$this$Row index:0 type:androidx.glance.layout.RowScope
+                    VALUE_PARAMETER name:$composer index:1 type:androidx.compose.runtime.Composer? [assignable]
+                    VALUE_PARAMETER name:$changed index:2 type:kotlin.Int
+                    BLOCK_BODY
+                      CALL 'public final fun sourceInformation (composer: androidx.compose.runtime.Composer, sourceInformation: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+                        composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                        sourceInformation: CONST String type=kotlin.String value="C131@5072L6,126@4908L209,135@5127L45,138@5248L716,138@5198L766:ClassScheduleWidget.kt#7sd964"
+                      COMPOSITE type=kotlin.Unit origin=null
+                        WHEN type=kotlin.Unit origin=IF
+                          BRANCH
+                            if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+                            then: CALL 'public final fun traceEventStart (key: kotlin.Int, dirty1: kotlin.Int, dirty2: kotlin.Int, info: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+                              key: CONST Int type=kotlin.Int value=1664003606
+                              dirty1: GET_VAR '$changed: kotlin.Int declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=kotlin.Int origin=null
+                              dirty2: CONST Int type=kotlin.Int value=-1
+                              info: CONST String type=kotlin.String value="com.example.classschedule.widget.CourseWidgetItem.<anonymous> (ClassScheduleWidget.kt:126)"
+                        CALL 'public final fun Box (modifier: androidx.glance.GlanceModifier?, contentAlignment: androidx.glance.layout.Alignment?, content: kotlin.Function2<androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.BoxKt' type=kotlin.Unit origin=null
+                          modifier: CALL 'public final fun background (colorProvider: androidx.glance.unit.ColorProvider): androidx.glance.GlanceModifier declared in androidx.glance.BackgroundKt' type=androidx.glance.GlanceModifier origin=null
+                            $receiver: CALL 'public final fun height-3ABfNKs (height: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+                              $receiver: CALL 'public final fun width-3ABfNKs (width: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+                                $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+                                width: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                                  $receiver: CONST Int type=kotlin.Int value=4
+                              height: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                                $receiver: CONST Int type=kotlin.Int value=36
+                            colorProvider: CALL 'public final fun <get-surface> (): androidx.glance.unit.ColorProvider declared in androidx.glance.color.ColorProviders' type=androidx.glance.unit.ColorProvider origin=GET_PROPERTY
+                              $this: CALL 'public final fun <get-colors> ($composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.glance.color.ColorProviders declared in androidx.glance.GlanceTheme' type=androidx.glance.color.ColorProviders origin=GET_PROPERTY
+                                $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:androidx.glance.GlanceTheme visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=androidx.glance.GlanceTheme origin=null
+                                $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                                $changed: GET_FIELD 'FIELD name:$stable type:kotlin.Int visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=kotlin.Int origin=null
+                          contentAlignment: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+                            CONST Null type=kotlin.Nothing? value=null
+                          content: CALL 'internal final fun <get-lambda-2> (): kotlin.Function2<androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit> declared in com.example.classschedule.widget.ComposableSingletons$ClassScheduleWidgetKt' type=kotlin.Function2<androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit> origin=null
+                            $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:com.example.classschedule.widget.ComposableSingletons$ClassScheduleWidgetKt visibility:public [final,static] declared in com.example.classschedule.widget.ComposableSingletons$ClassScheduleWidgetKt' type=com.example.classschedule.widget.ComposableSingletons$ClassScheduleWidgetKt origin=null
+                          $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                          $changed: CONST Int type=kotlin.Int value=384
+                          $default: CONST Int type=kotlin.Int value=2
+                        CALL 'public final fun Spacer (modifier: androidx.glance.GlanceModifier?, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.SpacerKt' type=kotlin.Unit origin=null
+                          modifier: CALL 'public final fun width-3ABfNKs (width: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+                            $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+                            width: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                              $receiver: CONST Int type=kotlin.Int value=8
+                          $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                          $changed: CONST Int type=kotlin.Int value=0
+                          $default: CONST Int type=kotlin.Int value=0
+                        CALL 'public final fun Column-K4GKKTE (modifier: androidx.glance.GlanceModifier?, verticalAlignment: androidx.glance.layout.Alignment.Vertical, horizontalAlignment: androidx.glance.layout.Alignment.Horizontal, content: @[ExtensionFunctionType] kotlin.Function3<androidx.glance.layout.ColumnScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.ColumnKt' type=kotlin.Unit origin=null
+                          modifier: CALL 'public abstract fun defaultWeight (): androidx.glance.GlanceModifier declared in androidx.glance.layout.RowScope' type=androidx.glance.GlanceModifier origin=null
+                            $this: GET_VAR '$this$Row: androidx.glance.layout.RowScope declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.glance.layout.RowScope origin=null
+                            $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+                          verticalAlignment: COMPOSITE type=androidx.glance.layout.Alignment.Vertical origin=DEFAULT_VALUE
+                            CALL 'public final fun <unsafe-coerce> <T, R> (v: T of kotlin.jvm.internal.<unsafe-coerce>): R of kotlin.jvm.internal.<unsafe-coerce> declared in kotlin.jvm.internal' type=androidx.glance.layout.Alignment.Vertical origin=null
+                              <T>: kotlin.Int
+                              <R>: androidx.glance.layout.Alignment.Vertical
+                              v: CONST Int type=kotlin.Int value=0
+                          horizontalAlignment: COMPOSITE type=androidx.glance.layout.Alignment.Horizontal origin=DEFAULT_VALUE
+                            CALL 'public final fun <unsafe-coerce> <T, R> (v: T of kotlin.jvm.internal.<unsafe-coerce>): R of kotlin.jvm.internal.<unsafe-coerce> declared in kotlin.jvm.internal' type=androidx.glance.layout.Alignment.Horizontal origin=null
+                              <T>: kotlin.Int
+                              <R>: androidx.glance.layout.Alignment.Horizontal
+                              v: CONST Int type=kotlin.Int value=0
+                          content: CALL 'public final fun rememberComposableLambda (key: kotlin.Int, tracked: kotlin.Boolean, block: kotlin.Any, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.compose.runtime.internal.ComposableLambda declared in androidx.compose.runtime.internal.ComposableLambdaKt' type=androidx.compose.runtime.internal.ComposableLambda origin=null
+                            key: CONST Int type=kotlin.Int value=632861324
+                            tracked: CONST Boolean type=kotlin.Boolean value=true
+                            block: BLOCK type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                              CLASS LAMBDA_IMPL CLASS name:<no name provided> modality:FINAL visibility:public/*package*/ superTypes:[kotlin.Any; kotlin.Function3<androidx.glance.layout.ColumnScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>]
+                                $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>
+                                CONSTRUCTOR GENERATED_MEMBER_IN_CALLABLE_REFERENCE visibility:public/*package*/ <> ($course:com.example.classschedule.data.course.CourseSimple) returnType:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> [primary]
+                                  VALUE_PARAMETER BOUND_VALUE_PARAMETER name:$course index:0 type:com.example.classschedule.data.course.CourseSimple
+                                  BLOCK_BODY
+                                    SET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=kotlin.Unit origin=INITIALIZER_OF_FIELD_FOR_CAPTURED_VALUE
+                                      receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                                      value: GET_VAR '$course: com.example.classschedule.data.course.CourseSimple declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.<init>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                                    DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in kotlin.Any'
+                                    BLOCK type=kotlin.Unit origin=null
+                                FUN name:invoke visibility:public modality:FINAL <> ($this:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>, $this$Column:androidx.glance.layout.ColumnScope, $composer:androidx.compose.runtime.Composer?, $changed:kotlin.Int) returnType:kotlin.Unit
+                                  annotations:
+                                    Composable
+                                    ComposableTarget(applier = "androidx.glance.GlanceComposable")
+                                  overridden:
+                                    public abstract fun invoke (p1: P1 of kotlin.Function3, p2: P2 of kotlin.Function3, p3: P3 of kotlin.Function3): R of kotlin.Function3 [operator] declared in kotlin.Function3
+                                  $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>
+                                  VALUE_PARAMETER name:$this$Column index:0 type:androidx.glance.layout.ColumnScope
+                                  VALUE_PARAMETER name:$composer index:1 type:androidx.compose.runtime.Composer? [assignable]
+                                  VALUE_PARAMETER name:$changed index:2 type:kotlin.Int
+                                  BLOCK_BODY
+                                    CALL 'public final fun sourceInformation (composer: androidx.compose.runtime.Composer, sourceInformation: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+                                      composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                                      sourceInformation: CONST String type=kotlin.String value="C139@5262L356,149@5631L46,154@5883L6,150@5690L239:ClassScheduleWidget.kt#7sd964"
+                                    COMPOSITE type=kotlin.Unit origin=null
+                                      WHEN type=kotlin.Unit origin=IF
+                                        BRANCH
+                                          if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+                                          then: CALL 'public final fun traceEventStart (key: kotlin.Int, dirty1: kotlin.Int, dirty2: kotlin.Int, info: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+                                            key: CONST Int type=kotlin.Int value=632861324
+                                            dirty1: GET_VAR '$changed: kotlin.Int declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=kotlin.Int origin=null
+                                            dirty2: CONST Int type=kotlin.Int value=-1
+                                            info: CONST String type=kotlin.String value="com.example.classschedule.widget.CourseWidgetItem.<anonymous>.<anonymous> (ClassScheduleWidget.kt:139)"
+                                      CALL 'public final fun Text (text: kotlin.String, modifier: androidx.glance.GlanceModifier?, style: androidx.glance.text.TextStyle?, maxLines: kotlin.Int, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.text.TextKt' type=kotlin.Unit origin=null
+                                        text: CALL 'public final fun <get-courseName> (): kotlin.String declared in com.example.classschedule.data.course.CourseSimple' type=kotlin.String origin=GET_PROPERTY
+                                          $this: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                                            receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                                        modifier: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+                                          CONST Null type=kotlin.Nothing? value=null
+                                        style: BLOCK type=androidx.glance.text.TextStyle origin=ARGUMENTS_REORDERING_FOR_CALL
+                                          VAR IR_TEMPORARY_VARIABLE name:tmp0_fontWeight type:androidx.glance.text.FontWeight [val]
+                                            CALL 'public final fun getBold-WjrlUT0 (): androidx.glance.text.FontWeight declared in androidx.glance.text.FontWeight.Companion' type=androidx.glance.text.FontWeight origin=GET_PROPERTY
+                                              $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.text.FontWeight.Companion visibility:public [final,static] declared in androidx.glance.text.FontWeight' type=androidx.glance.text.FontWeight.Companion origin=null
+                                          VAR IR_TEMPORARY_VARIABLE name:tmp1_fontSize type:androidx.compose.ui.unit.TextUnit [val]
+                                            CALL 'public final fun <get-sp> (): androidx.compose.ui.unit.TextUnit declared in androidx.compose.ui.unit.TextUnitKt' type=androidx.compose.ui.unit.TextUnit origin=GET_PROPERTY
+                                              $receiver: CONST Int type=kotlin.Int value=14
+                                          VAR IR_TEMPORARY_VARIABLE name:tmp2_color type:androidx.glance.unit.ColorProvider [val]
+                                            CALL 'public final fun ColorProvider--OWjLjI (day: androidx.compose.ui.graphics.Color, night: androidx.compose.ui.graphics.Color): androidx.glance.unit.ColorProvider declared in androidx.glance.color.DayNightColorProvidersKt' type=androidx.glance.unit.ColorProvider origin=null
+                                              day: CALL 'public final fun Color (color: kotlin.Long): androidx.compose.ui.graphics.Color declared in androidx.compose.ui.graphics.ColorKt' type=androidx.compose.ui.graphics.Color origin=null
+                                                color: CONST Long type=kotlin.Long value=4293981432
+                                              night: CALL 'public final fun Color (color: kotlin.Long): androidx.compose.ui.graphics.Color declared in androidx.compose.ui.graphics.ColorKt' type=androidx.compose.ui.graphics.Color origin=null
+                                                color: CONST Long type=kotlin.Long value=4279374354
+                                          CONSTRUCTOR_CALL 'public constructor <init> (color: androidx.glance.unit.ColorProvider?, fontSize: androidx.compose.ui.unit.TextUnit?, fontWeight: androidx.glance.text.FontWeight?, fontStyle: androidx.glance.text.FontStyle?, textAlign: androidx.glance.text.TextAlign?, textDecoration: androidx.glance.text.TextDecoration?, fontFamily: androidx.glance.text.FontFamily?, $mask0: kotlin.Int, $marker: kotlin.jvm.internal.DefaultConstructorMarker?) declared in androidx.glance.text.TextStyle' type=androidx.glance.text.TextStyle origin=DEFAULT_DISPATCH_CALL
+                                            color: GET_VAR 'val tmp2_color: androidx.glance.unit.ColorProvider [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.glance.unit.ColorProvider origin=null
+                                            fontSize: GET_VAR 'val tmp1_fontSize: androidx.compose.ui.unit.TextUnit [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.ui.unit.TextUnit origin=null
+                                            fontWeight: GET_VAR 'val tmp0_fontWeight: androidx.glance.text.FontWeight [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.glance.text.FontWeight origin=null
+                                            fontStyle: COMPOSITE type=androidx.glance.text.FontStyle? origin=DEFAULT_VALUE
+                                              CONST Null type=androidx.glance.text.FontStyle? value=null
+                                            textAlign: COMPOSITE type=androidx.glance.text.TextAlign? origin=DEFAULT_VALUE
+                                              CONST Null type=androidx.glance.text.TextAlign? value=null
+                                            textDecoration: COMPOSITE type=androidx.glance.text.TextDecoration? origin=DEFAULT_VALUE
+                                              CONST Null type=androidx.glance.text.TextDecoration? value=null
+                                            fontFamily: COMPOSITE type=androidx.glance.text.FontFamily? origin=DEFAULT_VALUE
+                                              CONST Null type=androidx.glance.text.FontFamily? value=null
+                                            $mask0: CONST Int type=kotlin.Int value=120
+                                            $marker: CONST Null type=kotlin.jvm.internal.DefaultConstructorMarker? value=null
+                                        maxLines: CONST Int type=kotlin.Int value=1
+                                        $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                                        $changed: CONST Int type=kotlin.Int value=3072
+                                        $default: CONST Int type=kotlin.Int value=2
+                                      CALL 'public final fun Spacer (modifier: androidx.glance.GlanceModifier?, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.SpacerKt' type=kotlin.Unit origin=null
+                                        modifier: CALL 'public final fun height-3ABfNKs (height: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+                                          $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+                                          height: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                                            $receiver: CONST Int type=kotlin.Int value=2
+                                        $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                                        $changed: CONST Int type=kotlin.Int value=0
+                                        $default: CONST Int type=kotlin.Int value=0
+                                      CALL 'public final fun Text (text: kotlin.String, modifier: androidx.glance.GlanceModifier?, style: androidx.glance.text.TextStyle?, maxLines: kotlin.Int, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.text.TextKt' type=kotlin.Unit origin=null
+                                        text: STRING_CONCATENATION type=kotlin.String
+                                          CALL 'public final fun <get-courseTime> (): kotlin.String declared in com.example.classschedule.data.course.CourseSimple' type=kotlin.String origin=GET_PROPERTY
+                                            $this: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                                              receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                                          CONST String type=kotlin.String value=" | "
+                                          CALL 'public final fun <get-courseLocation> (): kotlin.String declared in com.example.classschedule.data.course.CourseSimple' type=kotlin.String origin=GET_PROPERTY
+                                            $this: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                                              receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                                        modifier: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+                                          CONST Null type=kotlin.Nothing? value=null
+                                        style: BLOCK type=androidx.glance.text.TextStyle origin=ARGUMENTS_REORDERING_FOR_CALL
+                                          VAR IR_TEMPORARY_VARIABLE name:tmp3_fontSize type:androidx.compose.ui.unit.TextUnit [val]
+                                            CALL 'public final fun <get-sp> (): androidx.compose.ui.unit.TextUnit declared in androidx.compose.ui.unit.TextUnitKt' type=androidx.compose.ui.unit.TextUnit origin=GET_PROPERTY
+                                              $receiver: CONST Int type=kotlin.Int value=11
+                                          VAR IR_TEMPORARY_VARIABLE name:tmp4_color type:androidx.glance.unit.ColorProvider [val]
+                                            CALL 'public final fun <get-surface> (): androidx.glance.unit.ColorProvider declared in androidx.glance.color.ColorProviders' type=androidx.glance.unit.ColorProvider origin=GET_PROPERTY
+                                              $this: CALL 'public final fun <get-colors> ($composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.glance.color.ColorProviders declared in androidx.glance.GlanceTheme' type=androidx.glance.color.ColorProviders origin=GET_PROPERTY
+                                                $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:androidx.glance.GlanceTheme visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=androidx.glance.GlanceTheme origin=null
+                                                $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                                                $changed: GET_FIELD 'FIELD name:$stable type:kotlin.Int visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=kotlin.Int origin=null
+                                          CONSTRUCTOR_CALL 'public constructor <init> (color: androidx.glance.unit.ColorProvider?, fontSize: androidx.compose.ui.unit.TextUnit?, fontWeight: androidx.glance.text.FontWeight?, fontStyle: androidx.glance.text.FontStyle?, textAlign: androidx.glance.text.TextAlign?, textDecoration: androidx.glance.text.TextDecoration?, fontFamily: androidx.glance.text.FontFamily?, $mask0: kotlin.Int, $marker: kotlin.jvm.internal.DefaultConstructorMarker?) declared in androidx.glance.text.TextStyle' type=androidx.glance.text.TextStyle origin=DEFAULT_DISPATCH_CALL
+                                            color: GET_VAR 'val tmp4_color: androidx.glance.unit.ColorProvider [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.glance.unit.ColorProvider origin=null
+                                            fontSize: GET_VAR 'val tmp3_fontSize: androidx.compose.ui.unit.TextUnit [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.ui.unit.TextUnit origin=null
+                                            fontWeight: COMPOSITE type=androidx.glance.text.FontWeight? origin=DEFAULT_VALUE
+                                              CONST Null type=androidx.glance.text.FontWeight? value=null
+                                            fontStyle: COMPOSITE type=androidx.glance.text.FontStyle? origin=DEFAULT_VALUE
+                                              CONST Null type=androidx.glance.text.FontStyle? value=null
+                                            textAlign: COMPOSITE type=androidx.glance.text.TextAlign? origin=DEFAULT_VALUE
+                                              CONST Null type=androidx.glance.text.TextAlign? value=null
+                                            textDecoration: COMPOSITE type=androidx.glance.text.TextDecoration? origin=DEFAULT_VALUE
+                                              CONST Null type=androidx.glance.text.TextDecoration? value=null
+                                            fontFamily: COMPOSITE type=androidx.glance.text.FontFamily? origin=DEFAULT_VALUE
+                                              CONST Null type=androidx.glance.text.FontFamily? value=null
+                                            $mask0: CONST Int type=kotlin.Int value=124
+                                            $marker: CONST Null type=kotlin.jvm.internal.DefaultConstructorMarker? value=null
+                                        maxLines: COMPOSITE type=kotlin.Int origin=DEFAULT_VALUE
+                                          CONST Int type=kotlin.Int value=0
+                                        $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                                        $changed: CONST Int type=kotlin.Int value=0
+                                        $default: CONST Int type=kotlin.Int value=10
+                                      SET_FIELD 'FIELD IR_EXTERNAL_JAVA_DECLARATION_STUB name:maxLines type:kotlin.Int visibility:public [final,static] declared in android.R.attr' type=kotlin.Unit superQualifierSymbol=android.R.attr origin=EQ
+                                        value: CONST Int type=kotlin.Int value=1
+                                      WHEN type=kotlin.Unit origin=IF
+                                        BRANCH
+                                          if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+                                          then: CALL 'public final fun traceEventEnd (): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+                                FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final]
+                                FUN BRIDGE name:invoke visibility:public modality:OPEN <> ($this:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>, p1:kotlin.Any?, p2:kotlin.Any?, p3:kotlin.Any?) returnType:kotlin.Any?
+                                  $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>
+                                  VALUE_PARAMETER BRIDGE name:p1 index:0 type:kotlin.Any?
+                                  VALUE_PARAMETER BRIDGE name:p2 index:1 type:kotlin.Any?
+                                  VALUE_PARAMETER BRIDGE name:p3 index:2 type:kotlin.Any?
+                                  EXPRESSION_BODY
+                                    RETURN type=kotlin.Nothing from='public open fun invoke (p1: kotlin.Any?, p2: kotlin.Any?, p3: kotlin.Any?): kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>'
+                                      CALL 'public final fun invoke ($this$Column: androidx.glance.layout.ColumnScope, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): kotlin.Unit declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=kotlin.Unit origin=BRIDGE_DELEGATION
+                                        $this: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                                        $this$Column: TYPE_OP type=androidx.glance.layout.ColumnScope origin=IMPLICIT_CAST typeOperand=androidx.glance.layout.ColumnScope
+                                          GET_VAR 'p1: kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=kotlin.Any? origin=null
+                                        $composer: TYPE_OP type=androidx.compose.runtime.Composer origin=IMPLICIT_CAST typeOperand=androidx.compose.runtime.Composer
+                                          GET_VAR 'p2: kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=kotlin.Any? origin=null
+                                        $changed: TYPE_OP type=kotlin.Int origin=IMPLICIT_CAST typeOperand=kotlin.Int
+                                          GET_VAR 'p3: kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=kotlin.Any? origin=null
+                              CONSTRUCTOR_CALL 'public/*package*/ constructor <init> ($course: com.example.classschedule.data.course.CourseSimple) [primary] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                                $course: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                                  receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> origin=null
+                            $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                            $changed: CONST Int type=kotlin.Int value=54
+                          $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                          $changed: CONST Int type=kotlin.Int value=3072
+                          $default: CONST Int type=kotlin.Int value=6
+                        WHEN type=kotlin.Unit origin=IF
+                          BRANCH
+                            if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+                            then: CALL 'public final fun traceEventEnd (): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+                  FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final]
+                  FUN BRIDGE name:invoke visibility:public modality:OPEN <> ($this:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>, p1:kotlin.Any?, p2:kotlin.Any?, p3:kotlin.Any?) returnType:kotlin.Any?
+                    $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>
+                    VALUE_PARAMETER BRIDGE name:p1 index:0 type:kotlin.Any?
+                    VALUE_PARAMETER BRIDGE name:p2 index:1 type:kotlin.Any?
+                    VALUE_PARAMETER BRIDGE name:p3 index:2 type:kotlin.Any?
+                    EXPRESSION_BODY
+                      RETURN type=kotlin.Nothing from='public open fun invoke (p1: kotlin.Any?, p2: kotlin.Any?, p3: kotlin.Any?): kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>'
+                        CALL 'public final fun invoke ($this$Row: androidx.glance.layout.RowScope, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): kotlin.Unit declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>' type=kotlin.Unit origin=BRIDGE_DELEGATION
+                          $this: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> origin=null
+                          $this$Row: TYPE_OP type=androidx.glance.layout.RowScope origin=IMPLICIT_CAST typeOperand=androidx.glance.layout.RowScope
+                            GET_VAR 'p1: kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=kotlin.Any? origin=null
+                          $composer: TYPE_OP type=androidx.compose.runtime.Composer origin=IMPLICIT_CAST typeOperand=androidx.compose.runtime.Composer
+                            GET_VAR 'p2: kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=kotlin.Any? origin=null
+                          $changed: TYPE_OP type=kotlin.Int origin=IMPLICIT_CAST typeOperand=kotlin.Int
+                            GET_VAR 'p3: kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=kotlin.Any? origin=null
+                CONSTRUCTOR_CALL 'public/*package*/ constructor <init> ($course: com.example.classschedule.data.course.CourseSimple) [primary] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> origin=null
+                  $course: GET_VAR 'course: com.example.classschedule.data.course.CourseSimple declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=com.example.classschedule.data.course.CourseSimple origin=null
+              $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.Composer? origin=null
+              $changed: CONST Int type=kotlin.Int value=54
+            $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.Composer? origin=null
+            $changed: CONST Int type=kotlin.Int value=3072
+            $default: CONST Int type=kotlin.Int value=2
+          WHEN type=kotlin.Unit origin=IF
+            BRANCH
+              if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+              then: CALL 'public final fun traceEventEnd (): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+      BRANCH
+        if: CONST Boolean type=kotlin.Boolean value=true
+        then: CALL 'public abstract fun skipToGroupEnd (): kotlin.Unit declared in androidx.compose.runtime.Composer' type=kotlin.Unit origin=null
+          $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.Composer? origin=null
+    BLOCK type=kotlin.Unit origin=null
+      BLOCK type=kotlin.Unit origin=FOLDED_SAFE_CALL
+        WHEN type=kotlin.Unit origin=FOLDED_SAFE_CALL
+          BRANCH
+            if: COMPOSITE type=kotlin.Boolean origin=null
+              VAR IR_TEMPORARY_VARIABLE name:tmp0_safe_receiver type:androidx.compose.runtime.ScopeUpdateScope? [val]
+                CALL 'public abstract fun endRestartGroup (): androidx.compose.runtime.ScopeUpdateScope? declared in androidx.compose.runtime.Composer' type=androidx.compose.runtime.ScopeUpdateScope? origin=null
+                  $this: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.Composer? origin=null
+              CALL 'public final fun not (): kotlin.Boolean [operator] declared in kotlin.Boolean' type=kotlin.Boolean origin=null
+                $this: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=null
+                  arg0: GET_VAR 'val tmp0_safe_receiver: androidx.compose.runtime.ScopeUpdateScope? [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.ScopeUpdateScope? origin=null
+                  arg1: CONST Null type=kotlin.Nothing? value=null
+            then: CALL 'public abstract fun updateScope (block: kotlin.Function2<androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>): kotlin.Unit declared in androidx.compose.runtime.ScopeUpdateScope' type=kotlin.Unit origin=null
+              $this: GET_VAR 'val tmp0_safe_receiver: androidx.compose.runtime.ScopeUpdateScope? [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=androidx.compose.runtime.ScopeUpdateScope? origin=null
+              block: BLOCK type=kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit> origin=LAMBDA
+                COMPOSITE type=kotlin.Unit origin=null
+                CALL 'public final fun <jvm-indy> <T> (dynamicCall: T of kotlin.jvm.internal.<jvm-indy>, bootstrapMethodHandle: kotlin.Any, vararg bootstrapMethodArguments: kotlin.Any): T of kotlin.jvm.internal.<jvm-indy> declared in kotlin.jvm.internal' type=kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit> origin=null
+                  <T>: kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit>
+                  dynamicCall: CALL 'public final fun invoke (p0: com.example.classschedule.data.course.CourseSimple, p1: kotlin.Int): kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit> declared in kotlin.jvm.internal.invokeDynamic' type=kotlin.Function2<androidx.compose.runtime.Composer?, kotlin.Int, kotlin.Unit> origin=null
+                    p0: GET_VAR 'course: com.example.classschedule.data.course.CourseSimple declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=com.example.classschedule.data.course.CourseSimple origin=null
+                    p1: GET_VAR '$changed: kotlin.Int declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem' type=kotlin.Int origin=null
+                  bootstrapMethodHandle: CALL 'public final fun <jvm-method-handle> (tag: kotlin.Int, owner: kotlin.String, name: kotlin.String, descriptor: kotlin.String, isInterface: kotlin.Boolean): kotlin.Any declared in kotlin.jvm.internal' type=kotlin.Any origin=null
+                    tag: CONST Int type=kotlin.Int value=6
+                    owner: CONST String type=kotlin.String value="java/lang/invoke/LambdaMetafactory"
+                    name: CONST String type=kotlin.String value="metafactory"
+                    descriptor: CONST String type=kotlin.String value="(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;"
+                    isInterface: CONST Boolean type=kotlin.Boolean value=false
+                  bootstrapMethodArguments: VARARG type=kotlin.Array<kotlin.Any> varargElementType=kotlin.Any
+                    CALL 'public final fun <jvm-original-method-type> (method: kotlin.Any): kotlin.Any declared in kotlin.jvm.internal' type=kotlin.Any origin=null
+                      method: RAW_FUNCTION_REFERENCE 'public abstract fun invoke (p1: P1 of kotlin.Function2, p2: P2 of kotlin.Function2): R of kotlin.Function2 [operator] declared in kotlin.Function2' type=kotlin.Any
+                    RAW_FUNCTION_REFERENCE 'private final fun CourseWidgetItem$lambda$0 ($course: com.example.classschedule.data.course.CourseSimple, $$changed: kotlin.Int, $composer: androidx.compose.runtime.Composer?, $force: kotlin.Int): kotlin.Unit? declared in com.example.classschedule.widget.ClassScheduleWidgetKt' type=kotlin.Any
+                    CALL 'public final fun <jvm-original-method-type> (method: kotlin.Any): kotlin.Any declared in kotlin.jvm.internal' type=kotlin.Any origin=null
+                      method: RAW_FUNCTION_REFERENCE 'public abstract fun invoke (p1: androidx.compose.runtime.Composer?, p2: kotlin.Int?): kotlin.Unit? [fake_override,operator] declared in kotlin.jvm.internal.invokeDynamic.<fake>' type=kotlin.Any
+          BRANCH
+            if: CONST Boolean type=kotlin.Boolean value=true
+            then: CONST Null type=kotlin.Any? value=null
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate$default(FunctionCodegen.kt:40)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethodNode(ClassCodegen.kt:406)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethod(ClassCodegen.kt:423)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generate(ClassCodegen.kt:168)
+	at org.jetbrains.kotlin.backend.jvm.FileCodegen.lower(JvmPhases.kt:39)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseFactoriesKt.createFilePhase$lambda$4(PhaseFactories.kt:71)
+	at org.jetbrains.kotlin.backend.common.phaser.PhaseBuildersKt$createSimpleNamedCompilerPhase$1.phaseBody(PhaseBuilders.kt:69)
+	at org.jetbrains.kotlin.backend.common.phaser.SimpleNamedCompilerPhase.phaseBody(CompilerPhase.kt:226)
+	at org.jetbrains.kotlin.backend.common.phaser.AbstractNamedCompilerPhase.invoke(CompilerPhase.kt:113)
+	at org.jetbrains.kotlin.backend.common.phaser.PerformByIrFilePhase.invokeSequential(performByIrFile.kt:62)
+	... 43 more
+Caused by: java.lang.RuntimeException: Exception while generating code for:
+FUN name:invoke visibility:public modality:FINAL <> ($this:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>, $this$Row:androidx.glance.layout.RowScope, $composer:androidx.compose.runtime.Composer?, $changed:kotlin.Int) returnType:kotlin.Unit
+  annotations:
+    Composable
+    ComposableTarget(applier = "androidx.glance.GlanceComposable")
+  overridden:
+    public abstract fun invoke (p1: P1 of kotlin.Function3, p2: P2 of kotlin.Function3, p3: P3 of kotlin.Function3): R of kotlin.Function3 [operator] declared in kotlin.Function3
+  $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>
+  VALUE_PARAMETER name:$this$Row index:0 type:androidx.glance.layout.RowScope
+  VALUE_PARAMETER name:$composer index:1 type:androidx.compose.runtime.Composer? [assignable]
+  VALUE_PARAMETER name:$changed index:2 type:kotlin.Int
+  BLOCK_BODY
+    CALL 'public final fun sourceInformation (composer: androidx.compose.runtime.Composer, sourceInformation: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+      composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+      sourceInformation: CONST String type=kotlin.String value="C131@5072L6,126@4908L209,135@5127L45,138@5248L716,138@5198L766:ClassScheduleWidget.kt#7sd964"
+    COMPOSITE type=kotlin.Unit origin=null
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+          then: CALL 'public final fun traceEventStart (key: kotlin.Int, dirty1: kotlin.Int, dirty2: kotlin.Int, info: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+            key: CONST Int type=kotlin.Int value=1664003606
+            dirty1: GET_VAR '$changed: kotlin.Int declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=kotlin.Int origin=null
+            dirty2: CONST Int type=kotlin.Int value=-1
+            info: CONST String type=kotlin.String value="com.example.classschedule.widget.CourseWidgetItem.<anonymous> (ClassScheduleWidget.kt:126)"
+      CALL 'public final fun Box (modifier: androidx.glance.GlanceModifier?, contentAlignment: androidx.glance.layout.Alignment?, content: kotlin.Function2<androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.BoxKt' type=kotlin.Unit origin=null
+        modifier: CALL 'public final fun background (colorProvider: androidx.glance.unit.ColorProvider): androidx.glance.GlanceModifier declared in androidx.glance.BackgroundKt' type=androidx.glance.GlanceModifier origin=null
+          $receiver: CALL 'public final fun height-3ABfNKs (height: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+            $receiver: CALL 'public final fun width-3ABfNKs (width: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+              $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+              width: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                $receiver: CONST Int type=kotlin.Int value=4
+            height: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+              $receiver: CONST Int type=kotlin.Int value=36
+          colorProvider: CALL 'public final fun <get-surface> (): androidx.glance.unit.ColorProvider declared in androidx.glance.color.ColorProviders' type=androidx.glance.unit.ColorProvider origin=GET_PROPERTY
+            $this: CALL 'public final fun <get-colors> ($composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.glance.color.ColorProviders declared in androidx.glance.GlanceTheme' type=androidx.glance.color.ColorProviders origin=GET_PROPERTY
+              $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:androidx.glance.GlanceTheme visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=androidx.glance.GlanceTheme origin=null
+              $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+              $changed: GET_FIELD 'FIELD name:$stable type:kotlin.Int visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=kotlin.Int origin=null
+        contentAlignment: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+          CONST Null type=kotlin.Nothing? value=null
+        content: CALL 'internal final fun <get-lambda-2> (): kotlin.Function2<androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit> declared in com.example.classschedule.widget.ComposableSingletons$ClassScheduleWidgetKt' type=kotlin.Function2<androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit> origin=null
+          $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:com.example.classschedule.widget.ComposableSingletons$ClassScheduleWidgetKt visibility:public [final,static] declared in com.example.classschedule.widget.ComposableSingletons$ClassScheduleWidgetKt' type=com.example.classschedule.widget.ComposableSingletons$ClassScheduleWidgetKt origin=null
+        $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+        $changed: CONST Int type=kotlin.Int value=384
+        $default: CONST Int type=kotlin.Int value=2
+      CALL 'public final fun Spacer (modifier: androidx.glance.GlanceModifier?, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.SpacerKt' type=kotlin.Unit origin=null
+        modifier: CALL 'public final fun width-3ABfNKs (width: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+          $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+          width: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+            $receiver: CONST Int type=kotlin.Int value=8
+        $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+        $changed: CONST Int type=kotlin.Int value=0
+        $default: CONST Int type=kotlin.Int value=0
+      CALL 'public final fun Column-K4GKKTE (modifier: androidx.glance.GlanceModifier?, verticalAlignment: androidx.glance.layout.Alignment.Vertical, horizontalAlignment: androidx.glance.layout.Alignment.Horizontal, content: @[ExtensionFunctionType] kotlin.Function3<androidx.glance.layout.ColumnScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.ColumnKt' type=kotlin.Unit origin=null
+        modifier: CALL 'public abstract fun defaultWeight (): androidx.glance.GlanceModifier declared in androidx.glance.layout.RowScope' type=androidx.glance.GlanceModifier origin=null
+          $this: GET_VAR '$this$Row: androidx.glance.layout.RowScope declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.glance.layout.RowScope origin=null
+          $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+        verticalAlignment: COMPOSITE type=androidx.glance.layout.Alignment.Vertical origin=DEFAULT_VALUE
+          CALL 'public final fun <unsafe-coerce> <T, R> (v: T of kotlin.jvm.internal.<unsafe-coerce>): R of kotlin.jvm.internal.<unsafe-coerce> declared in kotlin.jvm.internal' type=androidx.glance.layout.Alignment.Vertical origin=null
+            <T>: kotlin.Int
+            <R>: androidx.glance.layout.Alignment.Vertical
+            v: CONST Int type=kotlin.Int value=0
+        horizontalAlignment: COMPOSITE type=androidx.glance.layout.Alignment.Horizontal origin=DEFAULT_VALUE
+          CALL 'public final fun <unsafe-coerce> <T, R> (v: T of kotlin.jvm.internal.<unsafe-coerce>): R of kotlin.jvm.internal.<unsafe-coerce> declared in kotlin.jvm.internal' type=androidx.glance.layout.Alignment.Horizontal origin=null
+            <T>: kotlin.Int
+            <R>: androidx.glance.layout.Alignment.Horizontal
+            v: CONST Int type=kotlin.Int value=0
+        content: CALL 'public final fun rememberComposableLambda (key: kotlin.Int, tracked: kotlin.Boolean, block: kotlin.Any, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.compose.runtime.internal.ComposableLambda declared in androidx.compose.runtime.internal.ComposableLambdaKt' type=androidx.compose.runtime.internal.ComposableLambda origin=null
+          key: CONST Int type=kotlin.Int value=632861324
+          tracked: CONST Boolean type=kotlin.Boolean value=true
+          block: BLOCK type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+            CLASS LAMBDA_IMPL CLASS name:<no name provided> modality:FINAL visibility:public/*package*/ superTypes:[kotlin.Any; kotlin.Function3<androidx.glance.layout.ColumnScope, androidx.compose.runtime.Composer, kotlin.Int, kotlin.Unit>]
+              $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>
+              CONSTRUCTOR GENERATED_MEMBER_IN_CALLABLE_REFERENCE visibility:public/*package*/ <> ($course:com.example.classschedule.data.course.CourseSimple) returnType:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> [primary]
+                VALUE_PARAMETER BOUND_VALUE_PARAMETER name:$course index:0 type:com.example.classschedule.data.course.CourseSimple
+                BLOCK_BODY
+                  SET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=kotlin.Unit origin=INITIALIZER_OF_FIELD_FOR_CAPTURED_VALUE
+                    receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                    value: GET_VAR '$course: com.example.classschedule.data.course.CourseSimple declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.<init>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                  DELEGATING_CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in kotlin.Any'
+                  BLOCK type=kotlin.Unit origin=null
+              FUN name:invoke visibility:public modality:FINAL <> ($this:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>, $this$Column:androidx.glance.layout.ColumnScope, $composer:androidx.compose.runtime.Composer?, $changed:kotlin.Int) returnType:kotlin.Unit
+                annotations:
+                  Composable
+                  ComposableTarget(applier = "androidx.glance.GlanceComposable")
+                overridden:
+                  public abstract fun invoke (p1: P1 of kotlin.Function3, p2: P2 of kotlin.Function3, p3: P3 of kotlin.Function3): R of kotlin.Function3 [operator] declared in kotlin.Function3
+                $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>
+                VALUE_PARAMETER name:$this$Column index:0 type:androidx.glance.layout.ColumnScope
+                VALUE_PARAMETER name:$composer index:1 type:androidx.compose.runtime.Composer? [assignable]
+                VALUE_PARAMETER name:$changed index:2 type:kotlin.Int
+                BLOCK_BODY
+                  CALL 'public final fun sourceInformation (composer: androidx.compose.runtime.Composer, sourceInformation: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+                    composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                    sourceInformation: CONST String type=kotlin.String value="C139@5262L356,149@5631L46,154@5883L6,150@5690L239:ClassScheduleWidget.kt#7sd964"
+                  COMPOSITE type=kotlin.Unit origin=null
+                    WHEN type=kotlin.Unit origin=IF
+                      BRANCH
+                        if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+                        then: CALL 'public final fun traceEventStart (key: kotlin.Int, dirty1: kotlin.Int, dirty2: kotlin.Int, info: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+                          key: CONST Int type=kotlin.Int value=632861324
+                          dirty1: GET_VAR '$changed: kotlin.Int declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=kotlin.Int origin=null
+                          dirty2: CONST Int type=kotlin.Int value=-1
+                          info: CONST String type=kotlin.String value="com.example.classschedule.widget.CourseWidgetItem.<anonymous>.<anonymous> (ClassScheduleWidget.kt:139)"
+                    CALL 'public final fun Text (text: kotlin.String, modifier: androidx.glance.GlanceModifier?, style: androidx.glance.text.TextStyle?, maxLines: kotlin.Int, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.text.TextKt' type=kotlin.Unit origin=null
+                      text: CALL 'public final fun <get-courseName> (): kotlin.String declared in com.example.classschedule.data.course.CourseSimple' type=kotlin.String origin=GET_PROPERTY
+                        $this: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                          receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                      modifier: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+                        CONST Null type=kotlin.Nothing? value=null
+                      style: BLOCK type=androidx.glance.text.TextStyle origin=ARGUMENTS_REORDERING_FOR_CALL
+                        VAR IR_TEMPORARY_VARIABLE name:tmp0_fontWeight type:androidx.glance.text.FontWeight [val]
+                          CALL 'public final fun getBold-WjrlUT0 (): androidx.glance.text.FontWeight declared in androidx.glance.text.FontWeight.Companion' type=androidx.glance.text.FontWeight origin=GET_PROPERTY
+                            $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.text.FontWeight.Companion visibility:public [final,static] declared in androidx.glance.text.FontWeight' type=androidx.glance.text.FontWeight.Companion origin=null
+                        VAR IR_TEMPORARY_VARIABLE name:tmp1_fontSize type:androidx.compose.ui.unit.TextUnit [val]
+                          CALL 'public final fun <get-sp> (): androidx.compose.ui.unit.TextUnit declared in androidx.compose.ui.unit.TextUnitKt' type=androidx.compose.ui.unit.TextUnit origin=GET_PROPERTY
+                            $receiver: CONST Int type=kotlin.Int value=14
+                        VAR IR_TEMPORARY_VARIABLE name:tmp2_color type:androidx.glance.unit.ColorProvider [val]
+                          CALL 'public final fun ColorProvider--OWjLjI (day: androidx.compose.ui.graphics.Color, night: androidx.compose.ui.graphics.Color): androidx.glance.unit.ColorProvider declared in androidx.glance.color.DayNightColorProvidersKt' type=androidx.glance.unit.ColorProvider origin=null
+                            day: CALL 'public final fun Color (color: kotlin.Long): androidx.compose.ui.graphics.Color declared in androidx.compose.ui.graphics.ColorKt' type=androidx.compose.ui.graphics.Color origin=null
+                              color: CONST Long type=kotlin.Long value=4293981432
+                            night: CALL 'public final fun Color (color: kotlin.Long): androidx.compose.ui.graphics.Color declared in androidx.compose.ui.graphics.ColorKt' type=androidx.compose.ui.graphics.Color origin=null
+                              color: CONST Long type=kotlin.Long value=4279374354
+                        CONSTRUCTOR_CALL 'public constructor <init> (color: androidx.glance.unit.ColorProvider?, fontSize: androidx.compose.ui.unit.TextUnit?, fontWeight: androidx.glance.text.FontWeight?, fontStyle: androidx.glance.text.FontStyle?, textAlign: androidx.glance.text.TextAlign?, textDecoration: androidx.glance.text.TextDecoration?, fontFamily: androidx.glance.text.FontFamily?, $mask0: kotlin.Int, $marker: kotlin.jvm.internal.DefaultConstructorMarker?) declared in androidx.glance.text.TextStyle' type=androidx.glance.text.TextStyle origin=DEFAULT_DISPATCH_CALL
+                          color: GET_VAR 'val tmp2_color: androidx.glance.unit.ColorProvider [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.glance.unit.ColorProvider origin=null
+                          fontSize: GET_VAR 'val tmp1_fontSize: androidx.compose.ui.unit.TextUnit [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.ui.unit.TextUnit origin=null
+                          fontWeight: GET_VAR 'val tmp0_fontWeight: androidx.glance.text.FontWeight [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.glance.text.FontWeight origin=null
+                          fontStyle: COMPOSITE type=androidx.glance.text.FontStyle? origin=DEFAULT_VALUE
+                            CONST Null type=androidx.glance.text.FontStyle? value=null
+                          textAlign: COMPOSITE type=androidx.glance.text.TextAlign? origin=DEFAULT_VALUE
+                            CONST Null type=androidx.glance.text.TextAlign? value=null
+                          textDecoration: COMPOSITE type=androidx.glance.text.TextDecoration? origin=DEFAULT_VALUE
+                            CONST Null type=androidx.glance.text.TextDecoration? value=null
+                          fontFamily: COMPOSITE type=androidx.glance.text.FontFamily? origin=DEFAULT_VALUE
+                            CONST Null type=androidx.glance.text.FontFamily? value=null
+                          $mask0: CONST Int type=kotlin.Int value=120
+                          $marker: CONST Null type=kotlin.jvm.internal.DefaultConstructorMarker? value=null
+                      maxLines: CONST Int type=kotlin.Int value=1
+                      $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                      $changed: CONST Int type=kotlin.Int value=3072
+                      $default: CONST Int type=kotlin.Int value=2
+                    CALL 'public final fun Spacer (modifier: androidx.glance.GlanceModifier?, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.SpacerKt' type=kotlin.Unit origin=null
+                      modifier: CALL 'public final fun height-3ABfNKs (height: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+                        $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+                        height: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+                          $receiver: CONST Int type=kotlin.Int value=2
+                      $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                      $changed: CONST Int type=kotlin.Int value=0
+                      $default: CONST Int type=kotlin.Int value=0
+                    CALL 'public final fun Text (text: kotlin.String, modifier: androidx.glance.GlanceModifier?, style: androidx.glance.text.TextStyle?, maxLines: kotlin.Int, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.text.TextKt' type=kotlin.Unit origin=null
+                      text: STRING_CONCATENATION type=kotlin.String
+                        CALL 'public final fun <get-courseTime> (): kotlin.String declared in com.example.classschedule.data.course.CourseSimple' type=kotlin.String origin=GET_PROPERTY
+                          $this: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                            receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                        CONST String type=kotlin.String value=" | "
+                        CALL 'public final fun <get-courseLocation> (): kotlin.String declared in com.example.classschedule.data.course.CourseSimple' type=kotlin.String origin=GET_PROPERTY
+                          $this: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                            receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                      modifier: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+                        CONST Null type=kotlin.Nothing? value=null
+                      style: BLOCK type=androidx.glance.text.TextStyle origin=ARGUMENTS_REORDERING_FOR_CALL
+                        VAR IR_TEMPORARY_VARIABLE name:tmp3_fontSize type:androidx.compose.ui.unit.TextUnit [val]
+                          CALL 'public final fun <get-sp> (): androidx.compose.ui.unit.TextUnit declared in androidx.compose.ui.unit.TextUnitKt' type=androidx.compose.ui.unit.TextUnit origin=GET_PROPERTY
+                            $receiver: CONST Int type=kotlin.Int value=11
+                        VAR IR_TEMPORARY_VARIABLE name:tmp4_color type:androidx.glance.unit.ColorProvider [val]
+                          CALL 'public final fun <get-surface> (): androidx.glance.unit.ColorProvider declared in androidx.glance.color.ColorProviders' type=androidx.glance.unit.ColorProvider origin=GET_PROPERTY
+                            $this: CALL 'public final fun <get-colors> ($composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.glance.color.ColorProviders declared in androidx.glance.GlanceTheme' type=androidx.glance.color.ColorProviders origin=GET_PROPERTY
+                              $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:androidx.glance.GlanceTheme visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=androidx.glance.GlanceTheme origin=null
+                              $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                              $changed: GET_FIELD 'FIELD name:$stable type:kotlin.Int visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=kotlin.Int origin=null
+                        CONSTRUCTOR_CALL 'public constructor <init> (color: androidx.glance.unit.ColorProvider?, fontSize: androidx.compose.ui.unit.TextUnit?, fontWeight: androidx.glance.text.FontWeight?, fontStyle: androidx.glance.text.FontStyle?, textAlign: androidx.glance.text.TextAlign?, textDecoration: androidx.glance.text.TextDecoration?, fontFamily: androidx.glance.text.FontFamily?, $mask0: kotlin.Int, $marker: kotlin.jvm.internal.DefaultConstructorMarker?) declared in androidx.glance.text.TextStyle' type=androidx.glance.text.TextStyle origin=DEFAULT_DISPATCH_CALL
+                          color: GET_VAR 'val tmp4_color: androidx.glance.unit.ColorProvider [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.glance.unit.ColorProvider origin=null
+                          fontSize: GET_VAR 'val tmp3_fontSize: androidx.compose.ui.unit.TextUnit [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.ui.unit.TextUnit origin=null
+                          fontWeight: COMPOSITE type=androidx.glance.text.FontWeight? origin=DEFAULT_VALUE
+                            CONST Null type=androidx.glance.text.FontWeight? value=null
+                          fontStyle: COMPOSITE type=androidx.glance.text.FontStyle? origin=DEFAULT_VALUE
+                            CONST Null type=androidx.glance.text.FontStyle? value=null
+                          textAlign: COMPOSITE type=androidx.glance.text.TextAlign? origin=DEFAULT_VALUE
+                            CONST Null type=androidx.glance.text.TextAlign? value=null
+                          textDecoration: COMPOSITE type=androidx.glance.text.TextDecoration? origin=DEFAULT_VALUE
+                            CONST Null type=androidx.glance.text.TextDecoration? value=null
+                          fontFamily: COMPOSITE type=androidx.glance.text.FontFamily? origin=DEFAULT_VALUE
+                            CONST Null type=androidx.glance.text.FontFamily? value=null
+                          $mask0: CONST Int type=kotlin.Int value=124
+                          $marker: CONST Null type=kotlin.jvm.internal.DefaultConstructorMarker? value=null
+                      maxLines: COMPOSITE type=kotlin.Int origin=DEFAULT_VALUE
+                        CONST Int type=kotlin.Int value=0
+                      $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                      $changed: CONST Int type=kotlin.Int value=0
+                      $default: CONST Int type=kotlin.Int value=10
+                    SET_FIELD 'FIELD IR_EXTERNAL_JAVA_DECLARATION_STUB name:maxLines type:kotlin.Int visibility:public [final,static] declared in android.R.attr' type=kotlin.Unit superQualifierSymbol=android.R.attr origin=EQ
+                      value: CONST Int type=kotlin.Int value=1
+                    WHEN type=kotlin.Unit origin=IF
+                      BRANCH
+                        if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+                        then: CALL 'public final fun traceEventEnd (): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+              FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final]
+              FUN BRIDGE name:invoke visibility:public modality:OPEN <> ($this:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>, p1:kotlin.Any?, p2:kotlin.Any?, p3:kotlin.Any?) returnType:kotlin.Any?
+                $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>
+                VALUE_PARAMETER BRIDGE name:p1 index:0 type:kotlin.Any?
+                VALUE_PARAMETER BRIDGE name:p2 index:1 type:kotlin.Any?
+                VALUE_PARAMETER BRIDGE name:p3 index:2 type:kotlin.Any?
+                EXPRESSION_BODY
+                  RETURN type=kotlin.Nothing from='public open fun invoke (p1: kotlin.Any?, p2: kotlin.Any?, p3: kotlin.Any?): kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>'
+                    CALL 'public final fun invoke ($this$Column: androidx.glance.layout.ColumnScope, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): kotlin.Unit declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=kotlin.Unit origin=BRIDGE_DELEGATION
+                      $this: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+                      $this$Column: TYPE_OP type=androidx.glance.layout.ColumnScope origin=IMPLICIT_CAST typeOperand=androidx.glance.layout.ColumnScope
+                        GET_VAR 'p1: kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=kotlin.Any? origin=null
+                      $composer: TYPE_OP type=androidx.compose.runtime.Composer origin=IMPLICIT_CAST typeOperand=androidx.compose.runtime.Composer
+                        GET_VAR 'p2: kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=kotlin.Any? origin=null
+                      $changed: TYPE_OP type=kotlin.Int origin=IMPLICIT_CAST typeOperand=kotlin.Int
+                        GET_VAR 'p3: kotlin.Any? declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=kotlin.Any? origin=null
+            CONSTRUCTOR_CALL 'public/*package*/ constructor <init> ($course: com.example.classschedule.data.course.CourseSimple) [primary] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+              $course: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+                receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided> origin=null
+          $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+          $changed: CONST Int type=kotlin.Int value=54
+        $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+        $changed: CONST Int type=kotlin.Int value=3072
+        $default: CONST Int type=kotlin.Int value=6
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+          then: CALL 'public final fun traceEventEnd (): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate$default(FunctionCodegen.kt:40)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethodNode(ClassCodegen.kt:406)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethod(ClassCodegen.kt:423)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generate(ClassCodegen.kt:168)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitClass(ExpressionCodegen.kt:1000)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitClass(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.declarations.IrClass.accept(IrClass.kt:72)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:593)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitBlock(IrElementVisitor.kt:122)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:413)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlock.accept(IrBlock.kt:18)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.gen(ExpressionCodegen.kt:217)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrCallGenerator.genValueAndPut(IrCallGenerator.kt:48)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall$handleParameter(ExpressionCodegen.kt:616)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:644)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.gen(ExpressionCodegen.kt:217)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrCallGenerator.genValueAndPut(IrCallGenerator.kt:48)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall$handleParameter(ExpressionCodegen.kt:616)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:644)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:593)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitBlock(IrElementVisitor.kt:122)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:413)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlock.accept(IrBlock.kt:18)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitWhen(ExpressionCodegen.kt:1101)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitWhen(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrWhen.accept(IrWhen.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:584)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlockBody.accept(IrBlockBody.kt:20)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.generate(ExpressionCodegen.kt:240)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.doGenerate(FunctionCodegen.kt:123)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:44)
+	... 53 more
+Caused by: java.lang.RuntimeException: Exception while generating code for:
+FUN name:invoke visibility:public modality:FINAL <> ($this:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>, $this$Column:androidx.glance.layout.ColumnScope, $composer:androidx.compose.runtime.Composer?, $changed:kotlin.Int) returnType:kotlin.Unit
+  annotations:
+    Composable
+    ComposableTarget(applier = "androidx.glance.GlanceComposable")
+  overridden:
+    public abstract fun invoke (p1: P1 of kotlin.Function3, p2: P2 of kotlin.Function3, p3: P3 of kotlin.Function3): R of kotlin.Function3 [operator] declared in kotlin.Function3
+  $this: VALUE_PARAMETER INSTANCE_RECEIVER name:<this> type:com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>
+  VALUE_PARAMETER name:$this$Column index:0 type:androidx.glance.layout.ColumnScope
+  VALUE_PARAMETER name:$composer index:1 type:androidx.compose.runtime.Composer? [assignable]
+  VALUE_PARAMETER name:$changed index:2 type:kotlin.Int
+  BLOCK_BODY
+    CALL 'public final fun sourceInformation (composer: androidx.compose.runtime.Composer, sourceInformation: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+      composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+      sourceInformation: CONST String type=kotlin.String value="C139@5262L356,149@5631L46,154@5883L6,150@5690L239:ClassScheduleWidget.kt#7sd964"
+    COMPOSITE type=kotlin.Unit origin=null
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+          then: CALL 'public final fun traceEventStart (key: kotlin.Int, dirty1: kotlin.Int, dirty2: kotlin.Int, info: kotlin.String): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+            key: CONST Int type=kotlin.Int value=632861324
+            dirty1: GET_VAR '$changed: kotlin.Int declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=kotlin.Int origin=null
+            dirty2: CONST Int type=kotlin.Int value=-1
+            info: CONST String type=kotlin.String value="com.example.classschedule.widget.CourseWidgetItem.<anonymous>.<anonymous> (ClassScheduleWidget.kt:139)"
+      CALL 'public final fun Text (text: kotlin.String, modifier: androidx.glance.GlanceModifier?, style: androidx.glance.text.TextStyle?, maxLines: kotlin.Int, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.text.TextKt' type=kotlin.Unit origin=null
+        text: CALL 'public final fun <get-courseName> (): kotlin.String declared in com.example.classschedule.data.course.CourseSimple' type=kotlin.String origin=GET_PROPERTY
+          $this: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+            receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+        modifier: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+          CONST Null type=kotlin.Nothing? value=null
+        style: BLOCK type=androidx.glance.text.TextStyle origin=ARGUMENTS_REORDERING_FOR_CALL
+          VAR IR_TEMPORARY_VARIABLE name:tmp0_fontWeight type:androidx.glance.text.FontWeight [val]
+            CALL 'public final fun getBold-WjrlUT0 (): androidx.glance.text.FontWeight declared in androidx.glance.text.FontWeight.Companion' type=androidx.glance.text.FontWeight origin=GET_PROPERTY
+              $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.text.FontWeight.Companion visibility:public [final,static] declared in androidx.glance.text.FontWeight' type=androidx.glance.text.FontWeight.Companion origin=null
+          VAR IR_TEMPORARY_VARIABLE name:tmp1_fontSize type:androidx.compose.ui.unit.TextUnit [val]
+            CALL 'public final fun <get-sp> (): androidx.compose.ui.unit.TextUnit declared in androidx.compose.ui.unit.TextUnitKt' type=androidx.compose.ui.unit.TextUnit origin=GET_PROPERTY
+              $receiver: CONST Int type=kotlin.Int value=14
+          VAR IR_TEMPORARY_VARIABLE name:tmp2_color type:androidx.glance.unit.ColorProvider [val]
+            CALL 'public final fun ColorProvider--OWjLjI (day: androidx.compose.ui.graphics.Color, night: androidx.compose.ui.graphics.Color): androidx.glance.unit.ColorProvider declared in androidx.glance.color.DayNightColorProvidersKt' type=androidx.glance.unit.ColorProvider origin=null
+              day: CALL 'public final fun Color (color: kotlin.Long): androidx.compose.ui.graphics.Color declared in androidx.compose.ui.graphics.ColorKt' type=androidx.compose.ui.graphics.Color origin=null
+                color: CONST Long type=kotlin.Long value=4293981432
+              night: CALL 'public final fun Color (color: kotlin.Long): androidx.compose.ui.graphics.Color declared in androidx.compose.ui.graphics.ColorKt' type=androidx.compose.ui.graphics.Color origin=null
+                color: CONST Long type=kotlin.Long value=4279374354
+          CONSTRUCTOR_CALL 'public constructor <init> (color: androidx.glance.unit.ColorProvider?, fontSize: androidx.compose.ui.unit.TextUnit?, fontWeight: androidx.glance.text.FontWeight?, fontStyle: androidx.glance.text.FontStyle?, textAlign: androidx.glance.text.TextAlign?, textDecoration: androidx.glance.text.TextDecoration?, fontFamily: androidx.glance.text.FontFamily?, $mask0: kotlin.Int, $marker: kotlin.jvm.internal.DefaultConstructorMarker?) declared in androidx.glance.text.TextStyle' type=androidx.glance.text.TextStyle origin=DEFAULT_DISPATCH_CALL
+            color: GET_VAR 'val tmp2_color: androidx.glance.unit.ColorProvider [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.glance.unit.ColorProvider origin=null
+            fontSize: GET_VAR 'val tmp1_fontSize: androidx.compose.ui.unit.TextUnit [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.ui.unit.TextUnit origin=null
+            fontWeight: GET_VAR 'val tmp0_fontWeight: androidx.glance.text.FontWeight [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.glance.text.FontWeight origin=null
+            fontStyle: COMPOSITE type=androidx.glance.text.FontStyle? origin=DEFAULT_VALUE
+              CONST Null type=androidx.glance.text.FontStyle? value=null
+            textAlign: COMPOSITE type=androidx.glance.text.TextAlign? origin=DEFAULT_VALUE
+              CONST Null type=androidx.glance.text.TextAlign? value=null
+            textDecoration: COMPOSITE type=androidx.glance.text.TextDecoration? origin=DEFAULT_VALUE
+              CONST Null type=androidx.glance.text.TextDecoration? value=null
+            fontFamily: COMPOSITE type=androidx.glance.text.FontFamily? origin=DEFAULT_VALUE
+              CONST Null type=androidx.glance.text.FontFamily? value=null
+            $mask0: CONST Int type=kotlin.Int value=120
+            $marker: CONST Null type=kotlin.jvm.internal.DefaultConstructorMarker? value=null
+        maxLines: CONST Int type=kotlin.Int value=1
+        $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+        $changed: CONST Int type=kotlin.Int value=3072
+        $default: CONST Int type=kotlin.Int value=2
+      CALL 'public final fun Spacer (modifier: androidx.glance.GlanceModifier?, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.layout.SpacerKt' type=kotlin.Unit origin=null
+        modifier: CALL 'public final fun height-3ABfNKs (height: androidx.compose.ui.unit.Dp): androidx.glance.GlanceModifier declared in androidx.glance.layout.SizeModifiersKt' type=androidx.glance.GlanceModifier origin=null
+          $receiver: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:Companion type:androidx.glance.GlanceModifier.Companion visibility:public [final,static] declared in androidx.glance.GlanceModifier' type=androidx.glance.GlanceModifier.Companion origin=null
+          height: CALL 'public final fun <get-dp> (): androidx.compose.ui.unit.Dp [inline] declared in androidx.compose.ui.unit.DpKt' type=androidx.compose.ui.unit.Dp origin=GET_PROPERTY
+            $receiver: CONST Int type=kotlin.Int value=2
+        $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+        $changed: CONST Int type=kotlin.Int value=0
+        $default: CONST Int type=kotlin.Int value=0
+      CALL 'public final fun Text (text: kotlin.String, modifier: androidx.glance.GlanceModifier?, style: androidx.glance.text.TextStyle?, maxLines: kotlin.Int, $composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int, $default: kotlin.Int): kotlin.Unit declared in androidx.glance.text.TextKt' type=kotlin.Unit origin=null
+        text: STRING_CONCATENATION type=kotlin.String
+          CALL 'public final fun <get-courseTime> (): kotlin.String declared in com.example.classschedule.data.course.CourseSimple' type=kotlin.String origin=GET_PROPERTY
+            $this: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+              receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+          CONST String type=kotlin.String value=" | "
+          CALL 'public final fun <get-courseLocation> (): kotlin.String declared in com.example.classschedule.data.course.CourseSimple' type=kotlin.String origin=GET_PROPERTY
+            $this: GET_FIELD 'FIELD FIELD_FOR_CAPTURED_VALUE name:$course type:com.example.classschedule.data.course.CourseSimple visibility:public/*package*/ [final] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>' type=com.example.classschedule.data.course.CourseSimple origin=null
+              receiver: GET_VAR '<this>: com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided> origin=null
+        modifier: COMPOSITE type=kotlin.Nothing? origin=DEFAULT_VALUE
+          CONST Null type=kotlin.Nothing? value=null
+        style: BLOCK type=androidx.glance.text.TextStyle origin=ARGUMENTS_REORDERING_FOR_CALL
+          VAR IR_TEMPORARY_VARIABLE name:tmp3_fontSize type:androidx.compose.ui.unit.TextUnit [val]
+            CALL 'public final fun <get-sp> (): androidx.compose.ui.unit.TextUnit declared in androidx.compose.ui.unit.TextUnitKt' type=androidx.compose.ui.unit.TextUnit origin=GET_PROPERTY
+              $receiver: CONST Int type=kotlin.Int value=11
+          VAR IR_TEMPORARY_VARIABLE name:tmp4_color type:androidx.glance.unit.ColorProvider [val]
+            CALL 'public final fun <get-surface> (): androidx.glance.unit.ColorProvider declared in androidx.glance.color.ColorProviders' type=androidx.glance.unit.ColorProvider origin=GET_PROPERTY
+              $this: CALL 'public final fun <get-colors> ($composer: androidx.compose.runtime.Composer?, $changed: kotlin.Int): androidx.glance.color.ColorProviders declared in androidx.glance.GlanceTheme' type=androidx.glance.color.ColorProviders origin=GET_PROPERTY
+                $this: GET_FIELD 'FIELD FIELD_FOR_OBJECT_INSTANCE name:INSTANCE type:androidx.glance.GlanceTheme visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=androidx.glance.GlanceTheme origin=null
+                $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+                $changed: GET_FIELD 'FIELD name:$stable type:kotlin.Int visibility:public [final,static] declared in androidx.glance.GlanceTheme' type=kotlin.Int origin=null
+          CONSTRUCTOR_CALL 'public constructor <init> (color: androidx.glance.unit.ColorProvider?, fontSize: androidx.compose.ui.unit.TextUnit?, fontWeight: androidx.glance.text.FontWeight?, fontStyle: androidx.glance.text.FontStyle?, textAlign: androidx.glance.text.TextAlign?, textDecoration: androidx.glance.text.TextDecoration?, fontFamily: androidx.glance.text.FontFamily?, $mask0: kotlin.Int, $marker: kotlin.jvm.internal.DefaultConstructorMarker?) declared in androidx.glance.text.TextStyle' type=androidx.glance.text.TextStyle origin=DEFAULT_DISPATCH_CALL
+            color: GET_VAR 'val tmp4_color: androidx.glance.unit.ColorProvider [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.glance.unit.ColorProvider origin=null
+            fontSize: GET_VAR 'val tmp3_fontSize: androidx.compose.ui.unit.TextUnit [val] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.ui.unit.TextUnit origin=null
+            fontWeight: COMPOSITE type=androidx.glance.text.FontWeight? origin=DEFAULT_VALUE
+              CONST Null type=androidx.glance.text.FontWeight? value=null
+            fontStyle: COMPOSITE type=androidx.glance.text.FontStyle? origin=DEFAULT_VALUE
+              CONST Null type=androidx.glance.text.FontStyle? value=null
+            textAlign: COMPOSITE type=androidx.glance.text.TextAlign? origin=DEFAULT_VALUE
+              CONST Null type=androidx.glance.text.TextAlign? value=null
+            textDecoration: COMPOSITE type=androidx.glance.text.TextDecoration? origin=DEFAULT_VALUE
+              CONST Null type=androidx.glance.text.TextDecoration? value=null
+            fontFamily: COMPOSITE type=androidx.glance.text.FontFamily? origin=DEFAULT_VALUE
+              CONST Null type=androidx.glance.text.FontFamily? value=null
+            $mask0: CONST Int type=kotlin.Int value=124
+            $marker: CONST Null type=kotlin.jvm.internal.DefaultConstructorMarker? value=null
+        maxLines: COMPOSITE type=kotlin.Int origin=DEFAULT_VALUE
+          CONST Int type=kotlin.Int value=0
+        $composer: GET_VAR '$composer: androidx.compose.runtime.Composer? [assignable] declared in com.example.classschedule.widget.ClassScheduleWidgetKt.CourseWidgetItem.<no name provided>.invoke.<no name provided>.invoke' type=androidx.compose.runtime.Composer? origin=null
+        $changed: CONST Int type=kotlin.Int value=0
+        $default: CONST Int type=kotlin.Int value=10
+      SET_FIELD 'FIELD IR_EXTERNAL_JAVA_DECLARATION_STUB name:maxLines type:kotlin.Int visibility:public [final,static] declared in android.R.attr' type=kotlin.Unit superQualifierSymbol=android.R.attr origin=EQ
+        value: CONST Int type=kotlin.Int value=1
+      WHEN type=kotlin.Unit origin=IF
+        BRANCH
+          if: CALL 'public final fun isTraceInProgress (): kotlin.Boolean declared in androidx.compose.runtime.ComposerKt' type=kotlin.Boolean origin=null
+          then: CALL 'public final fun traceEventEnd (): kotlin.Unit declared in androidx.compose.runtime.ComposerKt' type=kotlin.Unit origin=null
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:47)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate$default(FunctionCodegen.kt:40)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethodNode(ClassCodegen.kt:406)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generateMethod(ClassCodegen.kt:423)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ClassCodegen.generate(ClassCodegen.kt:168)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitClass(ExpressionCodegen.kt:1000)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitClass(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.declarations.IrClass.accept(IrClass.kt:72)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:593)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitBlock(IrElementVisitor.kt:122)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:413)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlock(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlock.accept(IrBlock.kt:18)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.gen(ExpressionCodegen.kt:217)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrCallGenerator.genValueAndPut(IrCallGenerator.kt:48)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall$handleParameter(ExpressionCodegen.kt:616)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:644)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.gen(ExpressionCodegen.kt:217)
+	at org.jetbrains.kotlin.backend.jvm.codegen.IrCallGenerator.genValueAndPut(IrCallGenerator.kt:48)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall$handleParameter(ExpressionCodegen.kt:616)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:644)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitCall(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrCall.accept(IrCall.kt:24)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:593)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitComposite(IrElementVisitor.kt:125)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitComposite(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitComposite(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrComposite.accept(IrComposite.kt:18)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:584)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlockBody.accept(IrBlockBody.kt:20)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.generate(ExpressionCodegen.kt:240)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.doGenerate(FunctionCodegen.kt:123)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:44)
+	... 96 more
+Caused by: java.lang.AssertionError: access of const val: SET_FIELD 'FIELD IR_EXTERNAL_JAVA_DECLARATION_STUB name:maxLines type:kotlin.Int visibility:public [final,static] declared in android.R.attr' type=kotlin.Unit superQualifierSymbol=android.R.attr origin=EQ
+  value: CONST Int type=kotlin.Int value=1
+
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitFieldAccess(ExpressionCodegen.kt:861)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitFieldAccess(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitSetField(IrElementVisitor.kt:206)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitSetField(ExpressionCodegen.kt:908)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitSetField(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrSetField.accept(IrSetField.kt:21)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:593)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitContainerExpression(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.visitors.IrElementVisitor$DefaultImpls.visitComposite(IrElementVisitor.kt:125)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitComposite(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitComposite(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrComposite.accept(IrComposite.kt:18)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitStatementContainer(ExpressionCodegen.kt:579)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:584)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.visitBlockBody(ExpressionCodegen.kt:138)
+	at org.jetbrains.kotlin.ir.expressions.IrBlockBody.accept(IrBlockBody.kt:20)
+	at org.jetbrains.kotlin.backend.jvm.codegen.ExpressionCodegen.generate(ExpressionCodegen.kt:240)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.doGenerate(FunctionCodegen.kt:123)
+	at org.jetbrains.kotlin.backend.jvm.codegen.FunctionCodegen.generate(FunctionCodegen.kt:44)
+	... 136 more
+
+
