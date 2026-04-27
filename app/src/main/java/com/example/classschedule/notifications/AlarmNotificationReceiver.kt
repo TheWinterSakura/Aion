@@ -14,13 +14,13 @@ class AlarmNotificationReceiver : BroadcastReceiver() {
         val notificationId = intent?.getIntExtra("NOTIFICATION_ID", 0)
         val notificationTittle = intent?.getStringExtra("NOTIFICATION_TITTLE")
         val notificationContent = intent?.getStringExtra("NOTIFICATION_CONTENT")
-        val notificationIcons = intent?.getIntExtra("NOTIFICATION_ICONS", R.mipmap.uchiha_sasuke)
+        val notificationIcons = intent?.getIntExtra("NOTIFICATION_ICONS", R.mipmap.app_icon)
         showNotification(
             context = context, notification = Notification(
                 notificationId = notificationId ?: 0,
                 title = notificationTittle ?: "未知课程",
                 content = notificationContent ?: "未知地点",
-                icons = notificationIcons ?: R.mipmap.uchiha_sasuke
+                icons = notificationIcons ?: R.mipmap.app_icon
             )
         )
     }
