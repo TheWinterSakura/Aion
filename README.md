@@ -40,12 +40,11 @@
 
 | 首页 (布局一) | 首页 (布局二) | 课程详情 | 添加课程 |
 | :---: | :---: | :---: | :---: |
-| <img width="220" src="https://github.com/user-attachments/assets/67cb1e17-c075-4055-b8d1-0d5ac14e8ca0" /> | <img width="220" src="https://github.com/user-attachments/assets/bdf0e97b-6970-4320-8f6b-847519e7af21" /> | <img width="220" src="https://github.com/user-attachments/assets/3d326254-5df6-4ec1-9ee3-eeb332ca5875" /> | <img width="220" src="https://github.com/user-attachments/assets/37afaed9-05d5-4a45-92fe-e0854d953469" /> |
+|<img width="280" alt="首页1" src="https://github.com/user-attachments/assets/00872cdf-9654-4f88-91ae-1d5a46ba2b16" /> | <img width="280" alt="首页2" src="https://github.com/user-attachments/assets/eeb47544-bc77-4af4-b159-6bf491cc1860" /> | <img width="280" alt="详情" src="https://github.com/user-attachments/assets/f4e6185e-a4d3-4e6f-a07a-a21d38aba942" /> | <img width="280" alt="添加" src="https://github.com/user-attachments/assets/f892ae43-a4f1-4160-89f9-cef22a742635" /> |
 
 > **桌面小组件效果**
 > <br>
-> <img width="600" src="https://github.com/user-attachments/assets/21d7b2fd-13b8-4fff-b03c-425e42c9651c" />
-
+> <img width="400" src="https://github.com/user-attachments/assets/21d7b2fd-13b8-4fff-b03c-425e42c9651c" />
 ---
 
 ## ⚠️ 使用说明
