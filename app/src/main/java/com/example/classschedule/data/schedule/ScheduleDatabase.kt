@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [Schedule::class, TimeTable::class], version = 2, exportSchema = false)
 abstract class ScheduleDatabase : RoomDatabase() {
-    abstract fun ScheduleDao(): ScheduleDao
+    abstract fun scheduleDao(): ScheduleDao
     abstract fun timeTableDao(): TimeTableDao
     companion object {
         @Volatile

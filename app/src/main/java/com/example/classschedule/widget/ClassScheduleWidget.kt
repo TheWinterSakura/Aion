@@ -31,16 +31,13 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import com.example.classschedule.ClassScheduleApplication
 import com.example.classschedule.MainActivity
-import com.example.classschedule.data.AppDataContainer
 import com.example.classschedule.data.course.CourseSimple
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import androidx.datastore.preferences.preferencesDataStore
-
-private val Context.dataStore by preferencesDataStore(name = "settings")
 
 private val WidgetBgColor = ColorProvider(day = Color(0xFFF9FAFB), night = Color(0xFF1E1E1E))
 private val ItemBgColor = ColorProvider(day = Color(0xFFFFFFFF), night = Color(0xFF2C2C2C))
@@ -53,11 +50,9 @@ class CourseWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val appContainer = AppDataContainer(context)
-        val repository = appContainer.courseRepository
-        val preferencesRepository = com.example.classschedule.data.user_preferences.UserPreferencesRepository(
-            context.dataStore
-        )
+        val app = context.applicationContext as ClassScheduleApplication
+        val repository = app.container.courseRepository
+        val preferencesRepository = app.userPreferencesRepository
 
         val startDate = preferencesRepository.commencementDate.first()
         val currentWeek = if (startDate.isNotBlank()) {

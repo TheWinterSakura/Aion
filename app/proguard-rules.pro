@@ -1,25 +1,29 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# ── kotlinx.serialization ─────────────────────────────────────────────────────
+# 保留所有 @Serializable 类（包括导航路由和 Room 实体中的序列化字段）
+-keepattributes *Annotation*, InnerClasses
+-keep @kotlinx.serialization.Serializable class * {
+    <fields>;
+    <init>();
+}
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# ── Room ──────────────────────────────────────────────────────────────────────
+# 保留 Room 实体类，防止字段被混淆导致 Room 生成的代码出错
+-keep @androidx.room.Entity class * {
+    <fields>;
+    <init>();
+}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# ── Retrofit + Gson ────────────────────────────────────────────────────────────
+# 保留 Retrofit API 接口（方法通过动态代理调用）
+-keep interface com.example.classschedule.retrofit.ClassScheduleApi { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# 保留 Gson 反序列化的网络模型
+-keep class com.example.classschedule.retrofit.model.** { <fields>; }
 
-# Please add these rules to your existing keep rules in order to suppress warnings.
-# This is generated automatically by the Android Gradle plugin.
+# 保留泛型签名信息，Retrofit/Gson 反序列化需要
+-keepattributes Signature
+
+# ── 通用抑制警告 ──────────────────────────────────────────────────────────────
+-dontwarn okhttp3.**
+-dontwarn retrofit2.**
 -dontwarn com.gemalto.jp2.JP2Decoder
