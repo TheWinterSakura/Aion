@@ -37,7 +37,7 @@ class AppDataContainer(private val context: Context) : AppContainer {
 
     override val scheduleRepository: ScheduleRepository =
         OfflineScheduleRepository(
-            ScheduleDatabase.getDatabase(context).ScheduleDao(),
+            ScheduleDatabase.getDatabase(context).scheduleDao(),
             appScope = applicationScope
         )
 
