@@ -7,11 +7,13 @@ import com.example.classschedule.data.course.Course
 import com.example.classschedule.data.course.CourseRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.tools.showToast
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddCourseViewModel(
     private val repository: CourseRepository,
