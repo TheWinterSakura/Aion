@@ -106,6 +106,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -151,7 +152,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(currentWeek) {
-        delay(150)
+        delay(150.milliseconds)
         viewModel.loadSimpleCourse(currentWeekDate = currentWeek)
         viewModel.getMonDateStr(startDate = startDate, weeksPassed = (currentWeek - 1).toLong())
     }
@@ -159,7 +160,7 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         if (!isTimerFinished) {
-            delay(150)
+            delay(150.milliseconds)
             if (currentWeek != 0) {
                 viewModel.getMonDateStr(
                     startDate = startDate,
@@ -191,7 +192,7 @@ fun HomeScreen(
     var showGridGuide by remember { mutableStateOf(false) }
     LaunchedEffect(isGridLayout, guideGridShown) {
         if (isGridLayout && !guideGridShown) {
-            delay(600)
+            delay(600.milliseconds)
             showGridGuide = true
         }
     }
