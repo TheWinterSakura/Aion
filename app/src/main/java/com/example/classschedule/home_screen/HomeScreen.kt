@@ -1,6 +1,8 @@
 package com.example.classschedule.home_screen
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -111,7 +113,9 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToAddCourse: () -> Unit,
     navigateToCourseDetails: (Int, String, String, String) -> Unit,
-    navigateToSetting: () -> Unit
+    navigateToSetting: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
 ) {
     val scope = rememberCoroutineScope()
     val courseList by viewModel.courseList.collectAsState()
@@ -387,7 +391,9 @@ fun HomeScreen(
                                     colorPickerTargetId = id
                                     colorPickerInitialColor = currentColor
                                     showColorPicker = true
-                                }
+                                },
+                                sharedTransitionScope = sharedTransitionScope,
+                                animatedVisibilityScope = animatedVisibilityScope
                             )
                         }
                     }
@@ -426,7 +432,9 @@ fun DailyCourseList(
     courseList: List<CourseSimple>,
     navigateToCourseDetails: (Int) -> Unit,
     courseTimeList: List<Schedule>,
-    onColorChange: (id: Int, color: String?) -> Unit
+    onColorChange: (id: Int, color: String?) -> Unit,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
 ) {
     if (courseList.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -448,8 +456,11 @@ fun DailyCourseList(
                     courseTime = getClassTime(item.courseTime, allCourseTime = courseTimeList),
                     courseLocation = item.courseLocation,
                     courseColor = item.color,
+                    courseId = item.id,
                     onClick = { navigateToCourseDetails(item.id) },
-                    onLongClick = { onColorChange(item.id, item.color) }
+                    onLongClick = { onColorChange(item.id, item.color) },
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
                 )
             }
         }
@@ -463,14 +474,29 @@ fun ScheduleCard(
     courseTime: String,
     courseLocation: String,
     courseColor: String?,
+    courseId: Int,
     onClick: () -> Unit,
-    onLongClick: () -> Unit
+    onLongClick: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
 ) {
     val accentColor = remember(courseColor) {
         if (courseColor != null) {
             try { Color(android.graphics.Color.parseColor(courseColor)) }
             catch (e: Exception) { null }
         } else null
+    }
+
+    val courseNameModifier = if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+        with(sharedTransitionScope) {
+            val state = rememberSharedContentState(key = "course_name_$courseId")
+            Modifier.sharedElement(
+                sharedContentState = state,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
+    } else {
+        Modifier
     }
 
     ElevatedCard(
@@ -495,6 +521,7 @@ fun ScheduleCard(
             ) {
                 Text(
                     courseName,
+                    modifier = courseNameModifier,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
