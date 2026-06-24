@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app_icon-playstore.png" alt="Aion Logo" width="128" height="128"/>
+  <img width="125" height="125" alt="2" src="https://github.com/user-attachments/assets/dde8c384-e52d-4f5f-b3d9-d106d9e7667b" />
 </p>
 
 <h1 align="center">Aion — 智能课程表</h1>
