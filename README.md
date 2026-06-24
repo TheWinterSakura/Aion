@@ -275,13 +275,6 @@ app/
 
 本项目基于 MIT 协议开源，详见 [LICENSE](LICENSE) 文件。
 
----
-
-## 📬 联系
-
-- 项目作者：杨春荣
-- GitHub：[@TheWinterSakura](https://github.com/TheWinterSakura)
-- CSDN：[技术博客](https://blog.csdn.net/2302_81450059)
 
 ---
 
