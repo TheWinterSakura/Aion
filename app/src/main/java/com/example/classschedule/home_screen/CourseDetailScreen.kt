@@ -11,6 +11,8 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -90,7 +92,9 @@ fun CourseDetail(
     startDate: String,
     navigationUp: () -> Unit,
     navigateToEdit: (Int) -> Unit,
-    viewModel: CourseDetailViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: CourseDetailViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
 ) {
     LaunchedEffect(courseId) {
         viewModel.loadCourse(id = courseId)
@@ -230,12 +234,26 @@ fun CourseDetail(
                     .padding(horizontal = 16.dp, vertical = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
+                val courseNameModifier = if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+                    with(sharedTransitionScope) {
+                        val state = rememberSharedContentState(key = "course_name_$courseId")
+                        Modifier
+                            .padding(bottom = 8.dp, top = 8.dp)
+                            .sharedElement(
+                                sharedContentState = state,
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                    }
+                } else {
+                    Modifier.padding(bottom = 8.dp, top = 8.dp)
+                }
+
                 Text(
                     text = course?.courseName ?: "未知课程",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground,
-                    modifier = Modifier.padding(bottom = 8.dp, top = 8.dp)
+                    modifier = courseNameModifier
                 )
 
                 CourseInfoCard(title = "Time & Location") {

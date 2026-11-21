@@ -1,6 +1,8 @@
 package com.example.classschedule.home_screen
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -104,6 +106,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,7 +114,9 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToAddCourse: () -> Unit,
     navigateToCourseDetails: (Int, String, String, String) -> Unit,
-    navigateToSetting: () -> Unit
+    navigateToSetting: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
 ) {
     val scope = rememberCoroutineScope()
     val courseList by viewModel.courseList.collectAsState()
@@ -147,7 +152,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(currentWeek) {
-        delay(150)
+        delay(150.milliseconds)
         viewModel.loadSimpleCourse(currentWeekDate = currentWeek)
         viewModel.getMonDateStr(startDate = startDate, weeksPassed = (currentWeek - 1).toLong())
     }
@@ -155,7 +160,7 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         if (!isTimerFinished) {
-            delay(150)
+            delay(150.milliseconds)
             if (currentWeek != 0) {
                 viewModel.getMonDateStr(
                     startDate = startDate,
@@ -187,7 +192,7 @@ fun HomeScreen(
     var showGridGuide by remember { mutableStateOf(false) }
     LaunchedEffect(isGridLayout, guideGridShown) {
         if (isGridLayout && !guideGridShown) {
-            delay(600)
+            delay(600.milliseconds)
             showGridGuide = true
         }
     }
@@ -387,7 +392,9 @@ fun HomeScreen(
                                     colorPickerTargetId = id
                                     colorPickerInitialColor = currentColor
                                     showColorPicker = true
-                                }
+                                },
+                                sharedTransitionScope = sharedTransitionScope,
+                                animatedVisibilityScope = animatedVisibilityScope
                             )
                         }
                     }
@@ -426,7 +433,9 @@ fun DailyCourseList(
     courseList: List<CourseSimple>,
     navigateToCourseDetails: (Int) -> Unit,
     courseTimeList: List<Schedule>,
-    onColorChange: (id: Int, color: String?) -> Unit
+    onColorChange: (id: Int, color: String?) -> Unit,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
 ) {
     if (courseList.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -448,8 +457,11 @@ fun DailyCourseList(
                     courseTime = getClassTime(item.courseTime, allCourseTime = courseTimeList),
                     courseLocation = item.courseLocation,
                     courseColor = item.color,
+                    courseId = item.id,
                     onClick = { navigateToCourseDetails(item.id) },
-                    onLongClick = { onColorChange(item.id, item.color) }
+                    onLongClick = { onColorChange(item.id, item.color) },
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
                 )
             }
         }
@@ -463,14 +475,29 @@ fun ScheduleCard(
     courseTime: String,
     courseLocation: String,
     courseColor: String?,
+    courseId: Int,
     onClick: () -> Unit,
-    onLongClick: () -> Unit
+    onLongClick: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
 ) {
     val accentColor = remember(courseColor) {
         if (courseColor != null) {
             try { Color(android.graphics.Color.parseColor(courseColor)) }
             catch (e: Exception) { null }
         } else null
+    }
+
+    val courseNameModifier = if (sharedTransitionScope != null && animatedVisibilityScope != null) {
+        with(sharedTransitionScope) {
+            val state = rememberSharedContentState(key = "course_name_$courseId")
+            Modifier.sharedElement(
+                sharedContentState = state,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
+        }
+    } else {
+        Modifier
     }
 
     ElevatedCard(
@@ -495,6 +522,7 @@ fun ScheduleCard(
             ) {
                 Text(
                     courseName,
+                    modifier = courseNameModifier,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
