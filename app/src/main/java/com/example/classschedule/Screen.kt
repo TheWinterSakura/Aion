@@ -1,12 +1,13 @@
 package com.example.classschedule
 
+import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-object HomeScreen
+object HomeScreen : NavKey
 
 @Serializable
-object AddCourseScreen
+object AddCourseScreen : NavKey
 
 @Serializable
 data class CourseDetailScreen(
@@ -14,66 +15,65 @@ data class CourseDetailScreen(
     val weekDate: String,
     val dayDate: String,
     val startDate: String,
-)
+) : NavKey
 
 @Serializable
 data class EditCourseScreen(
     val id: Int
-)
+) : NavKey
 
 @Serializable
-data class WebScreen(val universityUrl: String)
+data class WebScreen(val universityUrl: String) : NavKey
 
 @Serializable
-object IdentifyScreen
+object IdentifyScreen : NavKey
 
 @Serializable
-object SettingHomeScreen
+object SettingHomeScreen : NavKey
 
 @Serializable
-object SchoolDateScreen
+object SchoolDateScreen : NavKey
 
 @Serializable
-object EasImportScreen
+object EasImportScreen : NavKey
 
 @Serializable
-object DataManagerScreen
+object DataManagerScreen : NavKey
 
 @Serializable
-object LayoutManagerScreen
+object LayoutManagerScreen : NavKey
 
 @Serializable
-object AppDetailScreen
+object AppDetailScreen : NavKey
 
 @Serializable
-data class CourseTimeScreen(val totalCourseNumber: Int)
+data class CourseTimeScreen(val totalCourseNumber: Int) : NavKey
 
 @Serializable
-object ExportClassScheduleScreen
+object ExportClassScheduleScreen : NavKey
 
 @Serializable
-object ExportClassTimeScreen
+object ExportClassTimeScreen : NavKey
 
 @Serializable
-object AddCourseByJsonScreen
+object AddCourseByJsonScreen : NavKey
 
 @Serializable
-object ThemeColorScreen
+object ThemeColorScreen : NavKey
 
 @Serializable
-object CourseTableManagerScreen
+object CourseTableManagerScreen : NavKey
 
 @Serializable
-object TimeTableManagerScreen
+object TimeTableManagerScreen : NavKey
 
 @Serializable
-data class CourseTimeEditScreen(val timeTableId: Int, val timeTableName: String, val totalCourseNumber: Int)
+data class CourseTimeEditScreen(val timeTableId: Int, val timeTableName: String, val totalCourseNumber: Int) : NavKey
 
 // 快捷修改：选择类型（byName / byTeacher）
 @Serializable
-data class QuickEditListScreen(val mode: String) // mode = "name" | "teacher"
+data class QuickEditListScreen(val mode: String) : NavKey // mode = "name" | "teacher"
 
 // 快捷修改：展示同名/同教师课程列表
 @Serializable
-data class QuickEditCoursesScreen(val key: String, val mode: String)
-
+data class QuickEditCoursesScreen(val key: String, val mode: String) : NavKey
