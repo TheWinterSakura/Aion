@@ -31,9 +31,11 @@ import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
-import com.example.classschedule.ClassScheduleApplication
 import com.example.classschedule.MainActivity
 import com.example.classschedule.data.course.CourseSimple
+import com.example.classschedule.di.WidgetEntryPoint
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -50,9 +52,13 @@ class CourseWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val app = context.applicationContext as ClassScheduleApplication
-        val repository = app.container.courseRepository
-        val preferencesRepository = app.userPreferencesRepository
+
+        val entryPoint = EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            WidgetEntryPoint::class.java
+        )
+        val repository = entryPoint.courseRepository()
+        val preferencesRepository = entryPoint.userPreferencesRepository()
 
         val startDate = preferencesRepository.commencementDate.first()
         val currentWeek = if (startDate.isNotBlank()) {

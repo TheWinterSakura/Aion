@@ -9,17 +9,4 @@ import androidx.room.RoomDatabase
 abstract class ScheduleDatabase : RoomDatabase() {
     abstract fun scheduleDao(): ScheduleDao
     abstract fun timeTableDao(): TimeTableDao
-    companion object {
-        @Volatile
-        private var Instance: ScheduleDatabase? = null
-
-        fun getDatabase(context: Context): ScheduleDatabase {
-            return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, ScheduleDatabase::class.java, "schedule_database")
-                    .fallbackToDestructiveMigration()
-                    .build()
-                    .also { Instance = it }
-            }
-        }
-    }
 }

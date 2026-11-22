@@ -8,11 +8,13 @@ import com.example.classschedule.data.course.Course
 import com.example.classschedule.data.course.CourseRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.tools.JsonTool
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-
-class AddCourseByJsonViewModel(
+import javax.inject.Inject
+@HiltViewModel
+class AddCourseByJsonViewModel @Inject constructor(
     private val repository: CourseRepository,
     private val preferencesRepository: UserPreferencesRepository
 ): ViewModel() {

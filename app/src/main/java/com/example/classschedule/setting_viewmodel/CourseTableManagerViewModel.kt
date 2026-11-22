@@ -6,11 +6,13 @@ import com.example.classschedule.data.course.CourseRepository
 import com.example.classschedule.data.course.CourseTable
 import com.example.classschedule.data.course.CourseTableRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-class CourseTableManagerViewModel(
+import javax.inject.Inject
+@HiltViewModel
+class CourseTableManagerViewModel @Inject constructor(
     private val courseTableRepository: CourseTableRepository,
     private val courseRepository: CourseRepository,
     private val preferencesRepository: UserPreferencesRepository

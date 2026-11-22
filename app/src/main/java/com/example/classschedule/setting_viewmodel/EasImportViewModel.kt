@@ -6,13 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.school.University
 import com.example.classschedule.school.loadUniversitiesFromAssets
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-class EasImportViewModel(
+import javax.inject.Inject
+@HiltViewModel
+class EasImportViewModel @Inject constructor(
     private val repository: UserPreferencesRepository
 ) : ViewModel() {
 

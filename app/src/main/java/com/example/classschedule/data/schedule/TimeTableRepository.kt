@@ -1,6 +1,7 @@
 package com.example.classschedule.data.schedule
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 interface TimeTableRepository {
     fun getAll(): Flow<List<TimeTable>>
@@ -10,7 +11,7 @@ interface TimeTableRepository {
     suspend fun delete(table: TimeTable)
 }
 
-class OfflineTimeTableRepository(
+class OfflineTimeTableRepository @Inject constructor(
     private val dao: TimeTableDao
 ) : TimeTableRepository {
     override fun getAll(): Flow<List<TimeTable>> = dao.getAll()

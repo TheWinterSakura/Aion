@@ -5,13 +5,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.classschedule.analytical_method.ParserFactory
 import com.example.classschedule.data.course.CourseRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-
-class SpiderViewModel(
+import javax.inject.Inject
+@HiltViewModel
+class SpiderViewModel @Inject constructor(
     private val repository: CourseRepository,
     private val preferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {

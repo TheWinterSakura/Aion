@@ -11,12 +11,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.setting_viewmodel.SpiderViewModel
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -25,7 +36,7 @@ import com.example.classschedule.setting_viewmodel.SpiderViewModel
 fun ImportScheduleScreen(
     navigateUp: () -> Unit,
     universityUrl: String,
-    viewModel: SpiderViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: SpiderViewModel = hiltViewModel(),
     navigateToHome:()-> Unit
 ) {
     val statusText by viewModel.spiderStatus.collectAsState()

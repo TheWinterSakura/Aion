@@ -4,20 +4,21 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.example.classschedule.tools.getDayAfterWeeks
 import com.example.classschedule.tools.showToast
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
+import javax.inject.Singleton
 
 
-class AlertManagerClassScheduleRepository(context: Context) {
-
+@Singleton
+class AlertManagerClassScheduleRepository @Inject constructor(
+    @ApplicationContext context: Context
+){
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-    @RequiresApi(Build.VERSION_CODES.O)
     fun scheduleExactNotification(
         context: Context,
         notification: Notification,

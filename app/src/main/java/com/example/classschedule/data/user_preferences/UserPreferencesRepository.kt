@@ -12,8 +12,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class UserPreferencesRepository(
+@Singleton
+class UserPreferencesRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
 

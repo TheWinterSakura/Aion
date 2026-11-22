@@ -15,6 +15,7 @@ import com.example.classschedule.notifications.Notification
 import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.getDayAfterWeeks
 import com.example.classschedule.tools.showToast
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,8 +27,9 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-
-class CourseDetailViewModel(
+import javax.inject.Inject
+@HiltViewModel
+class CourseDetailViewModel @Inject constructor(
     private val repository: CourseRepository,
     private val alertManager: AlertManagerClassScheduleRepository,
     private val courseTimeRepository: ScheduleRepository

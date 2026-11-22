@@ -23,7 +23,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -31,8 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.setting_viewmodel.ExportClassScheduleViewModel
 import com.example.classschedule.tools.showToast
 
@@ -40,7 +38,7 @@ import com.example.classschedule.tools.showToast
 @Composable
 fun ExportClassSchedule(
     onNavigateUp: () -> Unit,
-    viewModel: ExportClassScheduleViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: ExportClassScheduleViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val courseList by viewModel.courseList.collectAsState()

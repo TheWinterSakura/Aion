@@ -1,56 +1,47 @@
 package com.example.classschedule
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import androidx.datastore.core.DataStore
-import com.example.classschedule.data.AppContainer
-import com.example.classschedule.data.AppDataContainer
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.example.classschedule.data.course.CourseTable
+import com.example.classschedule.data.course.CourseTableRepository
 import com.example.classschedule.data.schedule.TimeTable
+import com.example.classschedule.data.schedule.TimeTableRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
-import com.example.classschedule.notifications.AlertManagerClassScheduleRepository
+import com.example.classschedule.di.ApplicationScope
 import com.example.classschedule.widget.AppExitRefreshObserver
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
+import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-private const val START_DATE_NAME = "start_date"
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-    name = START_DATE_NAME
-)
-
+@HiltAndroidApp
 class ClassScheduleApplication : Application() {
-    companion object{
-        @SuppressLint("StaticFieldLeak")
-        lateinit var context: Context
-    }
+    @Inject lateinit var courseTableRepository: CourseTableRepository
+    @Inject lateinit var timeTableRepository: TimeTableRepository
+    @Inject lateinit var userPreferencesRepository: UserPreferencesRepository
 
-    lateinit var container: AppContainer
-    lateinit var userPreferencesRepository: UserPreferencesRepository
-    lateinit var workManagerClassScheduleRepository: AlertManagerClassScheduleRepository
-
-    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    @Inject
+    @ApplicationScope
+    lateinit var appScope: CoroutineScope
 
     private val _isReady = MutableStateFlow(false)
     val isReady: StateFlow<Boolean> = _isReady.asStateFlow()
 
+    companion object {
+        lateinit var appContext: Context
+            private set
+    }
+
     override fun onCreate() {
         super.onCreate()
-        context = this
-        container = AppDataContainer(this)
-        userPreferencesRepository = UserPreferencesRepository(dataStore)
-        workManagerClassScheduleRepository = AlertManagerClassScheduleRepository(this)
+        appContext = this
         PDFBoxResourceLoader.init(applicationContext)
         ProcessLifecycleOwner.get().lifecycle.addObserver(AppExitRefreshObserver(this))
         appScope.launch {
@@ -61,16 +52,16 @@ class ClassScheduleApplication : Application() {
 
     private suspend fun initDefaultTables() {
         // 默认课程表
-        val existingCourseTables = container.courseTableRepository.getAll().first()
+        val existingCourseTables = courseTableRepository.getAll().first()
         if (existingCourseTables.isEmpty()) {
-            val newId = container.courseTableRepository.insert(CourseTable(name = "默认课程表"))
+            val newId = courseTableRepository.insert(CourseTable(name = "默认课程表"))
             userPreferencesRepository.saveActiveCourseTableId(newId.toInt())
         }
 
         // 默认时间表
-        val existingTimeTables = container.timeTableRepository.getAll().first()
+        val existingTimeTables = timeTableRepository.getAll().first()
         if (existingTimeTables.isEmpty()) {
-            val newId = container.timeTableRepository.insert(TimeTable(name = "默认时间表"))
+            val newId = timeTableRepository.insert(TimeTable(name = "默认时间表"))
             userPreferencesRepository.saveActiveTimeTableId(newId.toInt())
         }
     }
