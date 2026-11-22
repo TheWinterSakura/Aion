@@ -82,7 +82,7 @@ class UserPreferencesRepository @Inject constructor(
                 throw it
             }
         }.map { preferences ->
-            preferences[IS_GRID_LAYOUT] ?: false
+            preferences[IS_GRID_LAYOUT] ?: true
         }
 
     val apiKey: Flow<String> = dataStore.data

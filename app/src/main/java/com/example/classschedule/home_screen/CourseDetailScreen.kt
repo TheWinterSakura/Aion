@@ -81,7 +81,6 @@ import com.example.classschedule.home_viewmodel.CourseDetailViewModel
 import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.showToast
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CourseDetail(

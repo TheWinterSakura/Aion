@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <!-- 默认禁止所有明文 HTTP，必须使用 HTTPS -->
+    <base-config cleartextTrafficPermitted="false" />
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">jwgl.hebtu.edu.cn</domain>
+    </domain-config>
+
+</network-security-config>
