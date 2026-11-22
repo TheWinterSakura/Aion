@@ -99,7 +99,6 @@ class CourseDetailViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun addSchedule(
         context: Context,
         title: String,

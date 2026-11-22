@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.course.Course
 import com.example.classschedule.data.course.CourseRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
-import com.example.classschedule.retrofit.ClassScheduleNetWork
+import com.example.classschedule.retrofit.ClassScheduleRemoteDataSource
 import com.example.classschedule.retrofit.model.ContentPart
 import com.example.classschedule.retrofit.model.CourseWrapper
 import com.example.classschedule.retrofit.model.ImageUrl
@@ -44,10 +44,11 @@ data class UiState(
 @HiltViewModel
 class IdentifyViewModel @Inject constructor(
     private val repository: CourseRepository,
-    private val userRepository: UserPreferencesRepository
+    private val userRepository: UserPreferencesRepository,
+    private val remoteDataSource: ClassScheduleRemoteDataSource,
+    private val gson: Gson,
 ) : ViewModel() {
 
-    private val gson = Gson()
     val apiKey = userRepository.apiKey.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
@@ -169,7 +170,7 @@ class IdentifyViewModel @Inject constructor(
                 )
 
                 val response =
-                    ClassScheduleNetWork.analyzeImage(apiKey, VisionRequest(messages = messages))
+                    remoteDataSource.analyzeImage(apiKey, VisionRequest(messages = messages))
                 val jsonResult = response.choices.firstOrNull()?.message?.content
 
                 handleJsonResult(jsonResult)
@@ -229,7 +230,7 @@ class IdentifyViewModel @Inject constructor(
             )
 
             val response =
-                ClassScheduleNetWork.analyzeText(apiKey, TextChatRequest(messages = messages))
+                remoteDataSource.analyzeText(apiKey, TextChatRequest(messages = messages))
             val jsonResult = response.choices.firstOrNull()?.message?.content
 
             handleJsonResult(jsonResult)
