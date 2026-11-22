@@ -1,21 +1,21 @@
 package com.example.classschedule.home_viewmodel
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.course.Course
 import com.example.classschedule.data.course.CourseRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
-import com.example.classschedule.tools.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
+
+
 @HiltViewModel
 class AddCourseViewModel @Inject constructor(
     private val repository: CourseRepository,
@@ -28,16 +28,16 @@ class AddCourseViewModel @Inject constructor(
         initialValue = 1
     )
 
+    private val _Success = MutableStateFlow(false)
+    val success = _Success.asStateFlow()
+
     fun addCourse(
         course: Course,
-        context: Context,
-        navigationUp:()-> Unit
     ){
         viewModelScope.launch {
             try {
                 repository.insertCourse(item = course.copy(tableId = activeTableId.value))
-                "添加成功".showToast(context = context)
-                navigationUp()
+                _Success.value = true
             }catch (e: Exception){
                 e.printStackTrace()
             }

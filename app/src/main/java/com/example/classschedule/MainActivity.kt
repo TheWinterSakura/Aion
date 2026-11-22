@@ -11,7 +11,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,9 +29,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val app = LocalContext.current.applicationContext as ClassScheduleApplication
-            val isReady by app.isReady.collectAsState()
+            val isReady by app.isReady.collectAsStateWithLifecycle()
             val themeViewModel: ThemeColorViewModel = hiltViewModel()
-            val themeColor by themeViewModel.themeColor.collectAsState()
+            val themeColor by themeViewModel.themeColor.collectAsStateWithLifecycle()
             ClassScheduleTheme(themeColorName = themeColor) {
                 Box(modifier = Modifier.fillMaxSize()) {
 

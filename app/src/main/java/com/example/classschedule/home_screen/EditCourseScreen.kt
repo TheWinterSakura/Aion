@@ -32,7 +32,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.classschedule.data.course.Course
 import com.example.classschedule.home_viewmodel.EditCourseViewModel
 
@@ -60,7 +60,7 @@ fun EditCourse(
         viewModel.loadCourse(id = id)
     }
 
-    val course by viewModel._course.collectAsState()
+    val course by viewModel._course.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -131,7 +131,7 @@ private fun EditCourseForm(
     var courseWeekStudyHours by remember { mutableStateOf(initialCourse.courseWeekStudyHours) }
     var courseTotalStudyHours by remember { mutableStateOf(initialCourse.courseTotalStudyHours) }
     var courseCredit by remember { mutableStateOf(initialCourse.courseCredit) }
-    val maxPeriodsPerDay by viewModel.maxPeriodsPerDay.collectAsState()
+    val maxPeriodsPerDay by viewModel.maxPeriodsPerDay.collectAsStateWithLifecycle()
 
     var weekExpanded by remember { mutableStateOf(false) }
     val weekList =

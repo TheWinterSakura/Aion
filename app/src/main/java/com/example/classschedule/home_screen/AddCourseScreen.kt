@@ -46,23 +46,23 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.classschedule.data.course.Course
 import com.example.classschedule.home_viewmodel.AddCourseViewModel
+import com.example.classschedule.tools.showToast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -79,9 +79,9 @@ fun AddCourse(
     var startPeriod by remember { mutableIntStateOf(1) }
     var endPeriod by remember { mutableIntStateOf(2) }
 
-    val maxPeriodsPerDay by viewModel.maxPeriodsPerDay.collectAsState()
-    val distinctCourseNames by viewModel.distinctCourseNames.collectAsState()
-    val distinctTeachers by viewModel.distinctTeachers.collectAsState()
+    val maxPeriodsPerDay by viewModel.maxPeriodsPerDay.collectAsStateWithLifecycle()
+    val distinctCourseNames by viewModel.distinctCourseNames.collectAsStateWithLifecycle()
+    val distinctTeachers by viewModel.distinctTeachers.collectAsStateWithLifecycle()
 
     var courseCampus by remember { mutableStateOf("") }
     var courseLocation by remember { mutableStateOf("") }
@@ -96,7 +96,16 @@ fun AddCourse(
     var courseCredit by remember { mutableStateOf("") }
 
     var expanded by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    val success by viewModel.success.collectAsStateWithLifecycle()
+
+    LaunchedEffect(success) {
+        if (success) {
+            "添加成功".showToast()
+            navigationUp()
+        }else{
+            "添加失败，请重试".showToast()
+        }
+    }
 
     val week = listOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
@@ -148,8 +157,6 @@ fun AddCourse(
                         )
                         viewModel.addCourse(
                             course = newCourse,
-                            context = context,
-                            navigationUp = navigationUp
                         )
                     },
                     enabled = isFormValid,

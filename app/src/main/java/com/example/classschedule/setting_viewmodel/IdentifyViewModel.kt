@@ -25,6 +25,7 @@ import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.text.PDFTextStripper
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -47,6 +48,7 @@ class IdentifyViewModel @Inject constructor(
     private val userRepository: UserPreferencesRepository,
     private val remoteDataSource: ClassScheduleRemoteDataSource,
     private val gson: Gson,
+    @param:ApplicationContext private val context: Context
 ) : ViewModel() {
 
     val apiKey = userRepository.apiKey.stateIn(
@@ -183,7 +185,10 @@ class IdentifyViewModel @Inject constructor(
         }
     }
 
-    fun parseScheduleFromPdf(context: Context, uri: Uri, apiKey: String) {
+    fun parseScheduleFromPdf(
+        uri: Uri,
+        apiKey: String
+    ) {
         PDFBoxResourceLoader.init(context)
 
         viewModelScope.launch(Dispatchers.IO) {

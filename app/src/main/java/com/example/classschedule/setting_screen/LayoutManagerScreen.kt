@@ -19,7 +19,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,7 +34,7 @@ fun LayoutManager(
     onBack: () -> Unit = {},
     viewModel: LayOutManagerViewModel = hiltViewModel()
 ) {
-    val isGridLayout by viewModel.isGridLayout.collectAsState()
+    val isGridLayout by viewModel.isGridLayout.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {

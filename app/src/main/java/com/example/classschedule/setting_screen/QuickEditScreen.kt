@@ -38,7 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,8 +61,8 @@ fun QuickEditListScreen(
     viewModel: QuickEditViewModel = hiltViewModel()
 ) {
     val isNameMode = mode == "name"
-    val items by if (isNameMode) viewModel.distinctNames.collectAsState()
-                 else viewModel.distinctTeachers.collectAsState()
+    val items by if (isNameMode) viewModel.distinctNames.collectAsStateWithLifecycle()
+                 else viewModel.distinctTeachers.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -176,8 +176,8 @@ fun QuickEditCoursesScreen(
 ) {
     LaunchedEffect(key) { viewModel.selectKey(key) }
 
-    val courses by if (mode == "name") viewModel.coursesByName.collectAsState()
-                   else viewModel.coursesByTeacher.collectAsState()
+    val courses by if (mode == "name") viewModel.coursesByName.collectAsStateWithLifecycle()
+                   else viewModel.coursesByTeacher.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {

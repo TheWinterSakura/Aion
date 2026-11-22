@@ -10,7 +10,6 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.BorderStroke
@@ -64,7 +63,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,6 +75,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.classschedule.home_viewmodel.CourseDetailViewModel
 import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.showToast
@@ -98,8 +97,8 @@ fun CourseDetail(
         viewModel.loadCourse(id = courseId)
     }
 
-    val course by viewModel._course.collectAsState()
-    val courseTimeList by viewModel.courseTimeList.collectAsState()
+    val course by viewModel._course.collectAsStateWithLifecycle()
+    val courseTimeList by viewModel.courseTimeList.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     var showDeleteConfirmDialog by remember { mutableStateOf(false) }

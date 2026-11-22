@@ -1,6 +1,6 @@
 package com.example.classschedule.navigation
 
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
@@ -188,7 +188,7 @@ internal fun EntryProviderScope<NavKey>.settingEntries(
     entry<TimeTableManagerScreen> {
         PredictiveBackGestureHandler(onBack = navigateUp) {
             val settingVm: SettingHomeViewModel = hiltViewModel()
-            val total by settingVm.totalCourse.collectAsState()
+            val total by settingVm.totalCourse.collectAsStateWithLifecycle()
             TimeTableManagerScreenContent(
                 navigateUp = navigateUp,
                 navigateToEdit = { tableId, tableName, totalNum ->

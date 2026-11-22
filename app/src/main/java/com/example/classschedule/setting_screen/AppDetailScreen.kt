@@ -32,6 +32,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.classschedule.R
 import com.example.classschedule.retrofit.model.GitHubRelease
 import com.example.classschedule.setting_viewmodel.AppDetailViewModel
@@ -46,7 +47,7 @@ fun AppDetail(
     val context = LocalContext.current
     val versionName = remember { getAppVersionName(context) }
 
-    val version by viewModel.version.collectAsState()
+    val version by viewModel.version.collectAsStateWithLifecycle()
 
     var isCheckingVersion by remember { mutableStateOf(false) }
     var showVersionDialog by remember { mutableStateOf(false) }

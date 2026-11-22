@@ -65,7 +65,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -96,8 +96,8 @@ fun ScheduleImportScreen(
     val context = LocalContext.current
     val selectedUri = remember { mutableStateListOf<Uri>() }
     val selectedBitmap = remember { mutableStateListOf<Bitmap>() }
-    val uiState by viewModel.uiState.collectAsState()
-    val apiKey by viewModel.apiKey.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val apiKey by viewModel.apiKey.collectAsStateWithLifecycle()
 
     var inputApiKey by remember(apiKey) { mutableStateOf(apiKey.removePrefix("Bearer ")) }
     var isApiCardExpanded by remember { mutableStateOf(false) }
@@ -124,7 +124,7 @@ fun ScheduleImportScreen(
         }
     val pdfPickerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-            uri?.let { viewModel.parseScheduleFromPdf(context, it, apiKey) }
+            uri?.let { viewModel.parseScheduleFromPdf(it, apiKey) }
         }
 
     Scaffold(

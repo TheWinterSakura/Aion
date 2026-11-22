@@ -31,7 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,9 +54,9 @@ fun SchoolDate(
     onNavigateBack: () -> Unit,
     viewModel: SchoolDateViewModel = hiltViewModel()
 ) {
-    val startDate by viewModel.startDate.collectAsState()
-    val allWeek by viewModel.allWeek.collectAsState()
-    val totalCourse by viewModel.totalCourse.collectAsState()
+    val startDate by viewModel.startDate.collectAsStateWithLifecycle()
+    val allWeek by viewModel.allWeek.collectAsStateWithLifecycle()
+    val totalCourse by viewModel.totalCourse.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {

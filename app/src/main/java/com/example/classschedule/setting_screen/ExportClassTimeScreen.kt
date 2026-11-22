@@ -23,7 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,8 +41,8 @@ fun ExportClassTime(
     viewModel: ExportClassTimeViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-    val courseTimeList by viewModel.courseTimeList.collectAsState()
-    val activeTableName by viewModel.activeTableName.collectAsState()
+    val courseTimeList by viewModel.courseTimeList.collectAsStateWithLifecycle()
+    val activeTableName by viewModel.activeTableName.collectAsStateWithLifecycle()
 
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")

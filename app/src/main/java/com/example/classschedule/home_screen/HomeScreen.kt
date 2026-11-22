@@ -39,7 +39,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -58,6 +57,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.classschedule.home_viewmodel.HomeViewModel
 import com.example.classschedule.ui.ColorPickerBottomSheet
 import com.example.classschedule.ui.GridLayoutGuideSnackbar
@@ -78,16 +78,16 @@ fun HomeScreen(
     animatedVisibilityScope: AnimatedVisibilityScope? = null,
 ) {
     val scope = rememberCoroutineScope()
-    val courseList by viewModel.courseList.collectAsState()
-    val courseTimeList by viewModel.allCourseTime.collectAsState()
-    val totalCourseNumber by viewModel.totalCourseNumber.collectAsState()
+    val courseList by viewModel.courseList.collectAsStateWithLifecycle()
+    val courseTimeList by viewModel.allCourseTime.collectAsStateWithLifecycle()
+    val totalCourseNumber by viewModel.totalCourseNumber.collectAsStateWithLifecycle()
 
-    val allWeeks by viewModel.allWeek.collectAsState()
-    val startDate by viewModel.startDate.collectAsState()
-    val hasLoad by viewModel.hasLoad.collectAsState()
-    val isGridLayout by viewModel.isGridLayout.collectAsState()
-    val isTimerFinished by viewModel.isTimerFinished.collectAsState()
-    val monDateStr by viewModel.monDateStr.collectAsState()
+    val allWeeks by viewModel.allWeek.collectAsStateWithLifecycle()
+    val startDate by viewModel.startDate.collectAsStateWithLifecycle()
+    val hasLoad by viewModel.hasLoad.collectAsStateWithLifecycle()
+    val isGridLayout by viewModel.isGridLayout.collectAsStateWithLifecycle()
+    val isTimerFinished by viewModel.isTimerFinished.collectAsStateWithLifecycle()
+    val monDateStr by viewModel.monDateStr.collectAsStateWithLifecycle()
 
     var currentWeek by rememberSaveable { mutableIntStateOf(1) }
     var localDateCurrentWeek by rememberSaveable { mutableIntStateOf(1) }
@@ -138,8 +138,8 @@ fun HomeScreen(
     var colorPickerTargetId by remember { mutableStateOf(0) }
     var colorPickerInitialColor by remember { mutableStateOf<String?>(null) }
 
-    val guideHomeShown by viewModel.guideHomeShown.collectAsState()
-    val guideGridShown by viewModel.guideGridShown.collectAsState()
+    val guideHomeShown by viewModel.guideHomeShown.collectAsStateWithLifecycle()
+    val guideGridShown by viewModel.guideGridShown.collectAsStateWithLifecycle()
 
     val showHomeGuide = remember(courseList, guideHomeShown) {
         courseList.isEmpty() && !guideHomeShown

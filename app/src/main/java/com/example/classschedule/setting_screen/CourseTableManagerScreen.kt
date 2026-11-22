@@ -38,7 +38,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,8 +59,8 @@ fun CourseTableManagerScreen(
     navigateToHome: () -> Unit,
     viewModel: CourseTableManagerViewModel = hiltViewModel()
 ) {
-    val tables by viewModel.tables.collectAsState()
-    val activeId by viewModel.activeTableId.collectAsState()
+    val tables by viewModel.tables.collectAsStateWithLifecycle()
+    val activeId by viewModel.activeTableId.collectAsStateWithLifecycle()
 
     var showAddDialog by remember { mutableStateOf(false) }
     var renameTarget by remember { mutableStateOf<CourseTable?>(null) }

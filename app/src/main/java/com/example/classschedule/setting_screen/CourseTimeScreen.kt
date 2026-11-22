@@ -49,7 +49,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -81,13 +81,13 @@ fun EditScheduleScreen(
     val context = LocalContext.current
 
     LaunchedEffect(timeTableId) { viewModel.setTableId(timeTableId) }
-    val initialData by viewModel.scheduleList.collectAsState()
+    val initialData by viewModel.scheduleList.collectAsStateWithLifecycle()
     val scheduleList = remember { mutableStateListOf<Schedule>() }
-    val autoCalcEnabled by viewModel.autoCalcEnabled.collectAsState()
+    val autoCalcEnabled by viewModel.autoCalcEnabled.collectAsStateWithLifecycle()
     var classDuration by remember { mutableStateOf("45") }
     var isSaving by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) }
-    val newScheduleList by viewModel.newScheduleList.collectAsState()
+    val newScheduleList by viewModel.newScheduleList.collectAsStateWithLifecycle()
 
     val hasChanges by remember {
         derivedStateOf {
