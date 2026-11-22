@@ -64,8 +64,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.setting_viewmodel.CourseTimeViewModel
 import com.example.classschedule.tools.showToast
@@ -74,7 +73,7 @@ import java.time.LocalTime
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditScheduleScreen(
-    viewModel: CourseTimeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: CourseTimeViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
     totalCourseNumber: Int = 20,
     timeTableId: Int = 1

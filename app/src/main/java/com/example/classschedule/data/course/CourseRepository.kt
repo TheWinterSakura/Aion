@@ -1,6 +1,7 @@
 package com.example.classschedule.data.course
 
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
 interface CourseRepository {
 
@@ -37,7 +38,7 @@ interface CourseRepository {
     fun getCoursesByTeacher(teacher: String, tableId: Int = 1): Flow<List<Course>>
 }
 
-class OfflineCourseRepository(private val courseDao: CourseDao) : CourseRepository {
+class OfflineCourseRepository @Inject constructor (private val courseDao: CourseDao) : CourseRepository {
     override fun getAllICourseSimple(currentWeekDate: Int, tableId: Int): Flow<List<CourseSimple>> =
         courseDao.getAllCourseSimple(currentWeekDate = currentWeekDate, tableId = tableId)
 

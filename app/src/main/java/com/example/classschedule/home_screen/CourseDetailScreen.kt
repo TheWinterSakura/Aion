@@ -76,8 +76,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.home_viewmodel.CourseDetailViewModel
 import com.example.classschedule.tools.getClassTime
 import com.example.classschedule.tools.showToast
@@ -92,7 +91,7 @@ fun CourseDetail(
     startDate: String,
     navigationUp: () -> Unit,
     navigateToEdit: (Int) -> Unit,
-    viewModel: CourseDetailViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: CourseDetailViewModel = hiltViewModel(),
     sharedTransitionScope: SharedTransitionScope? = null,
     animatedVisibilityScope: AnimatedVisibilityScope? = null,
 ) {

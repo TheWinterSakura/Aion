@@ -25,15 +25,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.setting_viewmodel.LayOutManagerViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LayoutManager(
     onBack: () -> Unit = {},
-    viewModel: LayOutManagerViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: LayOutManagerViewModel = hiltViewModel()
 ) {
     val isGridLayout by viewModel.isGridLayout.collectAsState()
 

@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.R
 import com.example.classschedule.retrofit.model.GitHubRelease
 import com.example.classschedule.setting_viewmodel.AppDetailViewModel
@@ -41,7 +41,7 @@ import com.example.classschedule.tools.showToast
 @Composable
 fun AppDetail(
     navigateUp: () -> Unit,
-    viewModel: AppDetailViewModel = viewModel()
+    viewModel: AppDetailViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val versionName = remember { getAppVersionName(context) }

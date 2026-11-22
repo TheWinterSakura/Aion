@@ -48,8 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.data.course.CourseTable
 import com.example.classschedule.setting_viewmodel.CourseTableManagerViewModel
 
@@ -58,7 +57,7 @@ import com.example.classschedule.setting_viewmodel.CourseTableManagerViewModel
 fun CourseTableManagerScreen(
     navigateUp: () -> Unit,
     navigateToHome: () -> Unit,
-    viewModel: CourseTableManagerViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: CourseTableManagerViewModel = hiltViewModel()
 ) {
     val tables by viewModel.tables.collectAsState()
     val activeId by viewModel.activeTableId.collectAsState()

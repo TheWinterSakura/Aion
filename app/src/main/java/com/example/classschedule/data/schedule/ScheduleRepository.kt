@@ -1,9 +1,11 @@
 package com.example.classschedule.data.schedule
 
+import com.example.classschedule.di.ApplicationScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 interface ScheduleRepository {
 
@@ -24,9 +26,9 @@ interface ScheduleRepository {
     suspend fun deleteAllByTableId(tableId: Int)
 }
 
-class OfflineScheduleRepository(
+class OfflineScheduleRepository @Inject constructor(
     private val scheduleDao: ScheduleDao,
-    private val appScope: CoroutineScope
+    @ApplicationScope private val appScope: CoroutineScope
 ) : ScheduleRepository {
 
     override suspend fun insertCourseTime(schedule: Schedule) =

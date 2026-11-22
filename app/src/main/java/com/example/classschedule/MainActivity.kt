@@ -26,7 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
@@ -43,6 +43,7 @@ import com.example.classschedule.home_screen.EditCourse
 import com.example.classschedule.home_screen.HomeScreen
 import com.example.classschedule.setting_screen.AddCourseByJson
 import com.example.classschedule.setting_screen.AppDetail
+import com.example.classschedule.setting_screen.CourseTableManagerScreen
 import com.example.classschedule.setting_screen.DataManager
 import com.example.classschedule.setting_screen.EasImport
 import com.example.classschedule.setting_screen.EditScheduleScreen
@@ -50,18 +51,20 @@ import com.example.classschedule.setting_screen.ExportClassSchedule
 import com.example.classschedule.setting_screen.ExportClassTime
 import com.example.classschedule.setting_screen.ImportScheduleScreen
 import com.example.classschedule.setting_screen.LayoutManager
+import com.example.classschedule.setting_screen.QuickEditCoursesScreen
+import com.example.classschedule.setting_screen.QuickEditListScreen
 import com.example.classschedule.setting_screen.ScheduleImportScreen
 import com.example.classschedule.setting_screen.SchoolDate
 import com.example.classschedule.setting_screen.SettingHome
-import com.example.classschedule.setting_screen.CourseTableManagerScreen
-import com.example.classschedule.setting_screen.QuickEditCoursesScreen
-import com.example.classschedule.setting_screen.QuickEditListScreen
 import com.example.classschedule.setting_screen.ThemeColorScreen
 import com.example.classschedule.setting_screen.TimeTableManagerScreen
+import com.example.classschedule.setting_viewmodel.SettingHomeViewModel
 import com.example.classschedule.setting_viewmodel.ThemeColorViewModel
 import com.example.classschedule.ui.PredictiveBackGestureHandler
 import com.example.classschedule.ui.theme.ClassScheduleTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,8 +72,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val app = LocalContext.current.applicationContext as ClassScheduleApplication
             val isReady by app.isReady.collectAsState()
-            val themeViewModel: ThemeColorViewModel =
-                viewModel(factory = AppViewModelProvider.Factory)
+            val themeViewModel: ThemeColorViewModel = hiltViewModel()
             val themeColor by themeViewModel.themeColor.collectAsState()
             ClassScheduleTheme(themeColorName = themeColor) {
                 Box(modifier = Modifier.fillMaxSize()) {
@@ -139,8 +141,8 @@ fun MainNavScreenNav3(finishAffinity: () -> Unit) {
             entries = rememberDecoratedNavEntries(
                 backStack = backStack,
                 entryDecorators = listOf(
-                    rememberSaveableStateHolderNavEntryDecorator<NavKey>(),
-                    rememberViewModelStoreNavEntryDecorator<NavKey>()
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
                 ),
                 entryProvider = entryProvider {
                     entry<HomeScreen> {
@@ -406,8 +408,7 @@ fun MainNavScreenNav3(finishAffinity: () -> Unit) {
 
                     entry<TimeTableManagerScreen> {
                         PredictiveBackGestureHandler(onBack = { navigateUp() }) {
-                            val settingVm: com.example.classschedule.setting_viewmodel.SettingHomeViewModel =
-                                viewModel(factory = AppViewModelProvider.Factory)
+                            val settingVm: SettingHomeViewModel = hiltViewModel()
                             val total by settingVm.totalCourse.collectAsState()
                             TimeTableManagerScreen(
                                 navigateUp = { navigateUp() },

@@ -7,12 +7,14 @@ import com.example.classschedule.data.schedule.ScheduleRepository
 import com.example.classschedule.data.schedule.TimeTable
 import com.example.classschedule.data.schedule.TimeTableRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-class TimeTableManagerViewModel(
+import javax.inject.Inject
+@HiltViewModel
+class TimeTableManagerViewModel @Inject constructor(
     private val timeTableRepository: TimeTableRepository,
     private val scheduleRepository: ScheduleRepository,
     private val preferencesRepository: UserPreferencesRepository

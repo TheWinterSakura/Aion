@@ -91,8 +91,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.data.course.CourseSimple
 import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.home_viewmodel.HomeViewModel
@@ -111,7 +110,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: HomeViewModel = hiltViewModel(),
     navigateToAddCourse: () -> Unit,
     navigateToCourseDetails: (Int, String, String, String) -> Unit,
     navigateToSetting: () -> Unit,

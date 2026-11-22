@@ -9,17 +9,4 @@ import androidx.room.RoomDatabase
 abstract class CourseDatabase : RoomDatabase() {
     abstract fun courseDao(): CourseDao
     abstract fun courseTableDao(): CourseTableDao
-    companion object {
-        @Volatile
-        private var Instance: CourseDatabase? = null
-
-        fun getDatabase(context: Context): CourseDatabase {
-            return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, CourseDatabase::class.java, "course_database")
-                    .fallbackToDestructiveMigration()
-                    .build()
-                    .also { Instance = it }
-            }
-        }
-    }
 }

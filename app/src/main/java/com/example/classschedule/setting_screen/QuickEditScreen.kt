@@ -46,8 +46,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
 import com.example.classschedule.data.course.Course
 import com.example.classschedule.setting_viewmodel.QuickEditViewModel
 
@@ -58,7 +58,7 @@ fun QuickEditListScreen(
     mode: String,
     navigateUp: () -> Unit,
     navigateToCourses: (key: String, mode: String) -> Unit,
-    viewModel: QuickEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: QuickEditViewModel = hiltViewModel()
 ) {
     val isNameMode = mode == "name"
     val items by if (isNameMode) viewModel.distinctNames.collectAsState()
@@ -172,7 +172,7 @@ fun QuickEditCoursesScreen(
     mode: String,
     navigateUp: () -> Unit,
     navigateToEdit: (id: Int) -> Unit,
-    viewModel: QuickEditViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: QuickEditViewModel = hiltViewModel()
 ) {
     LaunchedEffect(key) { viewModel.selectKey(key) }
 

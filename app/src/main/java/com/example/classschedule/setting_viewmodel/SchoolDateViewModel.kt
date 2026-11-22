@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.data.schedule.ScheduleRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-class SchoolDateViewModel(
+import javax.inject.Inject
+@HiltViewModel
+class SchoolDateViewModel @Inject constructor(
     private val repository: UserPreferencesRepository,
     private val scheduleRepository: ScheduleRepository
 ): ViewModel() {

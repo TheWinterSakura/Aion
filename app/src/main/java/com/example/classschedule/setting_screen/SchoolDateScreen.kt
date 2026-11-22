@@ -15,7 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.AlertDialog // 确保导入了 AlertDialog
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -40,8 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.data.schedule.Schedule
 import com.example.classschedule.setting_viewmodel.SchoolDateViewModel
 import com.example.classschedule.tools.showToast
@@ -53,7 +52,7 @@ import java.util.TimeZone
 @Composable
 fun SchoolDate(
     onNavigateBack: () -> Unit,
-    viewModel: SchoolDateViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: SchoolDateViewModel = hiltViewModel()
 ) {
     val startDate by viewModel.startDate.collectAsState()
     val allWeek by viewModel.allWeek.collectAsState()

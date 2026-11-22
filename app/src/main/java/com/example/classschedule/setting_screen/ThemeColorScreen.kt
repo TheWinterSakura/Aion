@@ -1,6 +1,5 @@
 package com.example.classschedule.setting_screen
 
-import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -43,8 +42,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.setting_viewmodel.ThemeColorViewModel
 import com.example.classschedule.ui.theme.AppColorScheme
 import com.example.classschedule.ui.theme.ThemeColorSchemes
@@ -53,11 +51,9 @@ import com.example.classschedule.ui.theme.ThemeColorSchemes
 @Composable
 fun ThemeColorScreen(
     navigateUp: () -> Unit,
-    viewModel: ThemeColorViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: ThemeColorViewModel = hiltViewModel()
 ) {
     val currentTheme by viewModel.themeColor.collectAsState()
-    val supportsDynamic = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -97,13 +93,11 @@ fun ThemeColorScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 // 壁纸动态色选项，仅 Android 12+ 显示，占满整行
-                if (supportsDynamic) {
-                    item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(2) }) {
-                        DynamicColorItem(
-                            isSelected = currentTheme == "Dynamic",
-                            onClick = { viewModel.saveThemeColor("Dynamic") }
-                        )
-                    }
+                item(span = { androidx.compose.foundation.lazy.grid.GridItemSpan(2) }) {
+                    DynamicColorItem(
+                        isSelected = currentTheme == "Dynamic",
+                        onClick = { viewModel.saveThemeColor("Dynamic") }
+                    )
                 }
 
                 items(ThemeColorSchemes) { scheme ->
@@ -166,7 +160,7 @@ private fun DynamicColorItem(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                     color = if (isSelected) MaterialTheme.colorScheme.primary
-                            else MaterialTheme.colorScheme.onSurface
+                    else MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     text = "从壁纸自动提取主题色",
@@ -229,7 +223,7 @@ private fun ThemeColorItem(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                 color = if (isSelected) MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.onSurface,
+                else MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
 

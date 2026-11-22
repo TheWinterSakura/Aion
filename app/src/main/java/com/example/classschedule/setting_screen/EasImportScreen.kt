@@ -45,8 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.school.University
 import com.example.classschedule.setting_viewmodel.EasImportViewModel
 
@@ -54,7 +53,7 @@ import com.example.classschedule.setting_viewmodel.EasImportViewModel
 @Composable
 fun EasImport(
     onNavigateBack: () -> Unit,
-    viewModel: EasImportViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: EasImportViewModel = hiltViewModel(),
     onNavigateToWeb: (String) -> Unit,
 ) {
     val context = LocalContext.current

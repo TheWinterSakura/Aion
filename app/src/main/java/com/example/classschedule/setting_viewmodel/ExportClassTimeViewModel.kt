@@ -8,6 +8,7 @@ import com.example.classschedule.data.schedule.ScheduleRepository
 import com.example.classschedule.data.schedule.TimeTableRepository
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.tools.ExportClassSchedule
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,8 +16,9 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-class ExportClassTimeViewModel(
+import javax.inject.Inject
+@HiltViewModel
+class ExportClassTimeViewModel @Inject constructor(
     private val repository: ScheduleRepository,
     private val timeTableRepository: TimeTableRepository,
     private val preferencesRepository: UserPreferencesRepository

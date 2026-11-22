@@ -64,8 +64,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.data.course.Course
 import com.example.classschedule.home_viewmodel.AddCourseViewModel
 
@@ -73,7 +72,7 @@ import com.example.classschedule.home_viewmodel.AddCourseViewModel
 @Composable
 fun AddCourse(
     navigationUp: () -> Unit,
-    viewModel: AddCourseViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: AddCourseViewModel = hiltViewModel()
 ) {
     var courseName by remember { mutableStateOf("") }
     var startWeekDate by remember { mutableStateOf("") }

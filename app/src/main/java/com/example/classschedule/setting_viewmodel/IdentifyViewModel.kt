@@ -24,6 +24,7 @@ import com.google.gson.Gson
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.text.PDFTextStripper
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,14 +34,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
 data class UiState(
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val success: Boolean = false,
 )
-
-class IdentifyViewModel(
+@HiltViewModel
+class IdentifyViewModel @Inject constructor(
     private val repository: CourseRepository,
     private val userRepository: UserPreferencesRepository
 ) : ViewModel() {

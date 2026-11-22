@@ -45,8 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.data.schedule.TimeTable
 import com.example.classschedule.setting_viewmodel.TimeTableManagerViewModel
 
@@ -56,7 +55,7 @@ fun TimeTableManagerScreen(
     navigateUp: () -> Unit,
     navigateToEdit: (timeTableId: Int, timeTableName: String, totalCourseNumber: Int) -> Unit,
     totalCourseNumber: Int,
-    viewModel: TimeTableManagerViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: TimeTableManagerViewModel = hiltViewModel()
 ) {
     val tables by viewModel.tables.collectAsState()
     val activeId by viewModel.activeTableId.collectAsState()

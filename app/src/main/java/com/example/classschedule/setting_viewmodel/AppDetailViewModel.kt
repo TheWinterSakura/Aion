@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.classschedule.retrofit.ClassScheduleNetWork
 import com.example.classschedule.retrofit.model.GitHubRelease
 import com.example.classschedule.tools.showToast
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AppDetailViewModel: ViewModel() {
+@HiltViewModel
+class AppDetailViewModel @Inject constructor(): ViewModel() {
 
     val _Version = MutableStateFlow<GitHubRelease?>(null)
     val version = _Version.asStateFlow()

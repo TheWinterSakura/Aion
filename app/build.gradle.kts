@@ -7,12 +7,12 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.hilt.android)
     id("kotlin-parcelize")
 }
 
 android {
     namespace = "com.example.classschedule"
-    // navigation3 1.2.2 / lifecycle 2.11.1 requires compiling against API 37
     compileSdk = 37
 
     defaultConfig {
@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.jsoup)
     implementation(libs.androidx.datastore.preferences)
@@ -99,4 +100,6 @@ dependencies {
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 }

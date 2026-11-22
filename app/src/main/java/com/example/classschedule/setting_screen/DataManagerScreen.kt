@@ -31,15 +31,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.classschedule.AppViewModelProvider
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.classschedule.setting_viewmodel.DataManagerViewModel
 import com.example.classschedule.tools.showToast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataManager(
-    viewModel: DataManagerViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: DataManagerViewModel = hiltViewModel(),
     navigateUp: () -> Unit,
     onNavigateToHomeScreen: () -> Unit
 ) {
