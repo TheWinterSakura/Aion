@@ -1,12 +1,7 @@
 package com.example.classschedule.setting_screen
 
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -67,7 +62,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -75,17 +69,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import coil.compose.AsyncImage
 import com.example.classschedule.data.course.Course
+import com.example.classschedule.setting_viewmodel.IdentifyEvent
 import com.example.classschedule.setting_viewmodel.IdentifyViewModel
+import com.example.classschedule.tools.showToast
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,10 +89,9 @@ fun ScheduleImportScreen(
     onNavigateUp: () -> Unit
 ) {
     val context = LocalContext.current
-    val selectedUri = remember { mutableStateListOf<Uri>() }
-    val selectedBitmap = remember { mutableStateListOf<Bitmap>() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val apiKey by viewModel.apiKey.collectAsStateWithLifecycle()
+    val courses by viewModel.courses.collectAsStateWithLifecycle()
 
     var inputApiKey by remember(apiKey) { mutableStateOf(apiKey.removePrefix("Bearer ")) }
     var isApiCardExpanded by remember { mutableStateOf(false) }
@@ -108,19 +102,19 @@ fun ScheduleImportScreen(
         isApiCardExpanded = !apiKey.isNotBlank()
     }
 
-    val pickMedia =
-        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uri ->
-            selectedUri.clear()
-            selectedUri.addAll(uri)
-            uri.forEach { it ->
-                it.let { uri ->
-                    uriToBitmap(
-                        uri = uri,
-                        context = context
-                    ).let { bitmap -> selectedBitmap.add(bitmap!!) }
-                }
+    LaunchedEffect(viewModel) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is IdentifyEvent.ShowMessage -> event.message.showToast(context)
             }
-            viewModel.parseScheduleImage(selectedBitmap, apiKey)
+        }
+    }
+
+    val pickMedia =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
+            if (uris.isNotEmpty()) {
+                viewModel.parseScheduleImage(uris, apiKey)
+            }
         }
     val pdfPickerLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -187,23 +181,23 @@ fun ScheduleImportScreen(
 
                 ExtendedFloatingActionButton(
                     onClick = {
-                        if (viewModel.courseList.isNotEmpty()) {
+                        if (courses.isNotEmpty()) {
                             viewModel.addCourse()
                         } else {
                             showFabMenu = !showFabMenu
                         }
                     },
-                    containerColor = if (viewModel.courseList.isNotEmpty()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = if (viewModel.courseList.isNotEmpty()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
+                    containerColor = if (courses.isNotEmpty()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = if (courses.isNotEmpty()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
                     icon = {
                         Icon(
-                            if (viewModel.courseList.isNotEmpty()) Icons.Default.Check else if (showFabMenu) Icons.Default.Close else Icons.Default.Add,
+                            if (courses.isNotEmpty()) Icons.Default.Check else if (showFabMenu) Icons.Default.Close else Icons.Default.Add,
                             contentDescription = null
                         )
                     },
                     text = {
                         Text(
-                            if (viewModel.courseList.isNotEmpty()) "确认导入" else "选择导入源",
+                            if (courses.isNotEmpty()) "确认导入" else "选择导入源",
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -359,38 +353,24 @@ fun ScheduleImportScreen(
                         )
                     }
                 }
-            } else if (viewModel.courseList.isEmpty()) {
+            } else if (courses.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (selectedUri != null) {
-                        selectedUri.forEach { uri ->
-                            AsyncImage(
-                                model = uri,
-                                contentDescription = null,
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(16.dp)
-                                    .clip(RoundedCornerShape(16.dp))
-                            )
-                        }
-                    } else {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                Icons.Rounded.CloudUpload,
-                                contentDescription = null,
-                                modifier = Modifier.size(64.dp),
-                                tint = MaterialTheme.colorScheme.outlineVariant
-                            )
-                            Text(
-                                "点击右下角按钮导入课表文件",
-                                color = MaterialTheme.colorScheme.outline
-                            )
-                        }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Icon(
+                            Icons.Rounded.CloudUpload,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.outlineVariant
+                        )
+                        Text(
+                            "点击右下角按钮导入课表文件",
+                            color = MaterialTheme.colorScheme.outline
+                        )
                     }
                 }
             }
@@ -401,7 +381,7 @@ fun ScheduleImportScreen(
                     .weight(1f),
                 contentPadding = PaddingValues(bottom = 80.dp, top = 8.dp)
             ) {
-                items(viewModel.courseList) { course ->
+                items(courses) { course ->
                     CourseCardItem(course)
                 }
             }
@@ -460,24 +440,5 @@ fun InfoRow(icon: ImageVector, text: String) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-    }
-}
-
-
-fun uriToBitmap(context: Context, uri: Uri): Bitmap? {
-    return try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val source = ImageDecoder.createSource(context.contentResolver, uri)
-            ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
-                decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
-                decoder.isMutableRequired = true
-            }
-        } else {
-            @Suppress("DEPRECATION")
-            MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
     }
 }
