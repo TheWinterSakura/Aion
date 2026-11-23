@@ -1,4 +1,4 @@
-@file:Suppress("DEPRECATION")
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
@@ -43,10 +43,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-        freeCompilerArgs += "-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi"
-    }
     buildFeatures {
         compose = true
     }
@@ -54,6 +50,13 @@ android {
         jniLibs {
             useLegacyPackaging = false
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+        freeCompilerArgs.add("-opt-in=androidx.compose.animation.ExperimentalSharedTransitionApi")
     }
 }
 
@@ -87,7 +90,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.jsoup)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.scalars)
     implementation(libs.coil.compose)

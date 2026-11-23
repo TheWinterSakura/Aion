@@ -10,11 +10,14 @@ import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import com.example.classschedule.tools.JsonTool
 import com.example.classschedule.tools.showToast
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class CourseTimeViewModel @Inject constructor(
     private val scheduleRepository: ScheduleRepository,

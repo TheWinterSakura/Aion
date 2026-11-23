@@ -31,8 +31,8 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryScrollableTabRow
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -222,7 +222,7 @@ fun HomeScreen(
                         )
 
                         if (!isGridLayout && viewModel.week.isNotEmpty()) {
-                            ScrollableTabRow(
+                            PrimaryScrollableTabRow(
                                 modifier = Modifier.clipToBounds(),
                                 selectedTabIndex = pagerState.currentPage,
                                 edgePadding = 16.dp,

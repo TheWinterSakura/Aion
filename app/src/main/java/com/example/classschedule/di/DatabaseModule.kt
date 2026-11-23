@@ -25,7 +25,7 @@ object DatabaseModule {
         @ApplicationContext context: Context
     ): CourseDatabase =
         Room.databaseBuilder(context, CourseDatabase::class.java, "course_database")
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
 
     @Provides
@@ -41,7 +41,7 @@ object DatabaseModule {
         @ApplicationContext context: Context
     ): ScheduleDatabase =
         Room.databaseBuilder(context, ScheduleDatabase::class.java, "schedule_database")
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
 
     @Provides

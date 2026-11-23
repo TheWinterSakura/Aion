@@ -28,7 +28,7 @@ interface ScheduleRepository {
 
 class OfflineScheduleRepository @Inject constructor(
     private val scheduleDao: ScheduleDao,
-    @ApplicationScope private val appScope: CoroutineScope
+    @param:ApplicationScope private val appScope: CoroutineScope
 ) : ScheduleRepository {
 
     override suspend fun insertCourseTime(schedule: Schedule) =

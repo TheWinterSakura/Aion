@@ -154,10 +154,8 @@ fun EditScheduleScreen(
     ) { uri: Uri? ->
         if (uri != null) {
             viewModel.analysisSchedule(context = context, uri = uri)
-        }else if (uri == null){
+        } else {
             "取消导入".showToast()
-        }else{
-            "导入失败".showToast()
         }
     }
 
@@ -169,7 +167,7 @@ fun EditScheduleScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text("编辑时间表", fontSize = 18.sp, fontWeight = FontWeight.Bold) },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                     titleContentColor = MaterialTheme.colorScheme.onSurface,
                     navigationIconContentColor = MaterialTheme.colorScheme.onSurface

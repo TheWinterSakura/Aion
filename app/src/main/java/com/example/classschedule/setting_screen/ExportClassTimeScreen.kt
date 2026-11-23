@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBackIosNew
-import androidx.compose.material.icons.outlined.InsertDriveFile
+import androidx.compose.material.icons.automirrored.outlined.InsertDriveFile
 import androidx.compose.material.icons.rounded.FileDownload
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,12 +47,10 @@ fun ExportClassTime(
     val exportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.CreateDocument("application/json")
     ) { uri ->
-        if (uri != null && courseTimeList != null) {
+        if (uri != null) {
             viewModel.exportJsonToUri(context = context, uri = uri, data = courseTimeList)
-        } else if (uri == null) {
-            "取消保存".showToast()
         } else {
-            "导出出现异常,请重试".showToast()
+            "取消保存".showToast()
         }
     }
 
@@ -84,7 +82,7 @@ fun ExportClassTime(
         ) {
 
             Icon(
-                imageVector = Icons.Outlined.InsertDriveFile,
+                imageVector = Icons.AutoMirrored.Outlined.InsertDriveFile,
                 contentDescription = null,
                 modifier = Modifier.size(80.dp),
                 tint = MaterialTheme.colorScheme.primary
@@ -119,7 +117,6 @@ fun ExportClassTime(
                     exportLauncher.launch("${activeTableName}.json")
                 },
 
-                enabled = courseTimeList != null,
                 modifier = Modifier.height(50.dp)
             ) {
                 Icon(
