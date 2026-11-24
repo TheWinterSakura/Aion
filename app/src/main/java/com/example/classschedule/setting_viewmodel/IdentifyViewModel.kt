@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.classschedule.data.course.Course
 import com.example.classschedule.data.course.CourseRepository
-import com.example.classschedule.data.schedule.ScheduleImportRepository
+import com.example.classschedule.data.schedule.ScheduleImporter
 import com.example.classschedule.data.user_preferences.UserPreferencesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
@@ -35,7 +35,7 @@ sealed interface IdentifyEvent {
 class IdentifyViewModel @Inject constructor(
     private val courseRepository: CourseRepository,
     private val userRepository: UserPreferencesRepository,
-    private val importRepository: ScheduleImportRepository,
+    private val importRepository: ScheduleImporter,
 ) : ViewModel() {
 
     val apiKey = userRepository.apiKey.stateIn(

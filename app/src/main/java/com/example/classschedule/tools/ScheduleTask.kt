@@ -17,13 +17,10 @@ fun getDayAfterWeeks(startDateStr: String, weeksPassed: Long, dayOfWeek: String)
         "Friday" -> DayOfWeek.FRIDAY
         "Saturday" -> DayOfWeek.SATURDAY
         "Sunday" -> DayOfWeek.SUNDAY
-        else -> {
-            "星期几获取失败,已将日期设置为今日".showToast()
-            LocalDate.now()
-        }
+        else -> return ""
     }
 
-    val target = startDate.plusWeeks(weeksPassed).with(TemporalAdjusters.previousOrSame(day as DayOfWeek))
+    val target = startDate.plusWeeks(weeksPassed).with(TemporalAdjusters.previousOrSame(day))
 
     return target.format(formatter)
 }

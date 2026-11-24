@@ -6,6 +6,8 @@ import com.example.classschedule.data.course.OfflineCourseRepository
 import com.example.classschedule.data.course.OfflineCourseTableRepository
 import com.example.classschedule.data.schedule.OfflineScheduleRepository
 import com.example.classschedule.data.schedule.OfflineTimeTableRepository
+import com.example.classschedule.data.schedule.ScheduleImportRepository
+import com.example.classschedule.data.schedule.ScheduleImporter
 import com.example.classschedule.data.schedule.ScheduleRepository
 import com.example.classschedule.data.schedule.TimeTableRepository
 import dagger.Binds
@@ -41,4 +43,10 @@ abstract class RepositoryModule {
     abstract fun bindTimeTableRepository(
         impl: OfflineTimeTableRepository
     ): TimeTableRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindScheduleImporter(
+        impl: ScheduleImportRepository
+    ): ScheduleImporter
 }

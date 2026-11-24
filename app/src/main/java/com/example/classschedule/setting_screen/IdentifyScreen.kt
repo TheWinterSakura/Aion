@@ -70,6 +70,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -187,6 +188,7 @@ fun ScheduleImportScreen(
                             showFabMenu = !showFabMenu
                         }
                     },
+                    modifier = Modifier.testTag("import_fab"),
                     containerColor = if (courses.isNotEmpty()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primaryContainer,
                     contentColor = if (courses.isNotEmpty()) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onPrimaryContainer,
                     icon = {

@@ -38,13 +38,13 @@ class ScheduleImportRepository @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val remoteDataSource: ClassScheduleRemoteDataSource,
     private val gson: Gson,
-) {
+) : ScheduleImporter {
 
     init {
         PDFBoxResourceLoader.init(context)
     }
 
-    suspend fun importFromImages(
+    override suspend fun importFromImages(
         uris: List<Uri>,
         apiKey: String,
     ): List<Course> = withContext(Dispatchers.IO) {
@@ -82,7 +82,7 @@ class ScheduleImportRepository @Inject constructor(
         parseCourses(response.choices.firstOrNull()?.message?.content)
     }
 
-    suspend fun importFromPdf(
+    override suspend fun importFromPdf(
         uri: Uri,
         apiKey: String,
     ): List<Course> = withContext(Dispatchers.IO) {

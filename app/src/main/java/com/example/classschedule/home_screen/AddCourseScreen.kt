@@ -55,6 +55,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -164,7 +165,8 @@ fun AddCourse(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
-                        .height(54.dp),
+                        .height(54.dp)
+                        .testTag("save_course"),
                     shape = MaterialTheme.shapes.large
                 ) {
                     Icon(
@@ -200,6 +202,7 @@ fun AddCourse(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     AddCourseItem(
+                        modifier = Modifier.testTag("course_name"),
                         label = "课程名称 *",
                         value = courseName,
                         leadingIcon = Icons.Rounded.Edit,
@@ -242,7 +245,7 @@ fun AddCourse(
                 ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         AddCourseItem(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f).testTag("start_week"),
                             label = "起始周 *",
                             value = startWeekDate,
                             leadingIcon = Icons.Rounded.PlayArrow,
@@ -250,7 +253,7 @@ fun AddCourse(
                             keyboardType = KeyboardType.Number
                         )
                         AddCourseItem(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f).testTag("end_week"),
                             label = "结束周 *",
                             value = endWeekDate,
                             leadingIcon = Icons.Rounded.Close,
@@ -278,7 +281,8 @@ fun AddCourse(
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                             modifier = Modifier
                                 .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .testTag("week_day"),
                             shape = MaterialTheme.shapes.medium,
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -346,12 +350,14 @@ fun AddCourse(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     AddCourseItem(
+                        modifier = Modifier.testTag("campus"),
                         label = "课程校区 *",
                         value = courseCampus,
                         leadingIcon = Icons.Rounded.Home,
                         onValueChange = { courseCampus = it }
                     )
                     AddCourseItem(
+                        modifier = Modifier.testTag("location"),
                         label = "课程地点 *",
                         value = courseLocation,
                         leadingIcon = Icons.Rounded.LocationOn,

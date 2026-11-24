@@ -9,6 +9,12 @@ import java.io.InputStreamReader
 
 object JsonTool {
     /**
+     * 纯函数：把 JSON 字符串解析为指定类型，方便单元测试。
+     */
+    inline fun <reified T> decodeJsonString(jsonString: String): T =
+        Json.decodeFromString<T>(jsonString)
+
+    /**
      * 从指定的 Uri 读取 JSON 文件，并解析为指定的数据类
      * @param context 上下文
      * @param uri 用户选择的文件的 Uri
@@ -20,7 +26,7 @@ object JsonTool {
                 val reader = BufferedReader(InputStreamReader(inputStream))
                 val jsonString = reader.readText()
 
-                val data = Json.decodeFromString<T>(jsonString)
+                val data = decodeJsonString<T>(jsonString)
 
                 Toast.makeText(context, "解析成功", Toast.LENGTH_SHORT).show()
                 data
